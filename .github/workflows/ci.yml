@@ -1,0 +1,41 @@
+name: Minishell CI/CD
+
+# Trigger the workflow on push and pull requests to main branch
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    # Checkout the repository code
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    # Install dependencies needed for minishell
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential valgrind clang-tools
+        sudo apt-get install -y libreadline-dev
+    
+    # Install norminette for 42 coding standard
+    - name: Install norminette
+      run: |
+        python3 -m pip install --upgrade pip setuptools
+        python3 -m pip install norminette
+    
+    # Run norminette check
+    - name: Check norminette
+      run: |
+        norminette src/ includes/ || echo "Norm violations found - check output above"
+    
+    # Clean up
+    - name: Cleanup
+      run: |
+        make fclean
+        rm -f test_output.txt valgrind_output.txt

@@ -3,9 +3,9 @@ name: Minishell CI/CD
 # Trigger the workflow on push and pull requests to main branch
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ master ]
   pull_request:
-    branches: [ main ]
+    branches: [ master ]
 
 jobs:
   test:
@@ -32,7 +32,7 @@ jobs:
     # Run norminette check
     - name: Check norminette
       run: |
-        norminette src/ includes/ || echo "Norm violations found - check output above"
+        norminette srcs/ includes/ || echo "Norm violations found - check output above"
     
     # Clean up
     - name: Cleanup

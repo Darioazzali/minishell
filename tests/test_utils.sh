@@ -35,6 +35,6 @@ test_fail() {
 
 test_pass() {
 	test_name=$1
-	description=$1
-	printf "${GREEN}${CHECKMARK}${NORMAL} ${test_name}\n"
+	description=$2
+	printf "${GREEN}${CHECKMARK}${NORMAL} ${test_name} - ${description}\n"
 }

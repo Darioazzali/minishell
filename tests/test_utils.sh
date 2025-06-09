@@ -13,6 +13,7 @@
 
 RED="\e[31m"
 GREEN="\e[32m"
+BLUE="\e[34m"
 NORMAL="\e[0m"
 BOLD="\033[1m"
 HEAVY_BALLOT='\xE2\x9C\x97'
@@ -37,4 +38,17 @@ test_pass() {
 	test_name=$1
 	description=$2
 	printf "${GREEN}${CHECKMARK}${NORMAL} ${test_name} - ${description}\n"
+}
+
+resume_test() {
+	local tests_passed=$1
+	local tests_failed=$2
+	local tests_count=$((tests_passed + tests_failed))
+	if [[ $tests_failed -eq 0 ]]; then
+		printf "${BOLD}${GREEN}ALL Tests passed${NORMAL} $tests_passed/$tests_count\n"
+		return
+	else
+		printf "${BOLD}${GREEN}Tests passed: ${tests_passed}${NORMAL}\n"
+		printf "${BOLD}${RED}Tests failed: ${tests_failed}${NORMAL}\n"
+	fi
 }

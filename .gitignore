@@ -1,3 +1,5 @@
 .cache
 build
 /echo
+/pwd
+compile_commands.json

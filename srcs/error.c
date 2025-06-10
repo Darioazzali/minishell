@@ -23,7 +23,8 @@ void	print_program_error(char *program_name, char *message)
 	if (message)
 		print_error(message);
 	else
-		print_error("Error\n");
+		print_error("Error");
+	print_error("\n");
 }
 
 static void	print_error(char *message)

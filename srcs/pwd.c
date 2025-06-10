@@ -24,12 +24,13 @@
 int	main(void)
 {
 	char	*pwd;
+	char	*msg;
 
 	pwd = getcwd(NULL, 0);
 	if (pwd == NULL)
 	{
-		print_program_error("pwd", "Error while "
-			"displaying current directory\n");
+		msg = strerror(errno);
+		print_program_error("pwd", msg);
 		return (1);
 	}
 	else

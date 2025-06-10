@@ -6,7 +6,7 @@
 /*   By: dazzali <dazzali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 16:12:17 by dazzali           #+#    #+#             */
-/*   Updated: 2025/06/09 18:59:10 by dazzali          ###   ########.fr       */
+/*   Updated: 2025/06/10 16:25:29 by dazzali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define MINISHELL_H
 # include <stdbool.h>
 # include <string.h>
+# include <errno.h>
 # include <unistd.h>
 # include <stdlib.h>
 # include <stdio.h>

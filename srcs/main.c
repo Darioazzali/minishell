@@ -33,9 +33,7 @@ int	main(void)
 				free_parser(ctx);
 			}
 			else
-			{
-				log_debug(ctx->logger, deb_format_tokens(ctx->parser->tokens));
-			}
+				expand(ctx);
 			free(line);
 		}
 	}

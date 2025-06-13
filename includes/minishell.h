@@ -6,7 +6,7 @@
 /*   By: dazzali <dazzali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 16:12:17 by dazzali           #+#    #+#             */
-/*   Updated: 2025/06/13 14:23:36 by dazzali          ###   ########.fr       */
+/*   Updated: 2025/06/13 19:25:06 by dazzali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,4 +59,5 @@ t_log_ctx	*init_logger(t_log_level level);
 void		*free_ctx(t_ctx *ctx);
 t_ctx		*init_ctx(void);
 int			tokenize_line(t_ctx *ctx, char *line);
+void		expand(t_ctx *ctx);
 #endif

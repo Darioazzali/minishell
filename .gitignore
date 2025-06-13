@@ -4,4 +4,4 @@ build
 /pwd
 compile_commands.json
 /minishell
-/log
+/log*

@@ -10,7 +10,8 @@ SRCS_FILES		:=	error.c	\
 					tokenizer.c \
 					ctx.c \
 					parser_debug.c \
-					parser.c
+					parser.c	\
+					expand.c
 INC_DIR			=	includes
 HEADERS			:=	includes/minishell.h srcs/log.h
 SRCS			:=	$(addprefix $(SRCS_DIR)/,$(SRCS_FILES))

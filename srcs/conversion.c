@@ -1,42 +1,42 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   echo.c                                             :+:      :+:    :+:   */
+/*   conversion.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dazzali <dazzali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/13 14:21:28 by dazzali           #+#    #+#             */
-/*   Updated: 2025/06/13 14:21:30 by dazzali          ###   ########.fr       */
+/*   Created: 2025/06/12 13:13:26 by dazzali           #+#    #+#             */
+/*   Updated: 2025/06/12 13:13:52 by dazzali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	main(int ac, char **av)
+int	ltos(long usec, char *res)
 {
-	bool	skip_nl;
+	long	temp;
+	size_t	len;
+	int		pos;
 
-	av++;
-	if (1 != ac)
-	{
-		if (strcmp(*av, "-n") == 0)
-		{
-			skip_nl = true;
-			av++;
-		}
-		else
-			skip_nl = false;
-		while (*av)
-		{
-			write(1, *av, strlen(*av));
-			if (*(av + 1))
-				write(1, " ", 1);
-			av++;
-		}
-		if (skip_nl == false)
-			write(1, "\n", 1);
-	}
+	temp = usec;
+	len = 0;
+	if (usec == 0)
+		res[0] = '0';
+	else if (usec < 0)
+		return (-1);
 	else
-		write(1, "\n", 1);
-	return (0);
+	{
+		while (temp > 0)
+		{
+			len++;
+			temp /= 10;
+		}
+		pos = len - 1;
+		while (usec > 0)
+		{
+			res[pos--] = '0' + (usec % 10);
+			usec /= 10;
+		}
+	}
+	return (len);
 }

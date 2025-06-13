@@ -3,3 +3,5 @@ build
 /echo
 /pwd
 compile_commands.json
+/minishell
+/log*

@@ -12,8 +12,6 @@
 
 #include "minishell.h"
 
-static void	print_error(char *message);
-
 void	print_program_error(char *program_name, char *message)
 {
 	if (!program_name)
@@ -27,7 +25,7 @@ void	print_program_error(char *program_name, char *message)
 	print_error("\n");
 }
 
-static void	print_error(char *message)
+void	print_error(char *message)
 {
 	size_t	len;
 

@@ -5,3 +5,5 @@ build
 compile_commands.json
 /minishell
 /log*
+libminishell.a
+.build_config

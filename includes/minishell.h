@@ -6,7 +6,7 @@
 /*   By: dazzali <dazzali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 16:12:17 by dazzali           #+#    #+#             */
-/*   Updated: 2025/06/14 08:58:42 by dazzali          ###   ########.fr       */
+/*   Updated: 2025/06/14 13:51:27 by dazzali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void		print_shell_error(char *message);
 t_log_ctx	*init_logger(t_log_level level);
 void		*free_ctx(t_ctx *ctx);
 t_ctx		*init_ctx(void);
-int			tokenize_line(t_ctx *ctx, char *line);
+int			tokenize_line(t_ctx *ctx, const char *line);
 int			expand_tokens(t_ctx *ctx);
 void		*free_parser(t_ctx *ctx);
 #endif

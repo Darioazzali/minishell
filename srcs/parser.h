@@ -63,4 +63,5 @@ int			init_expander(t_expander *expander, t_ctx *ctx, const char *token);
 int			join_until_cursor(t_expander *expander);
 char		*expand_shell_param(t_expander *expander);
 void		*expander_error(t_expander *expander);
+int			add_token(t_ctx *ctx, char *start, char *end);
 #endif

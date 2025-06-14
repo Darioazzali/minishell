@@ -1,0 +1,5 @@
+/usr/bin/zsh
+\
+//usr/bin/zsh
+'ciao $SHELL'
+"ciao /usr/bin/zsh"

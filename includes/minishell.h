@@ -6,7 +6,7 @@
 /*   By: dazzali <dazzali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 16:12:17 by dazzali           #+#    #+#             */
-/*   Updated: 2025/06/13 19:25:06 by dazzali          ###   ########.fr       */
+/*   Updated: 2025/06/14 08:58:42 by dazzali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@
 #  define LOG_LEVEL 2
 # endif
 
+# define MALLOC_ERROR_MSG	"Failed to allocate memory"
+
 typedef struct s_log_ctx	t_log_ctx;
 typedef struct s_parser		t_parser;
 
@@ -39,7 +41,9 @@ typedef enum e_log_level
 typedef struct s_ctx
 {
 	t_log_ctx		*logger;
-	t_parser		*parser;
+	t_parser		*tokenizer;
+	int				pid;
+	int				last_exit_code;
 }	t_ctx;
 
 /** @brief Print a program error message.
@@ -51,13 +55,14 @@ typedef struct s_ctx
  * @param program_name The name of the program.
  * @param message The error message.
  */
-void		print_program_error(char *program_name, char *message);
-
 int			ltos(long usec, char *res);
+void		print_program_error(char *program_name, char *message);
 void		print_error(char *message);
+void		print_shell_error(char *message);
 t_log_ctx	*init_logger(t_log_level level);
 void		*free_ctx(t_ctx *ctx);
 t_ctx		*init_ctx(void);
 int			tokenize_line(t_ctx *ctx, char *line);
-void		expand(t_ctx *ctx);
+int			expand_tokens(t_ctx *ctx);
+void		*free_parser(t_ctx *ctx);
 #endif

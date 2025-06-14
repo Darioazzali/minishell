@@ -11,9 +11,12 @@ SRCS_FILES		:=	error.c	\
 					ctx.c \
 					parser_debug.c \
 					parser.c	\
-					expand.c
+					expand.c	\
+					expander.c	
 INC_DIR			=	includes
-HEADERS			:=	includes/minishell.h srcs/log.h
+HEADERS			:=	includes/minishell.h	\
+					srcs/log.h	\
+					srcs/parser.h
 SRCS			:=	$(addprefix $(SRCS_DIR)/,$(SRCS_FILES))
 ECHO			=	echo
 _PWD			=	pwd

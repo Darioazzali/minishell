@@ -12,135 +12,107 @@
 
 #include "parser.h"
 
-static char	*expand_if_var(const char *str);
-// static char	*handle_metachar(char **ptr);
-// static bool	is_metachar(char *ptr);
-static char	*handle_variable(char **ptr);
-static char	*join_new_part(char *res, const char *str, char *ptr, char *start);
+static char	*expand_token(t_ctx *ctx, const char *token);
+static int	append_escaped_sym(t_expander *expander, char *symbol);
+static int	append_shell_parameter(t_expander *expander);
 
-void	expand(t_ctx *ctx)
+int	expand_tokens(t_ctx *ctx)
 {
 	t_parser	*parser;
 	t_list		*token;
+	char		*tmp;
 	char		*first;
 
-	parser = ctx->parser;
+	parser = ctx->tokenizer;
 	token = parser->tokens;
 	while (token)
 	{
 		first = token->content;
 		if (*first != '\'')
-			token->content = expand_if_var(token->content);
+		{
+			tmp = expand_token(ctx, token->content);
+			if (!tmp)
+			{
+				print_shell_error(MALLOC_ERROR_MSG);
+				return (-1);
+			}
+			free(token->content);
+			token->content = tmp;
+		}
 		token = token->next;
 	}
 	log_debug(ctx->logger, deb_format_tokens(parser->tokens));
+	return (0);
 }
 
-static char	*expand_if_var(const char *str)
+static char	*expand_token(t_ctx *ctx, const char *token)
 {
-	char	*ptr;
-	char	*res;
-	char	*start;
-	char	*tmp;
-	bool	escaping_mode;
+	t_expander	expander;
 
-	escaping_mode = false;
-	ptr = (char *)str;
-	start = (char *)str;
-	res = ft_strdup("");
-	while (*ptr)
+	init_expander(&expander, ctx, token);
+	while (*expander.cursor)
 	{
-		if (*ptr == '\\' && !escaping_mode)
-		{
-			escaping_mode = true;
-			res = join_new_part(res, str, ptr, start);
-			ptr++;
-			start = ptr;
-		}
-		else if (*ptr == '$' && !escaping_mode)
-		{
-			res = join_new_part(res, str, ptr, start);
-			ptr++;
-			tmp = handle_variable(&ptr);
-			start = ptr;
-			res = ft_strjoin(res, tmp);
-		}
+		if (*expander.cursor == '\\' && *(expander.cursor + 1) == '$')
+			append_escaped_sym(&expander, "$");
+		else if (*expander.cursor == '\\' && *(expander.cursor + 1) == '\\')
+			append_escaped_sym(&expander, "\\");
+		else if (*expander.cursor == '$')
+			append_shell_parameter(&expander);
 		else
-		{
-			escaping_mode = false;
-			ptr++;
-		}
+			expander.cursor++;
+		if (expander.err != EXP_NO_ERROR)
+			return (expander_error(&expander));
 	}
-	res = join_new_part(res, str, ptr, start);
-	return (res);
+	join_until_cursor(&expander);
+	if (expander.err != EXP_NO_ERROR)
+		return (expander_error(&expander));
+	return (ft_strdup(expander.expanded));
 }
 
-/**
- * @brief Join the substring to the result of the precedent expansions
- *
- * @param previous The previous string
- * @param str The beginning of the token
- * @param ptr The address of the actual position in the token
- * @param start The start of the substring that we want to join
-	*
-	* */
-static char	*join_new_part(char *previous,
-						const char *token, char *end_ptr, char *start)
+static int	append_escaped_sym(t_expander *expander, char *symbol)
 {
 	char	*tmp;
-	char	*raw;
 
-	raw = ft_substr(token, start - token, end_ptr - start);
-	if (!raw)
-		return (NULL);
-	tmp = ft_strjoin(previous, raw);
+	if (join_until_cursor(expander) == -1)
+	{
+		expander->err = EXP_ERR_MALLOC;
+		return (-1);
+	}
+	tmp = ft_strjoin(expander->expanded, symbol);
 	if (!tmp)
 	{
-		free(raw);
-		return (NULL);
+		expander->err = EXP_ERR_MALLOC;
+		return (-1);
 	}
-	free(previous);
-	free(raw);
-	return (tmp);
+	free(expander->expanded);
+	expander->expanded = tmp;
+	expander->cursor += 2;
+	expander->start = expander->cursor;
+	return (0);
 }
 
-static char	*handle_variable(char **ptr)
+static int	append_shell_parameter(t_expander *expander)
 {
-	char	*ret;
-	char	*start;
 	char	*tmp;
 
-	start = *ptr;
-	while (**ptr && (ft_isdigit(**ptr) || ft_isalpha(**ptr)))
-		(*ptr)++;
-	tmp = ft_substr(start, 0, *ptr - start);
+	if (join_until_cursor(expander) == -1)
+	{
+		expander->err = EXP_ERR_MALLOC;
+		return (-1);
+	}
+	tmp = expand_shell_param(expander);
 	if (!tmp)
-		return (NULL);
-	ret = getenv(tmp);
+	{
+		expander->err = EXP_ERR_MALLOC;
+		return (-1);
+	}
+	expander->start = expander->cursor;
+	expander->expanded = ft_strjoin(expander->expanded, tmp);
 	free(tmp);
-	if (!ret)
+	if (!expander->expanded)
 	{
-		free(ret);
-		return (ft_strdup(""));
+		expander->err = EXP_ERR_MALLOC;
+		return (-1);
 	}
-	return (ret);
+	return (0);
 }
-
-// static char	*handle_metachar(char **ptr)
-// {
-// 	char	*expansion;
-//
-// 	expansion = ft_strdup("There is a meta frate");
-// 	*ptr = (*ptr + 2);
-// 	return (expansion);
-// }
-
-// static bool	is_metachar(char *ptr)
-// {
-// 	if (*ptr == '$' || *ptr == '?'
-// 		|| *ptr == '@' || *ptr == '#'
-// 		|| ft_isdigit(*ptr) || *ptr == '*'
-// 		|| *ptr == '!')
-// 		return (true);
-// 	return (false);
-// }

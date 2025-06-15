@@ -12,96 +12,107 @@
 
 #include "parser.h"
 
-static char	*expand_if_var(char *str);
-// static char	*handle_metachar(char *ptr);
-static bool	is_metachar(char *ptr);
-static char	*handle_variable(char **ptr);
-static char	*join_all(char *res, char *str, char *ptr, char *start);
+static char	*expand_token(t_ctx *ctx, const char *token);
+static int	append_escaped_sym(t_expander *expander, char *symbol);
+static int	append_shell_parameter(t_expander *expander);
 
-void	expand(t_ctx *ctx)
+int	expand_tokens(t_ctx *ctx)
 {
 	t_parser	*parser;
 	t_list		*token;
+	char		*tmp;
 	char		*first;
 
-	parser = ctx->parser;
+	parser = ctx->tokenizer;
 	token = parser->tokens;
 	while (token)
 	{
 		first = token->content;
-		if (*first == '\'')
-			expand_if_var(token->content);
+		if (*first != '\'')
+		{
+			tmp = expand_token(ctx, token->content);
+			if (!tmp)
+			{
+				print_shell_error(MALLOC_ERROR_MSG);
+				return (-1);
+			}
+			free(token->content);
+			token->content = tmp;
+		}
 		token = token->next;
 	}
+	log_debug(ctx->logger, deb_format_tokens(parser->tokens));
+	return (0);
 }
 
-static char	*expand_if_var(char *str)
+static char	*expand_token(t_ctx *ctx, const char *token)
 {
-	char	*ptr;
-	char	*res;
-	char	*start;
+	t_expander	expander;
 
-	ptr = str;
-	start = str;
-	res = ft_strdup("");
-	while (*ptr)
+	init_expander(&expander, ctx, token);
+	while (*expander.cursor)
 	{
-		if (*ptr != '$')
-			ptr++;
+		if (*expander.cursor == '\\' && *(expander.cursor + 1) == '$')
+			append_escaped_sym(&expander, "$");
+		else if (*expander.cursor == '\\' && *(expander.cursor + 1) == '\\')
+			append_escaped_sym(&expander, "\\");
+		else if (*expander.cursor == '$')
+			append_shell_parameter(&expander);
 		else
-		{
-			res = join_all(res, str, ptr, start);
-			start = ptr;
-			if (*ptr && is_metachar(ptr))
-			{
-				ptr++;
-			}
-			res = handle_variable(&ptr);
-		}
+			expander.cursor++;
+		if (expander.err != EXP_NO_ERROR)
+			return (expander_error(&expander));
 	}
-	return (res);
+	join_until_cursor(&expander);
+	if (expander.err != EXP_NO_ERROR)
+		return (expander_error(&expander));
+	return (ft_strdup(expander.expanded));
 }
 
-static char	*join_all(char *res, char *str, char *ptr, char *start)
+static int	append_escaped_sym(t_expander *expander, char *symbol)
 {
 	char	*tmp;
-	char	*raw;
 
-	raw = ft_substr(str, start - str, ptr - start);
-	if (!raw)
-		return (NULL);
-	tmp = ft_strjoin(res, raw);
+	if (join_until_cursor(expander) == -1)
+	{
+		expander->err = EXP_ERR_MALLOC;
+		return (-1);
+	}
+	tmp = ft_strjoin(expander->expanded, symbol);
 	if (!tmp)
 	{
-		free(raw);
-		return (NULL);
+		expander->err = EXP_ERR_MALLOC;
+		return (-1);
 	}
-	free(res);
-	free(raw);
-	return (ptr);
+	free(expander->expanded);
+	expander->expanded = tmp;
+	expander->cursor += 2;
+	expander->start = expander->cursor;
+	return (0);
 }
 
-// static char	*handle_metachar(char *ptr)
-// {
-// 	char	*expansion;
-//
-// 	expansion = ft_strdup("");
-// 	(*ptr)++;
-// 	return (expansion);
-// }
-
-static bool	is_metachar(char *ptr)
+static int	append_shell_parameter(t_expander *expander)
 {
-	if (*ptr == '$' || *ptr == '?'
-		|| *ptr == '@' || *ptr == '#'
-		|| ft_isdigit(*ptr) || *ptr == '*'
-		|| *ptr == '!')
-		return (true);
-	return (false);
-}
+	char	*tmp;
 
-static char	*handle_variable(char **ptr)
-{
-	(*ptr)++;
-	return (ft_strdup(""));
+	if (join_until_cursor(expander) == -1)
+	{
+		expander->err = EXP_ERR_MALLOC;
+		return (-1);
+	}
+	tmp = expand_shell_param(expander);
+	if (!tmp)
+	{
+		expander->err = EXP_ERR_MALLOC;
+		return (-1);
+	}
+	expander->start = expander->cursor;
+	expander->expanded = ft_strjoin(expander->expanded, tmp);
+	free(tmp);
+	if (!expander->expanded)
+	{
+		expander->err = EXP_ERR_MALLOC;
+		return (-1);
+	}
+	return (0);
 }

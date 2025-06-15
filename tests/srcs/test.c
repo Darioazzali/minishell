@@ -1,23 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser.c                                           :+:      :+:    :+:   */
+/*   test.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dazzali <dazzali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/13 13:27:48 by dazzali           #+#    #+#             */
-/*   Updated: 2025/06/14 08:59:42 by dazzali          ###   ########.fr       */
+/*   Created: 2025/06/14 12:36:37 by dazzali           #+#    #+#             */
+/*   Updated: 2025/06/14 12:37:21 by dazzali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parser.h"
+#include "test.h"
 
-void	*free_parser(t_ctx *ctx)
+char	*strip_newline(char *g_line)
 {
-	if (!ctx->tokenizer)
-		return (NULL);
-	if (ctx->tokenizer->tokens)
-		ft_lstclear(&ctx->tokenizer->tokens, free);
-	free(ctx->tokenizer);
-	return (NULL);
+	char	*last_nl;
+
+	last_nl = ft_strrchr(g_line, '\n');
+	if (last_nl)
+		*last_nl = '\0';
+	return (g_line);
 }

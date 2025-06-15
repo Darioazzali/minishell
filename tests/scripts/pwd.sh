@@ -83,7 +83,6 @@ clean_files() {
 	rm -f $PWD_DIR/basic.txt $PWD_DIR/basic_real.txt
 }
 
-printf "${BOLD}${BLUE}Running pwd tests${NORMAL}\n"
 tests_passed=0
 tests_failed=0
 pwd_test

@@ -12,7 +12,6 @@
 
 #include "minishell.h"
 #include "log.h"
-#include "parser.h"
 
 int	main(void)
 {
@@ -29,13 +28,12 @@ int	main(void)
 		{
 			if (tokenize_line(ctx, line) == -1)
 			{
-				print_error("minishell: Error while parsing line\n");
+				print_shell_error("error while parsing line");
 				free_parser(ctx);
 			}
 			else
-			{
-				log_debug(ctx->logger, deb_format_tokens(ctx->parser->tokens));
-			}
+				if (expand_tokens(ctx) == -1)
+					continue ;
 			free(line);
 		}
 	}

@@ -41,6 +41,27 @@ typedef struct s_token
 	char		*value;
 }	t_token;
 
-char	*deb_format_tokens(t_list *lst);
-void	*free_parser(t_ctx *ctx);
+typedef enum e_expander_error
+{
+	EXP_NO_ERROR,
+	EXP_ERR_MALLOC,
+	EXP_ERR_OTHER
+}	t_expander_error;
+
+typedef struct s_expander
+{
+	const char			*token;
+	char				*cursor;
+	char				*start;
+	char				*expanded;	
+	t_expander_error	err;
+	t_ctx				*ctx;
+}	t_expander;
+
+char		*deb_format_tokens(t_list *lst);
+int			init_expander(t_expander *expander, t_ctx *ctx, const char *token);
+int			join_until_cursor(t_expander *expander);
+char		*expand_shell_param(t_expander *expander);
+void		*expander_error(t_expander *expander);
+int			add_token(t_ctx *ctx, char *start, char *end);
 #endif

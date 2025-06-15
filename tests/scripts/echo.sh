@@ -48,7 +48,6 @@ clean_up_files() {
 	rm -f $ECHO_DIR/basic.txt $ECHO_DIR/basic_real.txt
 }
 
-printf "${BOLD}${BLUE}Running echo tests${NORMAL}\n"
 tests_passed=0
 tests_failed=0
 echo_test "hello" "hello"

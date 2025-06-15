@@ -32,3 +32,13 @@ void	print_error(char *message)
 	len = strlen(message);
 	write(2, message, len);
 }
+
+void	print_shell_error(char *message)
+{
+	print_error("minishell: ");
+	if (message)
+		print_error(message);
+	else
+		print_error("A generic error occurred");
+	print_error("\n");
+}

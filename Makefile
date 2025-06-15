@@ -8,22 +8,33 @@ SRCS_FILES		:=	error.c	\
 					logger.c \
 					conversion.c \
 					tokenizer.c \
+					tokenizer2.c \
 					ctx.c \
 					parser_debug.c \
 					parser.c	\
-					expand.c
+					expand.c	\
+					expander.c	
 INC_DIR			=	includes
-HEADERS			:=	includes/minishell.h srcs/log.h
+LMINISHELL		= 	libminishell.a
+HEADERS			:=	includes/minishell.h	\
+					srcs/log.h	\
+					srcs/parser.h
 SRCS			:=	$(addprefix $(SRCS_DIR)/,$(SRCS_FILES))
 ECHO			=	echo
 _PWD			=	pwd
-DEBUG			=	1
+DEBUG ?= 0
 LOG_FILE_PATH 	= 
 LOG_LEVEL	 	= 	0
 LIBFT_DIR		= libft
 LIBFT			= $(LIBFT_DIR)/libft.a
 UTILS			= $(BUILD_DIR)/error.o $(BUILD_DIR)/logger.o $(BUILD_DIR)/conversion.o
 OBJS            := $(patsubst $(SRCS_DIR)/%.c,$(BUILD_DIR)/%.o,$(SRCS))
+CONFIG_FILE = .build_config
+
+$(CONFIG_FILE): force
+	@echo "DEBUG=$(DEBUG)" > $@.tmp
+	@echo "LOG_LEVEL=$(LOG_LEVEL)" >> $@.tmp
+	@if ! cmp -s $@.tmp $@ 2>/dev/null; then mv $@.tmp $@; else rm $@.tmp; fi
 
 all: $(NAME) $(ECHO) $(_PWD)
 
@@ -34,13 +45,17 @@ $(LIBFT): force
 	echo "compiling libft"
 	make -C libft
 
+$(LMINISHELL): $(OBJS)
+	make $(NAME)
+	ar -crs $@ $^
+
 $(ECHO):$(BUILD_DIR)/echo.o $(UTILS)
 	$(CC) $< $(UTILS) -o $@
 
 $(_PWD):$(BUILD_DIR)/pwd.o $(UTILS)
 	$(CC) $< $(UTILS) -o $@
 
-$(BUILD_DIR)/%.o: $(SRCS_DIR)/%.c $(HEADERS) Makefile
+$(BUILD_DIR)/%.o: $(SRCS_DIR)/%.c $(HEADERS) Makefile $(CONFIG_FILE)
 	@mkdir -p $(BUILD_DIR)
 	echo $(LOG_FILE_PATH)
 	$(CC) $(CFLAGS) -D DEBUG=$(DEBUG) \
@@ -63,4 +78,4 @@ norminette:
 	norminette $(SRCS_DIR)
 	norminette $(INC_DIR)
 	
-.PHONY: all clean fclean re force norminette
+.PHONY: all clean fclean re force norminette force

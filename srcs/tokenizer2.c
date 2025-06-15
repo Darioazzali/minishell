@@ -1,23 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser.c                                           :+:      :+:    :+:   */
+/*   tokenizer2.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dazzali <dazzali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/13 13:27:48 by dazzali           #+#    #+#             */
-/*   Updated: 2025/06/14 08:59:42 by dazzali          ###   ########.fr       */
+/*   Created: 2025/06/14 14:33:55 by dazzali           #+#    #+#             */
+/*   Updated: 2025/06/14 14:34:59 by dazzali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
 
-void	*free_parser(t_ctx *ctx)
+int	add_token(t_ctx *ctx, char *start, char *end)
 {
-	if (!ctx->tokenizer)
-		return (NULL);
-	if (ctx->tokenizer->tokens)
-		ft_lstclear(&ctx->tokenizer->tokens, free);
-	free(ctx->tokenizer);
-	return (NULL);
+	t_list	*new;
+	char	*new_str;
+
+	new_str = ft_substr(start, 0, end - start + 1);
+	if (!new_str)
+		return (0);
+	log_debug(ctx->logger, "Adding token");
+	log_debug(ctx->logger, new_str);
+	new = ft_lstnew(new_str);
+	if (!new)
+	{
+		free(new_str);
+		return (0);
+	}
+	ft_lstadd_back(&ctx->tokenizer->tokens, new);
+	return (1);
 }

@@ -40,7 +40,7 @@ $(CONFIG_FILE): force
 all: $(NAME) $(ECHO) $(_PWD)
 
 $(NAME):$(BUILD_DIR)/main.o $(OBJS) $(LIBFT)
-	$(CC)  $<  $(OBJS) $(LDFLAGS)  -o $@
+	$(CC)  $< $(OBJS) $(LDFLAGS) -o $@
 
 $(LIBFT): force
 	echo "compiling libft"

@@ -36,7 +36,7 @@ void	*expand_err_null(t_expander *expander, t_expander_error exp_err)
  *
  * @note The error code is set from the enum `t_expander_error`
 */
-int	expand_error_errcode(t_expander *expander, t_expander_error exp_err,
+int	expand_err_code(t_expander *expander, t_expander_error exp_err,
 					int code)
 {
 	set_expander_error(expander, exp_err);

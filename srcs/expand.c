@@ -13,7 +13,6 @@
 #include "parser.h"
 
 static char	*expand_token(t_ctx *ctx, const char *token);
-static int	append_escaped_sym(t_expander *expander, char *symbol);
 static int	append_shell_parameter(t_expander *expander);
 
 int	expand_tokens(t_ctx *ctx)
@@ -53,9 +52,7 @@ static char	*expand_token(t_ctx *ctx, const char *token)
 	while (*expander.cursor)
 	{
 		if (*expander.cursor == '\\' && *(expander.cursor + 1) == '$')
-			append_escaped_sym(&expander, "$");
-		else if (*expander.cursor == '\\' && *(expander.cursor + 1) == '\\')
-			append_escaped_sym(&expander, "\\");
+			expander.cursor += 2;
 		else if (*expander.cursor == '$')
 			append_shell_parameter(&expander);
 		else
@@ -67,22 +64,6 @@ static char	*expand_token(t_ctx *ctx, const char *token)
 	if (expander.err != EXP_NO_ERROR)
 		return (exp_error_fail(&expander));
 	return (ft_strdup(expander.expanded));
-}
-
-static int	append_escaped_sym(t_expander *expander, char *symbol)
-{
-	char	*tmp;
-
-	if (join_until_cursor(expander) == -1)
-		expand_err_code(expander, EXP_ERR_MALLOC, -1);
-	tmp = ft_strjoin(expander->expanded, symbol);
-	if (!tmp)
-		expand_err_code(expander, EXP_ERR_MALLOC, -1);
-	free(expander->expanded);
-	expander->expanded = tmp;
-	expander->cursor += 2;
-	expander->start = expander->cursor;
-	return (0);
 }
 
 static int	append_shell_parameter(t_expander *expander)
@@ -101,3 +82,19 @@ static int	append_shell_parameter(t_expander *expander)
 		expand_err_code(expander, EXP_ERR_MALLOC, -1);
 	return (0);
 }
+
+// static int	append_escaped_sym(t_expander *expander, char *symbol)
+// {
+// 	char	*tmp;
+//
+// 	if (join_until_cursor(expander) == -1)
+// 		expand_err_code(expander, EXP_ERR_MALLOC, -1);
+// 	tmp = ft_strjoin(expander->expanded, symbol);
+// 	if (!tmp)
+// 		expand_err_code(expander, EXP_ERR_MALLOC, -1);
+// 	free(expander->expanded);
+// 	expander->expanded = tmp;
+// 	expander->cursor += 2;
+// 	expander->start = expander->cursor;
+// 	return (0);
+// }

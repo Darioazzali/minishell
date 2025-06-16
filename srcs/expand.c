@@ -61,11 +61,11 @@ static char	*expand_token(t_ctx *ctx, const char *token)
 		else
 			expander.cursor++;
 		if (expander.err != EXP_NO_ERROR)
-			return (expander_error(&expander));
+			return (exp_error_fail(&expander));
 	}
 	join_until_cursor(&expander);
 	if (expander.err != EXP_NO_ERROR)
-		return (expander_error(&expander));
+		return (exp_error_fail(&expander));
 	return (ft_strdup(expander.expanded));
 }
 
@@ -74,16 +74,10 @@ static int	append_escaped_sym(t_expander *expander, char *symbol)
 	char	*tmp;
 
 	if (join_until_cursor(expander) == -1)
-	{
-		expander->err = EXP_ERR_MALLOC;
-		return (-1);
-	}
+		expand_err_code(expander, EXP_ERR_MALLOC, -1);
 	tmp = ft_strjoin(expander->expanded, symbol);
 	if (!tmp)
-	{
-		expander->err = EXP_ERR_MALLOC;
-		return (-1);
-	}
+		expand_err_code(expander, EXP_ERR_MALLOC, -1);
 	free(expander->expanded);
 	expander->expanded = tmp;
 	expander->cursor += 2;
@@ -96,23 +90,14 @@ static int	append_shell_parameter(t_expander *expander)
 	char	*tmp;
 
 	if (join_until_cursor(expander) == -1)
-	{
-		expander->err = EXP_ERR_MALLOC;
-		return (-1);
-	}
+		expand_err_code(expander, EXP_ERR_MALLOC, -1);
 	tmp = expand_shell_param(expander);
 	if (!tmp)
-	{
-		expander->err = EXP_ERR_MALLOC;
-		return (-1);
-	}
+		expand_err_code(expander, EXP_ERR_MALLOC, -1);
 	expander->start = expander->cursor;
 	expander->expanded = ft_strjoin(expander->expanded, tmp);
 	free(tmp);
 	if (!expander->expanded)
-	{
-		expander->err = EXP_ERR_MALLOC;
-		return (-1);
-	}
+		expand_err_code(expander, EXP_ERR_MALLOC, -1);
 	return (0);
 }

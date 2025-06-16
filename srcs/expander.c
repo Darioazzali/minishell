@@ -38,17 +38,11 @@ int	join_until_cursor(t_expander *expander)
 	end_idx = expander->cursor - expander->start;
 	prev = ft_substr(expander->token, start_idx, end_idx);
 	if (!prev)
-	{
-		expander->err = EXP_ERR_MALLOC;
-		return (-1);
-	}
+		return (expand_err_code(expander, EXP_ERR_MALLOC, -1));
 	tmp = ft_strjoin(expander->expanded, prev);
 	free(prev);
 	if (!tmp)
-	{
-		expander->err = EXP_ERR_MALLOC;
-		return (-1);
-	}
+		return (expand_err_code(expander, EXP_ERR_MALLOC, -1));
 	free(expander->expanded);
 	expander->expanded = tmp;
 	return (0);
@@ -71,10 +65,7 @@ char	*expand_shell_param(t_expander *expander)
 			expander->cursor++;
 		tmp = ft_substr(expander->start, 0, expander->cursor - expander->start);
 		if (!tmp)
-		{
-			expander->err = EXP_ERR_MALLOC;
-			return (NULL);
-		}
+			expand_err_null(expander, EXP_ERR_MALLOC);
 		ret = getenv(tmp);
 		free(tmp);
 	}
@@ -101,7 +92,7 @@ static char	*handle_shell_parameter(t_expander *expander)
 	return (ret);
 }
 
-void	*expander_error(t_expander *expander)
+void	*exp_error_fail(t_expander *expander)
 {
 	if (expander->err == EXP_ERR_MALLOC)
 		print_shell_error(MALLOC_ERROR_MSG);

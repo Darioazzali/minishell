@@ -13,7 +13,8 @@ SRCS_FILES		:=	error.c	\
 					parser_debug.c \
 					parser.c	\
 					expand.c	\
-					expander.c	
+					expander.c	\
+					expander2.c	
 INC_DIR			=	includes
 LMINISHELL		= 	libminishell.a
 HEADERS			:=	includes/minishell.h	\

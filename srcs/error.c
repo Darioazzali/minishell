@@ -29,7 +29,7 @@ void	print_error(char *message)
 {
 	size_t	len;
 
-	len = strlen(message);
+	len = ft_strlen(message);
 	write(2, message, len);
 }
 

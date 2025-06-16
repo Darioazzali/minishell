@@ -6,7 +6,7 @@
 /*   By: dazzali <dazzali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 16:12:17 by dazzali           #+#    #+#             */
-/*   Updated: 2025/06/14 13:51:27 by dazzali          ###   ########.fr       */
+/*   Updated: 2025/06/16 16:46:08 by dazzali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,4 +65,6 @@ t_ctx		*init_ctx(void);
 int			tokenize_line(t_ctx *ctx, const char *line);
 int			expand_tokens(t_ctx *ctx);
 void		*free_parser(t_ctx *ctx);
+int			remove_quotes(t_ctx *ctx);
+bool		ft_is_whitespace(char c);
 #endif

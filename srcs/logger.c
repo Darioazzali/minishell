@@ -27,7 +27,7 @@ t_log_ctx	*init_logger(t_log_level level)
 		return (NULL);
 	}
 	ctx->level = level;
-	if (!LOG_FILE_PATH || strlen(LOG_FILE_PATH) == 0)
+	if (!LOG_FILE_PATH || ft_strlen(LOG_FILE_PATH) == 0)
 		ctx->fd = STDERR_FILENO;
 	else
 	{
@@ -74,11 +74,11 @@ static void	_log(t_log_ctx *ctx, char *s, t_log_level level)
 	write(log_fd, timestamp, 10);
 	write(log_fd, " ", 1);
 	if (level == LEVEL_DEBUG)
-		write(log_fd, DEBUG_STR, strlen(DEBUG_STR));
+		write(log_fd, DEBUG_STR, ft_strlen(DEBUG_STR));
 	else if (level == LEVEL_WARN)
-		write(log_fd, WARN_STR, strlen(WARN_STR));
+		write(log_fd, WARN_STR, ft_strlen(WARN_STR));
 	else if (level == LEVEL_ERROR)
-		write(log_fd, ERR_STR, strlen(ERR_STR));
-	write(log_fd, s, strlen(s));
+		write(log_fd, ERR_STR, ft_strlen(ERR_STR));
+	write(log_fd, s, ft_strlen(s));
 	write(log_fd, "\n", 1);
 }

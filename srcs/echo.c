@@ -19,7 +19,7 @@ int	main(int ac, char **av)
 	av++;
 	if (1 != ac)
 	{
-		if (strcmp(*av, "-n") == 0)
+		if (ft_strcmp(*av, "-n", 2) == 0)
 		{
 			skip_nl = true;
 			av++;
@@ -28,7 +28,7 @@ int	main(int ac, char **av)
 			skip_nl = false;
 		while (*av)
 		{
-			write(1, *av, strlen(*av));
+			write(1, *av, ft_strlen(*av));
 			if (*(av + 1))
 				write(1, " ", 1);
 			av++;

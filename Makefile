@@ -24,7 +24,7 @@ LIBFT_DIR		=	libft
 #Libraries
 LIBFT			=	$(LIBFT_DIR)/libft.a
 LMINISHELL		=	libminishell.a
-LDFLAGS			=	-lreadline
+LDFLAGS			=	-lreadline -L$(LIBFT_DIR) -lft
 
 #Source files
 SRCS_FILES		=	error.c \
@@ -96,12 +96,12 @@ $(LMINISHELL): $(OBJS)
 #Built-in utilities
 $(ECHO):$(BUILD_DIR)/echo.o $(UTILS_OBJS)
 	printf "$(YELLOW)🔨 Building echo...$(RESET)\n"
-	@$(CC) $< $(UTILS_OBJS) -o $@
+	@$(CC) $< $(UTILS_OBJS) $(LIBFT) $(LDFLAGS) -o $@
 	printf "$(CLEAR_LINE)$(GREEN)✅ Echo built$(RESET)\n"
 
 $(PWD):$(BUILD_DIR)/pwd.o $(UTILS_OBJS)
 	printf "$(YELLOW)🔨 Building pwd...$(RESET)\n"
-	@$(CC) $< $(UTILS_OBJS) -o $@
+	@$(CC) $< $(UTILS_OBJS) $(LIBFT) $(LDFLAGS) -o $@
 	printf "$(CLEAR_LINE)$(GREEN)✅ Pwd built$(RESET)\n"
 
 #Object files compilation

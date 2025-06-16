@@ -62,6 +62,9 @@ char		*deb_format_tokens(t_list *lst);
 int			init_expander(t_expander *expander, t_ctx *ctx, const char *token);
 int			join_until_cursor(t_expander *expander);
 char		*expand_shell_param(t_expander *expander);
-void		*expander_error(t_expander *expander);
+void		*exp_error_fail(t_expander *expander);
+void		*expand_err_null(t_expander *expander, t_expander_error exp_err);
+int			expand_err_code(t_expander *expander, t_expander_error exp_err,
+				int code);
 int			add_token(t_ctx *ctx, char *start, char *end);
 #endif

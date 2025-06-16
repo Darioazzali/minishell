@@ -1,0 +1,8 @@
+.clangd
+.clang-format
+copy_libft.sh
+exclude.txt
+.git
+.gitignore
+README.md
+tests

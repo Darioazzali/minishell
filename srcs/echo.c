@@ -19,7 +19,7 @@ int	main(int ac, char **av)
 	av++;
 	if (1 != ac)
 	{
-		if (ft_strcmp(*av, "-n", 2) == 0)
+		if (ft_strncmp(*av, "-n", 2) == 0)
 		{
 			skip_nl = true;
 			av++;

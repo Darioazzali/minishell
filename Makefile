@@ -34,12 +34,13 @@ UTILS			= $(BUILD_DIR)/error.o $(BUILD_DIR)/logger.o $(BUILD_DIR)/conversion.o
 OBJS            := $(patsubst $(SRCS_DIR)/%.c,$(BUILD_DIR)/%.o,$(SRCS))
 CONFIG_FILE = .build_config
 
+all: $(NAME) $(ECHO) $(_PWD)
+
 $(CONFIG_FILE): force
 	@echo "DEBUG=$(DEBUG)" > $@.tmp
 	@echo "LOG_LEVEL=$(LOG_LEVEL)" >> $@.tmp
 	@if ! cmp -s $@.tmp $@ 2>/dev/null; then mv $@.tmp $@; else rm $@.tmp; fi
 
-all: $(NAME) $(ECHO) $(_PWD)
 
 $(NAME):$(BUILD_DIR)/main.o $(OBJS) $(LIBFT)
 	$(CC)  $<  $(OBJS) $(LDFLAGS)  -o $@

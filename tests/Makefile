@@ -11,7 +11,7 @@ MINISHELL_SRC	=	$(MINISHELL_DIR)/srcs
 MINISHELL_OBJ	=	$(wildcard $(MINISHELL_DIR)/build/*.o)
 HEADERS			:=	includes/test.h
 SRCS			:=	$(addprefix $(SRCS_DIR)/,$(SRCS_FILES))
-DEBUG			=	1
+DEBUG			?=	0
 # LOG_FILE_PATH 	= 
 # LOG_LEVEL	 	= 	0
 EXPANDER		= expander
@@ -22,7 +22,7 @@ LIBFT			= $(LIBFT_DIR)/libft.a
 UTILS			= $(BUILD_DIR)/test.o
 OBJS            := $(patsubst $(SRCS_DIR)/%.c,$(BUILD_DIR)/%.o,$(SRCS))
 
-all: $(EXPANDER) $(TOKENIZER)
+all: $(EXPANDER) $(TOKENIZER) $(QUOTE_REMOVAL)
 
 $(EXPANDER):$(BUILD_DIR)/expander.o $(OBJS) $(LIBFT)
 	make -C .. DEBUG=$(DEBUG)
@@ -32,7 +32,7 @@ $(TOKENIZER):$(BUILD_DIR)/tokenizer.o $(OBJS) $(LIBFT)
 	make -C .. libminishell.a DEBUG=$(DEBUG)
 	$(CC)  $< $(OBJS)  $(LDFLAGS)  -o $@
 
-$(QUOTE_REMOVAL):$(BUILD_DIR)/quote_removal.o $(OBJS) $(LIBFT)
+$(QUOTE_REMOVAL):$(BUILD_DIR)/quote_removal.o $(OBJS) $(LIBFT) force
 	make -C .. libminishell.a DEBUG=$(DEBUG)
 	$(CC)  $< $(OBJS)  $(LDFLAGS)  -o $@
 

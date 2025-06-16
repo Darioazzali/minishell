@@ -15,6 +15,7 @@
 static char	*handle_quotes_removal(t_ctx *ctx, char *content);
 static char	*handle_escapes_char(t_ctx *ctx, char *token);
 static int	append_escaped_sym(t_expander *expander, char symbol);
+static char	*ft_trim_double_quotes(char	*str);
 
 int	remove_quotes(t_ctx *ctx)
 {
@@ -51,7 +52,7 @@ static char	*handle_quotes_removal(t_ctx *ctx, char *token)
 		single_quote = true;
 	if (single_quote)
 		return (ft_strtrim(token, "'"));
-	ret = ft_strtrim(token, "\"");
+	ret = ft_trim_double_quotes(token);
 	if (!ret)
 		return (NULL);
 	tmp = handle_escapes_char(ctx, ret);
@@ -102,4 +103,16 @@ static int	append_escaped_sym(t_expander *expander, char symbol)
 	expander->cursor += 2;
 	expander->start = expander->cursor;
 	return (0);
+}
+
+static char	*ft_trim_double_quotes(char	*str)
+{
+	size_t	len;
+	char	*res;
+
+	if (*str != '"')
+		return (ft_strdup(str));
+	len = ft_strlen(str);
+	res = ft_substr(str, 1, len - 2);
+	return (res);
 }

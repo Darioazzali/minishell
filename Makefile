@@ -15,7 +15,8 @@ SRCS_FILES		:=	error.c	\
 					expand.c	\
 					expander.c	\
 					expander2.c	\
-					parenthesis_removal.c
+					quote_removal.c \
+					string_utils.c
 INC_DIR			=	includes
 LMINISHELL		= 	libminishell.a
 HEADERS			:=	includes/minishell.h	\

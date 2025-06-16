@@ -16,7 +16,15 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
       with:
-        submodules: recursive
+
+        submodule: false
+
+    - name: Rewrite submodule URL to HTTPS for CI
+      run: |
+        git config --file .gitmodules submodule.libft.url https://github.com/Darioazzali/libft.git
+        git submodule sync
+        git submodule update --init --recursive
+
     # Install dependencies needed for minishell
     - name: Install dependencies
       run: |

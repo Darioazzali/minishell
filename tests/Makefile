@@ -16,6 +16,7 @@ DEBUG			=	1
 # LOG_LEVEL	 	= 	0
 EXPANDER		= expander
 TOKENIZER		= tokenizer
+QUOTE_REMOVAL	= quote_removal
 LIBFT_DIR		= ../libft
 LIBFT			= $(LIBFT_DIR)/libft.a
 UTILS			= $(BUILD_DIR)/test.o
@@ -28,6 +29,10 @@ $(EXPANDER):$(BUILD_DIR)/expander.o $(OBJS) $(LIBFT)
 	DEBUG=0 $(CC)  $< $(OBJS)  $(LDFLAGS)  -o $@
 
 $(TOKENIZER):$(BUILD_DIR)/tokenizer.o $(OBJS) $(LIBFT)
+	make -C .. libminishell.a DEBUG=$(DEBUG)
+	$(CC)  $< $(OBJS)  $(LDFLAGS)  -o $@
+
+$(QUOTE_REMOVAL):$(BUILD_DIR)/quote_removal.o $(OBJS) $(LIBFT)
 	make -C .. libminishell.a DEBUG=$(DEBUG)
 	$(CC)  $< $(OBJS)  $(LDFLAGS)  -o $@
 

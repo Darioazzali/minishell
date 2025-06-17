@@ -1,3 +1,4 @@
+
 #Compiler and flags
 CC				=	cc
 CFLAGS			=	-Wall -Wextra -Werror -g
@@ -81,28 +82,28 @@ footer:
 $(NAME): $(BUILD_DIR)/main.o $(OBJS) $(LIBFT)
 	printf "$(YELLOW)🔗 Linking executable...$(RESET)\n"
 	@$(CC)  $< $(OBJS) $(LIBFT) $(LDFLAGS) -o $@
-	printf "$(CLEAR_LINE)$(GREEN)✅ $(NAME) linked successfully$(RESET)\n"
+	printf "$(GREEN)✅ $(NAME) linked successfully$(RESET)\n"
 
 $(LIBFT): force
-	printf "$(BLUE)📖 Building libft...$(RESET)\n"
+	@printf "$(CLEAR_LINE)$(BLUE)📖 Building libft...$(RESET)\n"
 	@$(MAKE) -C $(LIBFT_DIR) --no-print-directory
-	printf "$(CLEAR_LINE)$(GREEN)✅ Libft compiled$(RESET)\n"
+	printf "$(BLUE)✅ Libft compiled$(RESET)\n"
 
 $(LMINISHELL): $(OBJS)
 	printf "$(PURPLE)📚 Creating static library...$(RESET)\n"
 	@ar -crs $@ $^
-	printf "$(CLEAR_LINE)$(GREEN)✅ Library created$(RESET)\n"
+	printf "$(GREEN)✅ Library created$(RESET)\n"
 
 #Built-in utilities
 $(ECHO):$(BUILD_DIR)/echo.o $(UTILS_OBJS)
 	printf "$(YELLOW)🔨 Building echo...$(RESET)\n"
 	@$(CC) $< $(UTILS_OBJS) $(LIBFT) $(LDFLAGS) -o $@
-	printf "$(CLEAR_LINE)$(GREEN)✅ Echo built$(RESET)\n"
+	printf "$(GREEN)✅ Echo built$(RESET)\n"
 
 $(PWD):$(BUILD_DIR)/pwd.o $(UTILS_OBJS)
 	printf "$(YELLOW)🔨 Building pwd...$(RESET)\n"
 	@$(CC) $< $(UTILS_OBJS) $(LIBFT) $(LDFLAGS) -o $@
-	printf "$(CLEAR_LINE)$(GREEN)✅ Pwd built$(RESET)\n"
+	printf "$(GREEN)✅ Pwd built$(RESET)\n"
 
 #Object files compilation
 $(BUILD_DIR)/%.o:$(SRCS_DIR)/%.c $(HEADERS) Makefile $(CONFIG_FILE)
@@ -121,7 +122,7 @@ $(BUILD_DIR)/%.o:$(SRCS_DIR)/%.c $(HEADERS) Makefile $(CONFIG_FILE)
 # Special compilation rule for main and utilities (also generate deps)
 $(BUILD_DIR)/main.o: $(SRCS_DIR)/main.c Makefile $(CONFIG_FILE)
 	@mkdir -p $(BUILD_DIR)
-	printf "$(GREEN)Compiling: $(WHITE)$<$(RESET)\r"
+	printf "$(GREEN)Compiling: $(WHITE)$<$(RESET)\n"
 	@$(CC) $(CFLAGS) \
 		-D DEBUG=$(DEBUG) \
 		-D LOG_FILE_PATH='"$(LOG_FILE_PATH)"' \
@@ -134,7 +135,7 @@ $(BUILD_DIR)/main.o: $(SRCS_DIR)/main.c Makefile $(CONFIG_FILE)
 
 $(BUILD_DIR)/echo.o: $(SRCS_DIR)/echo.c Makefile $(CONFIG_FILE)
 	@mkdir -p $(BUILD_DIR)
-	printf "$(GREEN)Compiling: $(WHITE)$<$(RESET)\r"
+	printf "$(GREEN)Compiling: $(WHITE)$<$(RESET)\n"
 	@$(CC) $(CFLAGS) \
 		-D DEBUG=$(DEBUG) \
 		-D LOG_FILE_PATH='"$(LOG_FILE_PATH)"' \
@@ -147,7 +148,7 @@ $(BUILD_DIR)/echo.o: $(SRCS_DIR)/echo.c Makefile $(CONFIG_FILE)
 
 $(BUILD_DIR)/pwd.o: $(SRCS_DIR)/pwd.c Makefile $(CONFIG_FILE)
 	@mkdir -p $(BUILD_DIR)
-	printf "$(GREEN)Compiling: $(WHITE)$<$(RESET)\r"
+	printf "$(GREEN)Compiling: $(WHITE)$<$(RESET)\n"
 	@$(CC) $(CFLAGS) \
 		-D DEBUG=$(DEBUG) \
 		-D LOG_FILE_PATH='"$(LOG_FILE_PATH)"' \

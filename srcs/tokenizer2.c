@@ -52,7 +52,7 @@ bool	is_metachar(char *c)
 		|| ft_strncmp(c, "<<", 2) == 0
 		|| ft_strncmp(c, "&&", 2) == 0)
 		return (true);
-	if (*c == ' ' || *c == '&' || *c == '>' || *c == '<')
+	if (*c == ' ' || *c == '&' || *c == '>' || *c == '<' || *c == '|')
 		return (true);
 	return (false);
 }

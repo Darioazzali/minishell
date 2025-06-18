@@ -6,7 +6,8 @@
 /*   By: dazzali <dazzali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 16:12:17 by dazzali           #+#    #+#             */
-/*   Updated: 2025/06/16 16:46:08 by dazzali          ###   ########.fr       */
+
+/*   Updated: 2025/06/15 18:09:15 by aluque-v         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +19,7 @@
 # include <fcntl.h>
 # include <stdlib.h>
 # include <stdio.h>
+# include <string.h>
 # include "libft.h"
 # include <readline/readline.h>
 # include <readline/history.h>
@@ -46,15 +48,6 @@ typedef struct s_ctx
 	int				last_exit_code;
 }	t_ctx;
 
-/** @brief Print a program error message.
- *
- * Prints the program name followed by a colon, a space, and the error message
- * to the standard error stream.
- * If no error message is provided, the default error message "Error" is used.
- *
- * @param program_name The name of the program.
- * @param message The error message.
- */
 int			ltos(long usec, char *res);
 void		print_program_error(char *program_name, char *message);
 void		print_error(char *message);

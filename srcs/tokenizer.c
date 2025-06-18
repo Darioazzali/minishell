@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*																			  */
 /*														  :::	   ::::::::   */
-/*	 parser.c											:+:		 :+:	:+:   */
+/*	 tokenizer.c										:+:		 :+:	:+:   */
 /*													  +:+ +:+		  +:+	  */
 /*	 By: dazzali <dazzali@student.42.fr>			+#+  +:+	   +#+		  */
 /*												  +#+#+#+#+#+	+#+			  */
-/*	 Created: 2025/06/12 15:14:32 by dazzali		   #+#	  #+#			  */
-/*	 Updated: 2025/06/12 17:22:24 by dazzali		  ###	########.fr		  */
+/*	 Created: 2025/06/18 14:27:40 by dazzali		   #+#	  #+#			  */
+/*	 Updated: 2025/06/18 14:27:41 by dazzali		  ###	########.fr		  */
 /*																			  */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 static char		*handle_normal_mode(t_ctx *ctx, char *line);
 static char		*handle_single_quotes(t_ctx *ctx, char *line);
 static char		*handle_double_quotes(t_ctx *ctx, char *line);
-static void		revert_if_space(char **line);
 
 int	tokenize_line(t_ctx *ctx, const char *line)
 {
@@ -50,10 +49,12 @@ static	char	*handle_normal_mode(t_ctx *ctx, char *line)
 {
 	char	*start;
 
+	if (*line && is_metachar(line))
+		return (handle_metachar(ctx, line));
 	start = line;
-	while (*line && *line != ' ')
+	while (*line && !is_metachar(line) && *line != ' ')
 	{
-		if (*line == '\\' && ((*line + 1) == '\"'
+		if (*line == '\\' && (*(line + 1) == '\"'
 				|| (*line + 1) != '\''))
 			line++;
 		else if (*line == '\'')
@@ -68,10 +69,7 @@ static	char	*handle_normal_mode(t_ctx *ctx, char *line)
 		}
 		line++;
 	}
-	revert_if_space(&line);
 	add_token(ctx, start, line);
-	if (*(line + 1) == ' ')
-		line++;
 	return (line);
 }
 
@@ -85,7 +83,7 @@ static	char	*handle_single_quotes(t_ctx *ctx, char *line)
 	{
 		if (*line == '\'')
 		{
-			add_token(ctx, start, line);
+			add_token(ctx, start, line + 1);
 			ctx->tokenizer->mode = LEXI_NORMAL;
 			line++;
 			return (line);
@@ -116,12 +114,5 @@ static	char	*handle_double_quotes(t_ctx *ctx, char *line)
 	}
 	add_token(ctx, start, line + 1);
 	line++;
-	log_debug(ctx->logger, "Exiting double quotes");
 	return (line);
-}
-
-static void	revert_if_space(char **line)
-{
-	if (**line == ' ')
-		(*line)--;
 }

@@ -67,4 +67,6 @@ void		*expand_err_null(t_expander *expander, t_expander_error exp_err);
 int			expand_err_code(t_expander *expander, t_expander_error exp_err,
 				int code);
 int			add_token(t_ctx *ctx, char *start, char *end);
+char		*handle_metachar(t_ctx *ctx, char *line);
+bool		is_metachar(char *c);
 #endif

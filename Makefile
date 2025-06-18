@@ -35,16 +35,18 @@ SRCS_FILES		=	error.c \
 					tokenizer2.c \
 					ctx.c \
 					parser_debug.c \
-					parser.c \
-					expand.c \
-					expander.c \
-					expander2.c
-
+					parser.c	\
+					expand.c	\
+					expander.c	\
+					expander2.c	\
+					quote_removal.c \
+					string_utils.c
 HEADERS			=	$(INC_DIR)/minishell.h \
 					$(SRCS_DIR)/log.h \
 					$(SRCS_DIR)/parser.h
 
 #Built-ins utilities
+
 ECHO			=	echo
 PWD				=	pwd
 BUILTIN_UTILS	=	$(ECHO) $(PWD)

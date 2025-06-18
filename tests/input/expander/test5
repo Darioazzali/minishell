@@ -1,5 +1,5 @@
-$SHELL
+$HOLA
 \\
-/$SHELL
-'ciao $SHELL'
-"ciao $SHELL"
+\$HOLA
+'ciao $HOLA'
+"ciao $HOLA"

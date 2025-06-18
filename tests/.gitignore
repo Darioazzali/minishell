@@ -2,3 +2,5 @@
 output
 /expander
 /tokenizer
+/quote_removal
+expected/expander/test_pid

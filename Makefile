@@ -62,7 +62,7 @@ UTILS_OBJS		=	$(BUILD_DIR)/error.o $(BUILD_DIR)/logger.o $(BUILD_DIR)/conversion
 CONFIG_FILE		=	.build_config
 DEBUG			?=	0
 LOG_LEVEL		=	0
-LOG_FILE_PATH 	?=
+LOG_FILE_PATH 	?=	
 
 #Progress tracking
 TOTAL_FILES		=	$(words $(SRCS_FILES) main echo pwd)

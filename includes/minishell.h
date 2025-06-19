@@ -29,9 +29,11 @@
 # endif
 
 # define MALLOC_ERROR_MSG	"Failed to allocate memory"
-
+# define HISTORY_FILE		".minishell_history"
+# define INITIAL_CAPACITY	10;
 typedef struct s_log_ctx	t_log_ctx;
 typedef struct s_parser		t_parser;
+typedef struct s_history	t_history;
 
 typedef enum e_log_level
 {
@@ -45,8 +47,16 @@ typedef struct s_ctx
 	t_log_ctx		*logger;
 	t_parser		*tokenizer;
 	int				pid;
-	int				last_exit_code;
+	t_history		*history;
+	int				exit_status;
 }	t_ctx;
+
+typedef struct s_history
+{
+	char	**commands;
+	int		count;
+	int		capacity;
+}	t_history;
 
 int			ltos(long usec, char *res);
 void		print_program_error(char *program_name, char *message);
@@ -60,4 +70,9 @@ int			expand_tokens(t_ctx *ctx);
 void		*free_parser(t_ctx *ctx);
 int			remove_quotes(t_ctx *ctx);
 bool		ft_is_whitespace(char c);
+
+//History
+t_history	*init_history(void);
+void		add_to_history_struct(char *line, t_history *hist);
+void		save_to_history_file(t_history *hist);
 #endif

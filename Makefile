@@ -40,6 +40,7 @@ SRCS_FILES		=	error.c \
 					expander.c	\
 					expander2.c	\
 					quote_removal.c \
+					history.c \
 					string_utils.c
 HEADERS			=	$(INC_DIR)/minishell.h \
 					$(SRCS_DIR)/log.h \
@@ -59,7 +60,7 @@ UTILS_OBJS		=	$(BUILD_DIR)/error.o $(BUILD_DIR)/logger.o $(BUILD_DIR)/conversion
 
 #Configuration
 CONFIG_FILE		=	.build_config
-DEBUG			?=	0
+DEBUG			?=	1
 LOG_LEVEL		=	0
 LOG_FILE_PATH 	?=	
 

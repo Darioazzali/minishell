@@ -26,7 +26,7 @@ t_ctx	*init_ctx(void)
 		return (NULL);
 	}
 	ctx->pid = getpid();
-	ctx->last_exit_code = 0;
+	ctx->exit_status = 0;
 	return (ctx);
 }
 

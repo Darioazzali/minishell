@@ -40,7 +40,8 @@ SRCS_FILES		=	error.c \
 					expander.c	\
 					expander2.c	\
 					quote_removal.c \
-					string_utils.c
+					string_utils.c	\
+					token_recognizing.c
 HEADERS			=	$(INC_DIR)/minishell.h \
 					$(SRCS_DIR)/log.h \
 					$(SRCS_DIR)/parser.h

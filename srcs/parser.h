@@ -24,8 +24,14 @@ typedef enum e_lexi
 
 typedef enum e_tok_type
 {
-	TOK_VAR,
-	TOK_NORMAL
+	TOK_PIPE,
+	TOK_AND,
+	TOK_OR,
+	TOK_REDIR_IN,
+	TOK_REDIR_OUT,
+	TOK_REDIR_APPEND,
+	TOK_REDIR_HEREDOC,
+	TOK_WORD,
 }	t_tok_type;
 
 typedef struct s_parser
@@ -59,6 +65,8 @@ typedef struct s_expander
 }	t_expander;
 
 char		*deb_format_tokens(t_list *lst);
+char		*deb_format_tokens_type(t_list *lst);
+char		*get_token_type_str(t_tok_type tok);
 int			init_expander(t_expander *expander, t_ctx *ctx, const char *token);
 int			join_until_cursor(t_expander *expander);
 char		*expand_shell_param(t_expander *expander);
@@ -67,4 +75,6 @@ void		*expand_err_null(t_expander *expander, t_expander_error exp_err);
 int			expand_err_code(t_expander *expander, t_expander_error exp_err,
 				int code);
 int			add_token(t_ctx *ctx, char *start, char *end);
+char		*handle_metachar(t_ctx *ctx, char *line);
+bool		is_metachar(char *c);
 #endif

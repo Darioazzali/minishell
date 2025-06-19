@@ -60,4 +60,5 @@ int			expand_tokens(t_ctx *ctx);
 void		*free_parser(t_ctx *ctx);
 int			remove_quotes(t_ctx *ctx);
 bool		ft_is_whitespace(char c);
+int			recognize_tokens(t_ctx *ctx);
 #endif

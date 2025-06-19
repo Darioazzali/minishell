@@ -3,4 +3,6 @@ output
 /expander
 /tokenizer
 /quote_removal
+/token_recognition
 expected/expander/test_pid
+.error

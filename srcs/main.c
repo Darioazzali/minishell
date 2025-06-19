@@ -35,6 +35,7 @@ int	main(void)
 				if (expand_tokens(ctx) == -1)
 					continue ;
 			remove_quotes(ctx);
+			recognize_tokens(ctx);
 			free(line);
 		}
 	}

@@ -1,0 +1,4 @@
+{
+  "input": "echo hello world | grep hello",
+  "expected": ["echo", "hello", "world", "|", "grep", "hello"]
+}

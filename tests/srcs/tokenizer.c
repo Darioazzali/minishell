@@ -14,26 +14,32 @@
 #include "parser.h"
 
 static void	print_tokens(t_list *tok_lst);
+static bool	confront_tokens(t_list *tok_lst, t_list *expected);
 
 int	main(int ac, char **av)
 {
-	t_ctx	*ctx;
-	FILE	*fp;
-	char	*line;
-	size_t	len;
+	t_ctx			*ctx;
+	t_list			*expected;
+	t_json_input_t	*input;
+	int				ret_val;
 
 	if (ac < 2)
 		return (-1);
 	ctx = init_ctx();
-	fp = fopen(av[1], "r");
-	if (!fp)
-		exit(1);
-	while ((getline(&line, &len, fp)) != -1)
+	input = read_json_input(av[1]);
+	if (!input)
+		return (1);
+	ret_val = 0;
+	if (input)
 	{
-		tokenize_line(ctx, strip_newline(line));
-		print_tokens(ctx->tokenizer->tokens);
+		if (tokenize_line(ctx, input->input_line) != 0)
+			return (1);
+		expected = from_array_to_ll(input->input_array, input->array_size);
+		if (!confront_tokens(ctx->tokenizer->tokens, expected))
+			ret_val = 1;
+		free_json_input(input);
 	}
-	fclose(fp);
+	return (ret_val);
 }
 
 static void	print_tokens(t_list *tok_lst)
@@ -46,4 +52,24 @@ static void	print_tokens(t_list *tok_lst)
 		printf("%s\n", (char *)current->content);
 		current = current->next;
 	}
+}
+
+static bool	confront_tokens(t_list *tok_lst, t_list *expected)
+{
+	char	*expected_str;
+	char	*tok_str;
+
+	while (tok_lst)
+	{
+		tok_str = (char *)tok_lst->content;
+		expected_str = (char *)expected->content;
+		if (strcmp(tok_str, expected_str))
+		{
+			printf("%s != %s\n", tok_str, expected_str);
+			return (false);
+		}
+		tok_lst = tok_lst->next;
+		expected = expected->next;
+	}
+	return (true);
 }

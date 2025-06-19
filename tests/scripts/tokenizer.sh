@@ -14,28 +14,22 @@
 _this_dir=$(dirname $0)
 source ${_this_dir}/../test_utils.sh
 input_dir=${_this_dir}/../input/tokenizer
-output_dir=${_this_dir}/../output/tokenizer
 tokenizer_bin=${_this_dir}/../tokenizer
-expected_dir=${_this_dir}/../expected/tokenizer
-expansion_tests=(${input_dir}/*)
+filename="${input_dir}/test.json"
+err_file="${_this_dir}/.error"
 tests_passed=0
 tests_failed=0
 
-mkdir -p $expected_dir $output_dir
-mkdir -p $expected_dir
 make -C $_this_dir/.. tokenizer >/dev/null
 
 make_test() {
+	local input=${1}
 	local filename=$(basename $1)
-	local output=${output_dir}/${filename}
-	local input=${input_dir}/${filename}
-	local expected=${expected_dir}/${filename}
 
-	./${tokenizer_bin} ${input} >${output} 2>/dev/null
-	if ! diff -U 3 ${expected} ${output}; then
-		test_fail "${filename}" "diff"
-		cat -en ${expected}
-		cat -en ${output}
+	./${tokenizer_bin} ${input} >${err_file}
+	if [[ $? -ne 0 ]]; then
+		test_fail "Tokenizer" ""
+		cat ${err_file}
 		tests_failed=$((tests_failed + 1))
 	else
 		test_pass "${filename}"
@@ -43,9 +37,8 @@ make_test() {
 	fi
 }
 
-for file in "${expansion_tests[@]}"; do
-	if [[ -f "$file" ]]; then
-		make_test "$file"
-	fi
-done
+make_test "${input_dir}/test.json"
+make_test "${input_dir}/test1.json"
+make_test "${input_dir}/test2.json"
+make_test "${input_dir}/test3.json"
 resume_test $tests_passed $tests_failed

@@ -37,7 +37,13 @@ test_fail() {
 test_pass() {
 	test_name=$1
 	description=$2
-	printf "${GREEN}${CHECKMARK}${NORMAL} ${test_name} - ${description}\n"
+	printf "${GREEN}${CHECKMARK}${NORMAL} ${test_name}"
+	if [[ $description ]]; then
+		printf " - ${description}\n"
+	else
+		printf "\n"
+	fi
+
 }
 
 resume_test() {

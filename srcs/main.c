@@ -48,6 +48,7 @@ int	main(void)
 		}
 	}
 	save_to_history_file(ctx->history);
+	free_history_struct(ctx->history);
 	rl_clear_history();
 	free_ctx(ctx);
 	return (0);

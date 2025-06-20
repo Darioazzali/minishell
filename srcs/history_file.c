@@ -6,7 +6,7 @@
 /*   By: aluque-v <aluque-v@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 08:59:40 by dazzali           #+#    #+#             */
-/*   Updated: 2025/06/20 09:08:50 by dazzali          ###   ########.fr       */
+/*   Updated: 2025/06/20 17:30:06 by dazzali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,17 +47,26 @@ void	load_history_from_file(t_history *hist)
 
 static int	process_line_from_file(t_history *hist, char *line)
 {
+	char	*new_line;
+	size_t	len;
+
 	if (is_empty_line(line))
 		return (1);
-	add_history(line);
+	len = ft_strlen(line);
+	if (line[len - 1] == '\n')
+		new_line = ft_substr(line, 0, len - 1);
+	else
+		new_line = ft_strdup(line);
+	add_history(new_line);
 	if (hist->count >= hist->capacity)
 	{
 		if (!resize_for_file_load(hist))
 			return (0);
 	}
-	hist->commands[hist->count] = ft_strdup(line);
+	hist->commands[hist->count] = ft_strdup(new_line);
 	if (hist->commands[hist->count])
 		hist->count++;
+	free(new_line);
 	return (1);
 }
 

@@ -1,6 +1,6 @@
 CC				=	cc
 CFLAGS			=	-Wall -Wextra -g
-LDFLAGS			=	-L $(MINISHELL_DIR) -lminishell -L $(LIBFT_DIR) -lft 
+LDFLAGS 		= -L $(MINISHELL_DIR) -lminishell -L $(LIBFT_DIR) -lft -lreadline
 BUILD_DIR		=	build
 SRCS_DIR		:=	srcs
 SRCS_FILES		:=	test.c 

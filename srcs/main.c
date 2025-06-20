@@ -63,6 +63,7 @@ static int	read_user_line(t_ctx *ctx)
 			if (expand_tokens(ctx) == -1)
 				continue ;
 			remove_quotes(ctx);
+			recognize_tokens(ctx);
 			free(line);
 		}
 		else

@@ -70,14 +70,13 @@ int			expand_tokens(t_ctx *ctx);
 void		*free_parser(t_ctx *ctx);
 int			remove_quotes(t_ctx *ctx);
 bool		ft_is_whitespace(char c);
-
 //History
 t_history	*init_history(void);
-void	add_to_history_struct(char *line, t_history *hist);
-void	free_history_struct(t_history *hist);
-void	save_to_history_file(t_history *hist);
-void	load_history_from_file(t_history *hist);
-int		expand_buffer(char **line, int *capacity);
-int		is_empty_line(char *line);
-
+void		add_to_history_struct(char *line, t_history *hist);
+void		free_history_struct(t_history *hist);
+void		save_to_history_file(t_history *hist);
+void		load_history_from_file(t_history *hist);
+int			expand_buffer(char **line, int *capacity);
+int			is_empty_line(char *line);
+int			recognize_tokens(t_ctx *ctx);
 #endif

@@ -43,8 +43,8 @@ SRCS_FILES		=	error.c \
 					history.c \
 					history_utils.c \
 					history_file.c \
-					string_utils.c
-
+					string_utils.c	\
+					token_recognizing.c
 HEADERS			=	$(INC_DIR)/minishell.h \
 					$(SRCS_DIR)/log.h \
 					$(SRCS_DIR)/parser.h

@@ -6,7 +6,7 @@
 /*   By: aluque-v <aluque-v@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 12:43:38 by aluque-v          #+#    #+#             */
-/*   Updated: 2025/06/19 12:43:45 by aluque-v         ###   ########.fr       */
+/*   Updated: 2025/06/20 09:16:11 by dazzali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,4 +56,3 @@ void	save_to_history_file(t_history *hist)
 	}
 	close (fd);
 }
-

@@ -36,6 +36,8 @@ void	*free_ctx(t_ctx *ctx)
 		return (NULL);
 	if (ctx->logger)
 		free(ctx->logger);
+	if (ctx->history)
+		free_history_struct(ctx->history);
 	free(ctx);
 	return (NULL);
 }

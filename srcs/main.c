@@ -15,40 +15,17 @@
 #include <readline/readline.h>
 
 static int	init_program(t_ctx **ctx);
+static int	read_user_line(t_ctx *ctx);
 
 int	main(void)
 {
-	char	*line;
 	t_ctx	*ctx;
-	
+
 	ctx = NULL;
 	if (!init_program(&ctx))
 		return (1);
-	while (1)
-	{
-		line = readline("> ");
-		if (line)
-		{
-			add_to_history_struct(line, ctx->history);
-			if (tokenize_line(ctx, line) == -1)
-			{
-				print_shell_error("error while parsing line");
-				free_parser(ctx);
-			}
-			else
-				if (expand_tokens(ctx) == -1)
-					continue ;
-			remove_quotes(ctx);
-			free(line);
-		}
-		else //Ctrl + D
-		{
-			printf("exit\n");
-			break;
-		}
-	}
+	read_user_line(ctx);
 	save_to_history_file(ctx->history);
-	free_history_struct(ctx->history);
 	rl_clear_history();
 	free_ctx(ctx);
 	return (0);
@@ -66,4 +43,33 @@ static int	init_program(t_ctx **ctx)
 		return (0);
 	}
 	return (1);
+}
+
+static int	read_user_line(t_ctx *ctx)
+{
+	char	*line;
+
+	while (1)
+	{
+		line = readline("> ");
+		if (line)
+		{
+			add_to_history_struct(line, ctx->history);
+			if (tokenize_line(ctx, line) == -1)
+			{
+				print_shell_error("error while parsing line");
+				continue ;
+			}
+			if (expand_tokens(ctx) == -1)
+				continue ;
+			remove_quotes(ctx);
+			free(line);
+		}
+		else
+		{
+			printf("exit\n");
+			break ;
+		}
+	}
+	return (0);
 }

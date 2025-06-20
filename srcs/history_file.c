@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   history_file.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aluque-v <aluque-v@student.42barcelon      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/06/20 08:59:40 by dazzali           #+#    #+#             */
+/*   Updated: 2025/06/20 09:08:50 by dazzali          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-static char	*read_line_from_fd(int fd);
+// static char	*read_line_from_fd(int fd);
 static int	process_line_from_file(t_history *hist, char *line);
 static int	resize_for_file_load(t_history *hist);
 
@@ -19,15 +31,16 @@ void	load_history_from_file(t_history *hist)
 		perror("Error opening history file");
 		return ;
 	}
-	while ((line = read_line_from_fd(fd)) != NULL)
+	line = get_next_line(fd);
+	while ((line) != NULL)
 	{
 		if (!process_line_from_file(hist, line))
 		{
-			free(line);
 			close(fd);
-			return ;
+			return (free(line));
 		}
 		free(line);
+		line = get_next_line(fd);
 	}
 	close(fd);
 }
@@ -50,7 +63,7 @@ static int	process_line_from_file(t_history *hist, char *line)
 
 static int	resize_for_file_load(t_history *hist)
 {
-	char **tmp;
+	char	**tmp;
 
 	if (hist->capacity == 0)
 		hist->capacity = INITIAL_CAPACITY;
@@ -63,44 +76,44 @@ static int	resize_for_file_load(t_history *hist)
 	return (1);
 }
 
-static char	*read_line_from_fd(int fd)
-{
-	char	*line;
-	char	buffer;
-	int		len;
-	int		capacity;
-
-	len = 0;
-	capacity = 64;
-	line = malloc(capacity + 1);
-	if (!line)
-		return (NULL);
-	while (read(fd, &buffer, 1) > 0)
-	{
-		if (buffer == '\n')
-			break;
-		if (len >= capacity)
-		{
-			if (!expand_buffer(&line, &capacity))
-				return (NULL);
-		}
-		line[len] = buffer;
-		len++;
-	}
-	line[len] = '\0';
-	if (len == 0)
-	{
-		free(line);
-		return (NULL);
-	}
-	return (line);
-}
+// static char	*read_line_from_fd(int fd)
+// {
+// 	char	*line;
+// 	char	buffer;
+// 	int		len;
+// 	int		capacity;
+//
+// 	len = 0;
+// 	capacity = 64;
+// 	line = malloc(64 + 1);
+// 	if (!line)
+// 		return (NULL);
+// 	while (read(fd, &buffer, 1) > 0)
+// 	{
+// 		if (buffer == '\n')
+// 			break ;
+// 		if (len >= capacity)
+// 		{
+// 			if (!expand_buffer(&line, &capacity))
+// 				return (NULL);
+// 		}
+// 		line[len] = buffer;
+// 		len++;
+// 	}
+// 	line[len] = '\0';
+// 	if (len == 0)
+// 	{
+// 		free(line);
+// 		return (NULL);
+// 	}
+// 	return (line);
+// }
 
 int	is_empty_line(char *line)
 {
 	int	i;
 
-	if(!line)
+	if (!line)
 		return (1);
 	i = 0;
 	while (line[i])

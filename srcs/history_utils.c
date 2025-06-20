@@ -1,11 +1,23 @@
+/* ************************************************************************** */
+/*																			  */
+/*														  :::	   ::::::::   */
+/*	 history_utils.c									:+:		 :+:	:+:   */
+/*													  +:+ +:+		  +:+	  */
+/*	 By: aluque-v <aluque-v@student.42barcelon		+#+  +:+	   +#+		  */
+/*												  +#+#+#+#+#+	+#+			  */
+/*	 Created: 2025/06/20 08:58:29 by dazzali		   #+#	  #+#			  */
+/*	 Updated: 2025/06/20 08:58:44 by dazzali		  ###	########.fr		  */
+/*																			  */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 static int	is_duplicate_command(t_history *hist, char *line)
 {
 	if (hist->count > 0 && hist->commands[hist->count - 1])
 	{
-		if (!ft_strncmp(hist->commands[hist->count - 1], line, 
-			ft_strlen(line)))
+		if (!ft_strncmp(hist->commands[hist->count - 1], line,
+				ft_strlen(line)))
 			return (1);
 	}
 	return (0);
@@ -13,7 +25,7 @@ static int	is_duplicate_command(t_history *hist, char *line)
 
 static int	resize_history_array(t_history *hist)
 {
-	char **tmp;
+	char	**tmp;
 
 	if (hist->capacity == 0)
 		hist->capacity = INITIAL_CAPACITY;
@@ -64,7 +76,7 @@ void	free_history_struct(t_history *hist)
 
 int	expand_buffer(char **line, int *capacity)
 {
-	char *tmp;
+	char	*tmp;
 
 	*capacity = *capacity * 2;
 	tmp = ft_realloc(*line, *capacity + 1);
@@ -76,4 +88,3 @@ int	expand_buffer(char **line, int *capacity)
 	*line = tmp;
 	return (1);
 }
-

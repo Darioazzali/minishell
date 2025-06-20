@@ -7,3 +7,4 @@ compile_commands.json
 /log*
 libminishell.a
 .build_config
+.minishell_history

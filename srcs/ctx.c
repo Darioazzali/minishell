@@ -26,7 +26,7 @@ t_ctx	*init_ctx(void)
 		return (NULL);
 	}
 	ctx->pid = getpid();
-	ctx->last_exit_code = 0;
+	ctx->exit_status = 0;
 	return (ctx);
 }
 
@@ -36,6 +36,8 @@ void	*free_ctx(t_ctx *ctx)
 		return (NULL);
 	if (ctx->logger)
 		free(ctx->logger);
+	if (ctx->history)
+		free_history_struct(ctx->history);
 	free(ctx);
 	return (NULL);
 }

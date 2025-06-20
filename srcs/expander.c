@@ -81,7 +81,7 @@ static char	*handle_shell_parameter(t_expander *expander)
 	if (*expander->cursor == '$')
 		ret = ft_itoa(expander->ctx->pid);
 	else if (*expander->cursor == '?')
-		ret = ft_itoa(expander->ctx->last_exit_code);
+		ret = ft_itoa(expander->ctx->exit_status);
 	else if (*expander->cursor == '0')
 		ret = (ft_strdup("minishell"));
 	else if (ft_isdigit(*expander->cursor))

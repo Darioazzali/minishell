@@ -1,9 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ast_parser.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aluque-v <aluque-v@student.42barcelon      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/06/26 11:07:04 by aluque-v          #+#    #+#             */
+/*   Updated: 2025/06/26 11:07:09 by aluque-v         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "parser.h"
 
 static t_ast_node	*parse_logical(t_list **current);
 static t_ast_node	*parse_pipeline(t_list **current);
 static t_ast_node	*parse_command(t_list **current);
 static t_ast_node	*create_node(t_ast_type type, char *value);
+static char			**list_to_array(t_list *lst);
 
 t_ast_node	*build_ast(t_ctx *ctx)
 {
@@ -12,7 +25,7 @@ t_ast_node	*build_ast(t_ctx *ctx)
 	return (parse_logical(&current));
 }
 
-static t_ast_node	*parse_logical(t_list **curent)
+static t_ast_node	*parse_logical(t_list **current)
 {
 	t_ast_node	*left;
 	t_ast_node	*node;
@@ -33,7 +46,7 @@ static t_ast_node	*parse_logical(t_list **curent)
 	return (left);
 }
 
-static t_ast_node	*parse_pipeline(t_list **curent)
+static t_ast_node	*parse_pipeline(t_list **current)
 {
 	t_ast_node	*left;
 	t_ast_node	*node;
@@ -72,7 +85,7 @@ static t_ast_node	*parse_command(t_list **current)
 		token = (t_token *)(*current)->content;
 		if (token->type != TOK_WORD)
 			break ;
-		ft_lstaddback(&args, ft_lstnew(ft_strdup(token->value)));
+		ft_lstadd_back(&args, ft_lstnew(ft_strdup(token->value)));
 		*current = (*current)->next;
 	}
 	if (args)
@@ -95,7 +108,7 @@ static t_ast_node	*create_node(t_ast_type type, char *value)
 	return (node);
 }
 
-char **list_to_array (t_list *lst)
+static char	**list_to_array(t_list *lst)
 {
 	int		size;
 	char	**array;

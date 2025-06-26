@@ -34,6 +34,22 @@ typedef enum e_tok_type
 	TOK_WORD,
 }	t_tok_type;
 
+typedef enum e_ast_type
+{
+	AST_LOGICAL,
+	AST_PIPELINE,
+	AST_COMMAND
+}	t_ast_type;
+
+typedef struct s_ast_node
+{
+	t_ast_type	type;
+	char		*value;
+	char		**args;
+	struct	s_ast_node	*left;
+	struct	s_ast_node	*right;
+}	t_ast_node;
+
 typedef struct s_parser
 {
 	t_parser_mode	mode;
@@ -77,4 +93,5 @@ int			expand_err_code(t_expander *expander, t_expander_error exp_err,
 int			add_token(t_ctx *ctx, char *start, char *end);
 char		*handle_metachar(t_ctx *ctx, char *line);
 bool		is_metachar(char *c);
+t_ast_node	*build_ast(t_ctx *ctx);
 #endif

@@ -28,23 +28,26 @@ LMINISHELL		=	libminishell.a
 LDFLAGS			=	-lreadline -L$(LIBFT_DIR) -lft
 
 #Source files
-SRCS_FILES		=	error.c \
-					logger.c \
-					conversion.c \
-					tokenizer.c \
-					tokenizer2.c \
-					ctx.c \
-					parser_debug.c \
-					parser.c	\
-					expand.c	\
-					expander.c	\
-					expander2.c	\
-					quote_removal.c \
-					history.c \
-					history_utils.c \
-					history_file.c \
+SRCS_FILES		=	error.c			\
+					logger.c		\
+					conversion.c	\
+					tokenizer.c		\
+					tokenizer2.c	\
+					ctx.c			\
+					parser_debug.c	\
+					parser.c		\
+					expand.c		\
+					expander.c		\
+					expander2.c		\
+					quote_removal.c	\
+					history.c		\
+					history_utils.c	\
+					history_file.c	\
 					string_utils.c	\
+					ast_parser.c	\
+					ast_debug.c	\
 					token_recognizing.c
+
 HEADERS			=	$(INC_DIR)/minishell.h \
 					$(SRCS_DIR)/log.h \
 					$(SRCS_DIR)/parser.h

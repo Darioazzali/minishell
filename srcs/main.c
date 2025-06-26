@@ -65,6 +65,14 @@ static int	read_user_line(t_ctx *ctx)
 			remove_quotes(ctx);
 			recognize_tokens(ctx);
 			ast_root = build_ast(ctx);
+			if (!ast_root)
+			{
+				log_error(ctx->logger, "AST construction failed");
+				continue ;
+			}
+			log_debug(ctx->logger, "AST ready for execution");
+
+			free_ast_node(ast_root);
 			free(line);
 		}
 		else

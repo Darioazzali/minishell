@@ -45,6 +45,7 @@ SRCS_FILES		=	error.c			\
 					history_file.c	\
 					string_utils.c	\
 					ast_parser.c	\
+					ast_debug.c	\
 					token_recognizing.c
 
 HEADERS			=	$(INC_DIR)/minishell.h \

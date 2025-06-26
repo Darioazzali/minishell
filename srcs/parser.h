@@ -82,6 +82,7 @@ typedef struct s_expander
 
 char		*deb_format_tokens(t_list *lst);
 char		*deb_format_tokens_type(t_list *lst);
+char		*deb_ast_to_string(t_ast_node *node);
 char		*get_token_type_str(t_tok_type tok);
 int			init_expander(t_expander *expander, t_ctx *ctx, const char *token);
 int			join_until_cursor(t_expander *expander);
@@ -94,4 +95,7 @@ int			add_token(t_ctx *ctx, char *start, char *end);
 char		*handle_metachar(t_ctx *ctx, char *line);
 bool		is_metachar(char *c);
 t_ast_node	*build_ast(t_ctx *ctx);
+void		free_ast_node(t_ast_node *node);
+char		*deb_ast_to_string(t_ast_node *node);
+
 #endif

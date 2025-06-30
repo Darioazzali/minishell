@@ -13,10 +13,10 @@
 #include "minishell.h"
 #include "log.h"
 #include "parser.h"
-#include <readline/readline.h>
 
 static int	init_program(t_ctx **ctx);
 static int	read_user_line(t_ctx *ctx);
+
 int	main(void)
 {
 	t_ctx	*ctx;
@@ -49,6 +49,7 @@ static int	read_user_line(t_ctx *ctx)
 {
 	char		*line;
 	t_ast_node	*ast_root;
+
 	while (1)
 	{
 		line = readline("> ");
@@ -71,15 +72,11 @@ static int	read_user_line(t_ctx *ctx)
 				continue ;
 			}
 			log_debug(ctx->logger, "AST ready for execution");
-
 			free_ast_node(ast_root);
 			free(line);
 		}
 		else
-		{
-			printf("exit\n");
-			break ;
-		}
+			return (printf("exit\n"));
 	}
 	return (0);
 }

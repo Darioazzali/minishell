@@ -6,10 +6,9 @@
 /*   By: aluque-v <aluque-v@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 16:48:47 by aluque-v          #+#    #+#             */
-/*   Updated: 2025/06/26 16:48:50 by aluque-v         ###   ########.fr       */
+/*   Updated: 2025/06/30 17:10:06 by dazzali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "log.h"
 #include "parser.h"
@@ -22,12 +21,11 @@ static char			**list_to_array(t_list *lst);
 
 t_ast_node	*build_ast(t_ctx *ctx)
 {
-	t_list	*current;
-	t_ast_node	*ast; //debug
-	char		*debug_str; //debug
-	
-	log_debug(ctx->logger, "=== Starting AST construction ===");
+	t_list		*current;
+	t_ast_node	*ast;
+	char		*debug_str;
 
+	log_debug(ctx->logger, "=== Starting AST construction ===");
 	current = ctx->tokenizer->tokens;
 	if (!current)
 	{
@@ -58,7 +56,7 @@ static t_ast_node	*parse_logical(t_list **current)
 	left = parse_pipeline(current);
 	if (!left)
 		return (NULL);
-	while(*current)
+	while (*current)
 	{
 		token = (t_token *)(*current)->content;
 		if (token->type != TOK_AND && token->type != TOK_OR)
@@ -87,7 +85,7 @@ static t_ast_node	*parse_pipeline(t_list **current)
 	t_ast_node	*left;
 	t_ast_node	*node;
 	t_token		*token;
-	
+
 	left = parse_command(current);
 	if (!left)
 		return (NULL);
@@ -149,8 +147,8 @@ static t_ast_node	*parse_command(t_list **current)
 
 static t_ast_node	*create_node(t_ast_type type, char *value)
 {
-	t_ast_node *node;
-	
+	t_ast_node	*node;
+
 	node = malloc(sizeof(t_ast_node));
 	if (!node)
 		return (NULL);
@@ -167,7 +165,7 @@ static char	**list_to_array(t_list *lst)
 	int		size;
 	char	**array;
 	int		i;
-	
+
 	if (!lst)
 		return (NULL);
 	size = ft_lstsize(lst);
@@ -180,7 +178,7 @@ static char	**list_to_array(t_list *lst)
 		array[i] = ft_strdup((char *)lst->content);
 		if (!array[i])
 		{
-			while(--i >= 0)
+			while (--i >= 0)
 				free(array[i]);
 			free(array);
 			return (NULL);

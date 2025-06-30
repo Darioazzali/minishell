@@ -43,11 +43,11 @@ typedef enum e_ast_type
 
 typedef struct s_ast_node
 {
-	t_ast_type	type;
-	char		*value;
-	char		**args;
-	struct	s_ast_node	*left;
-	struct	s_ast_node	*right;
+	t_ast_type			type;
+	char				*value;
+	char				**args;
+	struct s_ast_node	*left;
+	struct s_ast_node	*right;
 }	t_ast_node;
 
 typedef struct s_parser

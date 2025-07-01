@@ -16,7 +16,7 @@
 
 static	void	print_tokens(t_list *tokens);
 
-int	main(int ac, char **av)
+int	main(int ac, char **av, char **env)
 {
 	t_ctx	*ctx;
 	t_list	*tok_lst;
@@ -27,7 +27,9 @@ int	main(int ac, char **av)
 
 	if (ac < 2)
 		return (-1);
+	ctx = NULL;
 	ctx = init_ctx();
+	ctx->envs = parse_envs(env);
 	tok_lst = NULL;
 	fp = fopen(av[1], "r");
 	if (!fp)

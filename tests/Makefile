@@ -20,6 +20,7 @@ DEBUG			?=	0
 EXPANDER		= expander
 TOKENIZER		= tokenizer
 EXPORT_BTIN		= export
+CD				= cd
 TOKEN_RECOGNITION		= token_recognition
 QUOTE_REMOVAL	= quote_removal
 LIBFT_DIR		= ../libft
@@ -28,13 +29,17 @@ UTILS			= $(BUILD_DIR)/test.o
 CFLAGS 			+= -I $(CJSON_DIR)
 OBJS            := $(patsubst $(SRCS_DIR)/%.c,$(BUILD_DIR)/%.o,$(SRCS))
 
-all: $(EXPANDER) $(TOKENIZER) $(QUOTE_REMOVAL) $(TOKEN_RECOGNITION) $(EXPORT_BTIN)
+all: $(EXPANDER) $(TOKENIZER) $(QUOTE_REMOVAL) $(TOKEN_RECOGNITION) $(EXPORT_BTIN) $(CD)
 
 $(EXPANDER):$(BUILD_DIR)/expander.o $(OBJS) $(CJSON_OBJ) $(LIBFT)
 	make -C .. libminishell.a DEBUG=$(DEBUG)
 	DEBUG=0 $(CC)  $< $(OBJS)  $(CJSON_OBJ) $(LDFLAGS)  -o $@
 
 $(TOKENIZER):$(BUILD_DIR)/tokenizer.o $(OBJS) $(CJSON_OBJ)  $(LIBFT)
+	make -C .. libminishell.a DEBUG=$(DEBUG)
+	$(CC)  $< $(OBJS) $(CJSON_OBJ) $(LDFLAGS)  -o $@
+
+$(CD):$(BUILD_DIR)/cd.o $(OBJS) $(CJSON_OBJ)  $(LIBFT)
 	make -C .. libminishell.a DEBUG=$(DEBUG)
 	$(CC)  $< $(OBJS) $(CJSON_OBJ) $(LDFLAGS)  -o $@
 
@@ -65,6 +70,7 @@ $(BUILD_DIR)/%.o: $(SRCS_DIR)/%.c $(HEADERS) Makefile
 	-I $(INC_DIR) \
 	-I $(MINISHELL_INC) \
 	-I $(MINISHELL_SRC) \
+	-I libs \
 	-c $< -o $@
 
 

@@ -21,13 +21,18 @@
 * 		 user friendly. We should understand if we can use errno
 */
 
-int	main(void)
+int	_builtin_pwd(void)
+{
+	return (_pwd());
+}
+
+int	_pwd(void)
 {
 	char	*pwd;
 	char	*msg;
 
 	pwd = getcwd(NULL, 0);
-	if (pwd == NULL)
+	if (!pwd)
 	{
 		msg = strerror(errno);
 		print_program_error("pwd", msg);

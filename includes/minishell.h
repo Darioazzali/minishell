@@ -6,7 +6,7 @@
 /*   By: dazzali <dazzali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 14:15:08 by dazzali           #+#    #+#             */
-/*   Updated: 2025/07/17 08:57:09 by dazzali          ###   ########.fr       */
+/*   Updated: 2025/07/18 10:30:15 by dazzali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ typedef struct s_ctx
 
 int				ltos(long usec, char *res);
 void			print_program_error(char *program_name, char *message);
+int				print_shell_error_ret_int(char *message, int errcode);
 void			print_error(char *message);
 void			print_shell_error(char *message);
 void			*print_shell_error_ret_null(char *message);
@@ -101,4 +102,7 @@ void			ft_lstremove_node(t_list **head,
 					t_list *node, void (*del)(void *));
 int				unset_builtin(t_envs **envs, char **keys);
 void			*free_envs(t_envs *envs);
+int				_built_chdir(int ac, const char **av, t_envs *envs);
+int				ft_strcmp(const char *s1, const char *s2);
+int				_pwd(void);
 #endif

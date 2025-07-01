@@ -16,6 +16,7 @@ void	print_program_error(char *program_name, char *message)
 {
 	if (!program_name)
 		return ;
+	print_error("minishell: ");
 	print_error(program_name);
 	print_error(": ");
 	if (message)
@@ -52,4 +53,15 @@ void	*print_shell_error_ret_null(char *message)
 		print_error("A generic error occurred");
 	print_error("\n");
 	return (NULL);
+}
+
+int	print_shell_error_ret_int(char *message, int errcode)
+{
+	print_error("minishell: ");
+	if (message)
+		print_error(message);
+	else
+		print_error("A generic error occurred");
+	print_error("\n");
+	return (errcode);
 }

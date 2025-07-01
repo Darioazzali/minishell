@@ -77,6 +77,7 @@ typedef struct s_expander
 	char				*start;
 	char				*expanded;	
 	t_expander_error	err;
+	t_envs				*envs;
 	t_ctx				*ctx;
 }	t_expander;
 

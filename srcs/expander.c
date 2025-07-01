@@ -20,6 +20,7 @@ int	init_expander(t_expander *expander, t_ctx *ctx, const char *token)
 	expander->cursor = (char *)token;
 	expander->start = expander->cursor;
 	expander->expanded = ft_strdup("");
+	expander->envs = ctx->envs;
 	if (!expander->expanded)
 		return (-1);
 	expander->err = EXP_NO_ERROR;
@@ -66,7 +67,7 @@ char	*expand_shell_param(t_expander *expander)
 		tmp = ft_substr(expander->start, 0, expander->cursor - expander->start);
 		if (!tmp)
 			expand_err_null(expander, EXP_ERR_MALLOC);
-		ret = getenv(tmp);
+		ret = ft_strdup(get_env(expander->envs, tmp));
 		free(tmp);
 	}
 	if (!ret)

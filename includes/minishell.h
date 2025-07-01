@@ -5,9 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: dazzali <dazzali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/05 16:12:17 by dazzali           #+#    #+#             */
-
-/*   Updated: 2025/06/15 18:09:15 by aluque-v         ###   ########.fr       */
+/*   Created: 2025/07/01 14:15:08 by dazzali           #+#    #+#             */
+/*   Updated: 2025/07/01 15:16:11 by dazzali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +33,8 @@
 
 typedef struct s_log_ctx	t_log_ctx;
 typedef struct s_parser		t_parser;
+typedef struct s_env		t_env;
+typedef t_list				t_envs;
 
 typedef struct s_history
 {
@@ -55,28 +56,33 @@ typedef struct s_ctx
 	t_parser		*tokenizer;
 	int				pid;
 	t_history		*history;
+	t_envs			*envs;
 	int				exit_status;
 }	t_ctx;
 
-int			ltos(long usec, char *res);
-void		print_program_error(char *program_name, char *message);
-void		print_error(char *message);
-void		print_shell_error(char *message);
-t_log_ctx	*init_logger(t_log_level level);
-void		*free_ctx(t_ctx *ctx);
-t_ctx		*init_ctx(void);
-int			tokenize_line(t_ctx *ctx, const char *line);
-int			expand_tokens(t_ctx *ctx);
-void		*free_parser(t_ctx *ctx);
-int			remove_quotes(t_ctx *ctx);
-bool		ft_is_whitespace(char c);
+int				ltos(long usec, char *res);
+void			print_program_error(char *program_name, char *message);
+void			print_error(char *message);
+void			print_shell_error(char *message);
+t_log_ctx		*init_logger(t_log_level level);
+void			*free_ctx(t_ctx *ctx);
+t_ctx			*init_ctx(void);
+int				tokenize_line(t_ctx *ctx, const char *line);
+int				expand_tokens(t_ctx *ctx);
+void			*free_parser(t_ctx *ctx);
+int				remove_quotes(t_ctx *ctx);
+bool			ft_is_whitespace(char c);
 //History
-t_history	*init_history(void);
-void		add_to_history_struct(char *line, t_history *hist);
-void		free_history_struct(t_history *hist);
-void		save_to_history_file(t_history *hist);
-void		load_history_from_file(t_history *hist);
-int			expand_buffer(char **line, int *capacity);
-int			is_empty_line(char *line);
-int			recognize_tokens(t_ctx *ctx);
+t_history		*init_history(void);
+void			add_to_history_struct(char *line, t_history *hist);
+void			free_history_struct(t_history *hist);
+void			save_to_history_file(t_history *hist);
+void			load_history_from_file(t_history *hist);
+int				expand_buffer(char **line, int *capacity);
+int				is_empty_line(char *line);
+int				recognize_tokens(t_ctx *ctx);
+void			print_envs(t_envs *envs);
+t_envs			*parse_envs(char **str);
+const char		*get_env(t_envs *envs, char *name);
+int				set_env(t_envs *envs, char *name, char *value);
 #endif

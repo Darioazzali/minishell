@@ -6,7 +6,7 @@
 /*   By: dazzali <dazzali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 14:15:08 by dazzali           #+#    #+#             */
-/*   Updated: 2025/07/01 15:16:11 by dazzali          ###   ########.fr       */
+/*   Updated: 2025/07/02 10:35:06 by dazzali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,12 @@
 
 typedef struct s_log_ctx	t_log_ctx;
 typedef struct s_parser		t_parser;
-typedef struct s_env		t_env;
+typedef struct s_env
+{
+	char	*name;
+	char	*value;
+	bool	exported;
+}	t_env;
 typedef t_list				t_envs;
 
 typedef struct s_history
@@ -81,8 +86,10 @@ void			load_history_from_file(t_history *hist);
 int				expand_buffer(char **line, int *capacity);
 int				is_empty_line(char *line);
 int				recognize_tokens(t_ctx *ctx);
-void			print_envs(t_envs *envs);
+void			print_shell_vars(t_envs *envs);
 t_envs			*parse_envs(char **str);
-const char		*get_env(t_envs *envs, char *name);
-int				set_env(t_envs *envs, char *name, char *value);
+char			*get_shell_var_value(t_envs *envs, char *name);
+t_env			*get_shell_var(t_envs *envs, char *name);
+int				set_shell_var(t_envs *envs, char *name, char *value);
+void			_export(t_envs *envs, char *name, char *value);
 #endif

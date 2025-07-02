@@ -47,11 +47,12 @@ t_env	*parse_env(char *str)
 	tmp = ft_split(str, '=');
 	env->name = tmp[0];
 	env->value = tmp[1];
+	env->exported = true;
 	free(tmp);
 	return (env);
 }
 
-void	print_envs(t_envs *envs)
+void	print_shell_vars(t_envs *envs)
 {
 	t_list	*tmp;
 	t_env	*env;
@@ -66,7 +67,7 @@ void	print_envs(t_envs *envs)
 	}
 }
 
-const char	*get_env(t_envs *envs, char *name)
+char	*get_shell_var_value(t_envs *envs, char *name)
 {
 	t_list	*tmp;
 	t_env	*env;
@@ -82,23 +83,17 @@ const char	*get_env(t_envs *envs, char *name)
 	return (NULL);
 }
 
-int	set_env(t_envs *envs, char *name, char *value)
+int	set_shell_var(t_envs *envs, char *name, char *value)
 {
-	t_list	*tmp;
-	t_env	*env;
+	char	*tmp;
 	t_env	*new;
 	t_list	*node;
 
-	tmp = envs;
-	while (tmp)
+	tmp = get_shell_var_value(envs, name);
+	if (tmp)
 	{
-		env = tmp->content;
-		if (ft_strncmp(env->name, name, ft_strlen(name)) == 0)
-		{
-			env->value = value;
-			return (0);
-		}
-		tmp = tmp->next;
+		tmp = value;
+		return (0);
 	}
 	new = malloc(sizeof(t_env));
 	if (!new)

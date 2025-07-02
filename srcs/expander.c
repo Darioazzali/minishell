@@ -67,7 +67,7 @@ char	*expand_shell_param(t_expander *expander)
 		tmp = ft_substr(expander->start, 0, expander->cursor - expander->start);
 		if (!tmp)
 			expand_err_null(expander, EXP_ERR_MALLOC);
-		ret = ft_strdup(get_env(expander->envs, tmp));
+		ret = ft_strdup(get_shell_var_value(expander->envs, tmp));
 		free(tmp);
 	}
 	if (!ret)

@@ -12,10 +12,6 @@
 
 #include "minishell.h"
 
-typedef struct s_env
-{
-	char	*name;
-	char	*value;
-}	t_env;
-
 typedef t_list	t_envs;
+
+void	promote_var_to_env(t_envs *envs, char *name);

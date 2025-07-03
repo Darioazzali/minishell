@@ -6,7 +6,7 @@
 /*   By: dazzali <dazzali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 14:15:08 by dazzali           #+#    #+#             */
-/*   Updated: 2025/07/02 10:35:06 by dazzali          ###   ########.fr       */
+/*   Updated: 2025/07/03 09:09:06 by dazzali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,10 +86,11 @@ void			load_history_from_file(t_history *hist);
 int				expand_buffer(char **line, int *capacity);
 int				is_empty_line(char *line);
 int				recognize_tokens(t_ctx *ctx);
-void			print_shell_vars(t_envs *envs);
+void			print_shell_vars(t_envs *envs, bool env);
 t_envs			*parse_envs(char **str);
 char			*get_shell_var_value(t_envs *envs, char *name);
 t_env			*get_shell_var(t_envs *envs, char *name);
 int				set_shell_var(t_envs *envs, char *name, char *value);
-void			_export(t_envs *envs, char *name, char *value);
+void			_export_var(t_envs *envs, char *name, char *value);
+void			_export(char **av, t_envs *envs);
 #endif

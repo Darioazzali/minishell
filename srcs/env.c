@@ -58,7 +58,11 @@ static t_env	*parse_env_str(char *str)
 	return (env);
 }
 
-void	print_shell_vars(t_envs *envs)
+/** @brief print the shell variables
+ *	Print the environment variables in the format name=value
+ *	for debugging purposes
+ * */
+void	print_vars(t_envs *envs, bool only_envs)
 {
 	t_list	*tmp;
 	t_env	*env;
@@ -68,7 +72,10 @@ void	print_shell_vars(t_envs *envs)
 	while (tmp)
 	{
 		env = tmp->content;
-		printf("%s=%s\n", env->name, env->value);
+		if (only_envs && env->exported)
+			printf("%s=%s\n", env->name, env->value);
+		else if (!only_envs)
+			printf("%s=%s\n", env->name, env->value);
 		tmp = tmp->next;
 	}
 }

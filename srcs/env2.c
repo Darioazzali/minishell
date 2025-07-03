@@ -6,12 +6,15 @@
 /*   By: dazzali <dazzali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 09:59:05 by dazzali           #+#    #+#             */
-/*   Updated: 2025/07/02 10:19:39 by dazzali          ###   ########.fr       */
+/*   Updated: 2025/07/03 08:30:01 by dazzali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "env.h"
 
+/**
+ * @brief Set the env variable exported.
+ * */
 void	set_env_from_shell_var(t_envs *envs, char *name)
 {
 	t_list	*tmp;

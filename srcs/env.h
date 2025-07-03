@@ -15,3 +15,4 @@
 typedef t_list	t_envs;
 
 void	promote_var_to_env(t_envs *envs, char *name);
+void	print_vars(t_envs *envs, bool only_envs);

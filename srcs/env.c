@@ -12,8 +12,11 @@
 
 #include "env.h"
 
-t_env	*parse_env(char *str);
+static t_env	*parse_env_str(char *str);
 
+/** @brief parse the envs string.
+ *	Parse the environment variables string into a t_envs list.
+ * */
 t_envs	*parse_envs(char **str)
 {
 	char	**ptr;
@@ -25,7 +28,7 @@ t_envs	*parse_envs(char **str)
 	envs = NULL;
 	while (*ptr)
 	{
-		tmp = parse_env(*ptr);
+		tmp = parse_env_str(*ptr);
 		if (!tmp)
 		{
 			free(envs);
@@ -38,7 +41,10 @@ t_envs	*parse_envs(char **str)
 	return (envs);
 }
 
-t_env	*parse_env(char *str)
+/** @brief parse the env string
+ * Parse the environment variable string into a t_env struct.
+ * */
+static t_env	*parse_env_str(char *str)
 {
 	t_env	*env;
 	char	**tmp;
@@ -67,6 +73,11 @@ void	print_shell_vars(t_envs *envs)
 	}
 }
 
+/** @brief get shell var VALUE
+ * Get the Value of the shell variable with the given name.
+ * If the variable is not found, return NULL.
+ *
+ * */
 char	*get_shell_var_value(t_envs *envs, char *name)
 {
 	t_list	*tmp;
@@ -83,6 +94,13 @@ char	*get_shell_var_value(t_envs *envs, char *name)
 	return (NULL);
 }
 
+/** 
+ * @brief set shell var
+ *
+ * Set the value of the shell variable with the given name to the given value.
+ * If the variable already exists, its value is updated.
+ * @return 0 on success
+ * */
 int	set_shell_var(t_envs *envs, char *name, char *value)
 {
 	char	*tmp;

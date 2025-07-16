@@ -6,7 +6,7 @@
 /*   By: dazzali <dazzali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 14:15:08 by dazzali           #+#    #+#             */
-/*   Updated: 2025/07/03 09:09:06 by dazzali          ###   ########.fr       */
+/*   Updated: 2025/07/16 13:59:58 by dazzali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ int				ltos(long usec, char *res);
 void			print_program_error(char *program_name, char *message);
 void			print_error(char *message);
 void			print_shell_error(char *message);
+void			*print_shell_error_ret_null(char *message);
 t_log_ctx		*init_logger(t_log_level level);
 void			*free_ctx(t_ctx *ctx);
 t_ctx			*init_ctx(void);
@@ -86,11 +87,15 @@ void			load_history_from_file(t_history *hist);
 int				expand_buffer(char **line, int *capacity);
 int				is_empty_line(char *line);
 int				recognize_tokens(t_ctx *ctx);
-void			print_shell_vars(t_envs *envs, bool env);
+void			print_vars(t_envs *envs, bool env);
 t_envs			*parse_envs(char **str);
 char			*get_shell_var_value(t_envs *envs, char *name);
 t_env			*get_shell_var(t_envs *envs, char *name);
 int				set_shell_var(t_envs *envs, char *name, char *value);
 void			_export_var(t_envs *envs, char *name, char *value);
-void			_export(char **av, t_envs *envs);
+int				export_builtin(char **av, t_envs *envs);
+t_env			*parse_variable_assignment(char *str);
+void			ft_lstremove_node(t_list **head,
+					t_list *node, void (*del)(void *));
+int				unset_builtin(t_envs **envs, char **keys);
 #endif

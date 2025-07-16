@@ -12,65 +12,41 @@
 
 #include "env.h"
 
-static bool	is_valid_var(char *str);
-static bool	is_assignment(char *str);
-int			split_assignment(char *str, char **name, char **val);
+static int	_handle_assignment(char *arg, t_envs *envs);
 
-void	_export(char **av, t_envs *envs)
+/** @brief Export shell builtin
+ *
+ * Promote a shell variable to environment variable or define
+ * 			a new environment variable in the form
+ * 			KEY=VALUE
+ *
+ * 	@note. The export program accept:
+ * 	1. No argument -> The program print the environment variables
+ * 	2. One argument or more arguments -> 
+ * 		The program promote the shell variable to environment variable
+ * 		or if is in the form KEY=VALUE it will be define and then promoted
+ * 		as env.
+ * 	
+ * */
+int	export_builtin(char **av, t_envs *envs)
 {
-	char	*var_name;
-	char	*var_value;
+	int		status;
 
-	(void)av;
-	if (!av)
+	status = 0;
+	if (!av || !av[0])
 	{
 		print_vars(envs, true);
-		return ;
+		return (0);
 	}
 	while (*av)
 	{
-		if (is_assignment(*av))
-		{
-			if (split_assignment(*av, &var_name, &var_value) != 0)
-			{
-				print_shell_error(MALLOC_ERROR_MSG);
-				return ;
-			}
-			if (!is_valid_var(var_name))
-			{
-				free(var_name);
-				free(var_value);
-				print_shell_error("Invalid variable name");
-				return ;
-			}
-			_export_var(envs, var_name, var_value);
-		}
+		if (ft_strchr(*av, '='))
+			status |= _handle_assignment(*av, envs);
 		else
-		{
-			if (!is_valid_var(*av))
-				promote_var_to_env(envs, *av);
-			else
-				print_shell_error("Invalid variable name");
-		}
+			promote_var_to_env(envs, *av);
 		av++;
 	}
-}
-
-/** @brief check if the variable is valid
- *
- * Check if the variable name is valid being compliant with posix
- * */
-static bool	is_valid_var(char *str)
-{
-	if (!*str || ft_isdigit(*str))
-		return (false);
-	while (*str)
-	{
-		if (!ft_isalnum(*str) && *str != '_')
-			return (false);
-		str++;
-	}
-	return (true);
+	return (status);
 }
 
 void	_export_var(t_envs *envs, char *name, char *value)
@@ -85,36 +61,27 @@ void	_export_var(t_envs *envs, char *name, char *value)
 		if (env)
 		{
 			env->exported = true;
+			return ;
 		}
 	}
 	set_shell_var(envs, name, value);
 	promote_var_to_env(envs, name);
 }
 
-/** Check if the variable is an assignment */
-static bool	is_assignment(char *str)
+/** 
+ * @brief Handle assignment
+ *
+ * Handle the assignment of a variable in the form KEY=VALUE
+ * @return 1 on error and 0 on success
+ * */
+static int	_handle_assignment(char *arg, t_envs *envs)
 {
-	char	*equals;
+	t_env	*env;
 
-	equals = ft_strchr(str, '=');
-	if (!equals || equals == str)
-		return (false);
-	return (true);
-}
-
-int	split_assignment(char *str, char **name, char **val)
-{
-	int	eq_idx;
-
-	eq_idx = ft_strchr(str, '=') - str;
-	*name = ft_substr(str, 0, eq_idx);
-	if (!*name)
+	env = parse_variable_assignment(arg);
+	if (!env)
 		return (1);
-	*val = ft_substr(str, eq_idx + 1, ft_strlen(str));
-	if (!*val)
-	{
-		free(*name);
-		return (1);
-	}
+	_export_var(envs, env->name, env->value);
+	free_env(env);
 	return (0);
 }

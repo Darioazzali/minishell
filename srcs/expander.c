@@ -53,9 +53,10 @@ char	*expand_shell_param(t_expander *expander)
 {
 	char	*ret;
 	char	*tmp;
+	char	*val;
 
-	expander->cursor++;
-	expander->start = expander->cursor;
+	expander->start = ++expander->cursor;
+	ret = NULL;
 	if (*expander->cursor == '$' || *expander->cursor == '?'
 		|| *(expander->cursor + 1) == '\0' || ft_isdigit(*expander->cursor))
 		ret = handle_shell_parameter(expander);
@@ -67,12 +68,14 @@ char	*expand_shell_param(t_expander *expander)
 		tmp = ft_substr(expander->start, 0, expander->cursor - expander->start);
 		if (!tmp)
 			expand_err_null(expander, EXP_ERR_MALLOC);
-		ret = ft_strdup(get_shell_var_value(expander->envs, tmp));
+		val = get_shell_var_value(expander->envs, tmp);
+		if (val)
+			ret = ft_strdup(val);
 		free(tmp);
 	}
 	if (!ret)
 		return (ft_strdup(""));
-	return (ft_strdup(ret));
+	return (ret);
 }
 
 static char	*handle_shell_parameter(t_expander *expander)

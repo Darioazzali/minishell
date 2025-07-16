@@ -11,8 +11,11 @@
 /* ************************************************************************** */
 
 #include "env.h"
+#include "log.h"
 
 static t_env	*parse_env_str(char *str);
+static int		_env_mem_err(t_env *env);
+static t_env	*set_new_shell_var(char *name, char *value);
 
 /** @brief parse the envs string.
  *	Parse the environment variables string into a t_envs list.
@@ -50,55 +53,22 @@ static t_env	*parse_env_str(char *str)
 	char	**tmp;
 
 	env = malloc(sizeof(t_env));
+	if (!env)
+	{
+		print_shell_error(MALLOC_ERROR_MSG);
+		return (NULL);
+	}
 	tmp = ft_split(str, '=');
+	if (!tmp)
+	{
+		_env_mem_err(env);
+		return (NULL);
+	}
 	env->name = tmp[0];
 	env->value = tmp[1];
 	env->exported = true;
 	free(tmp);
 	return (env);
-}
-
-/** @brief print the shell variables
- *	Print the environment variables in the format name=value
- *	for debugging purposes
- * */
-void	print_vars(t_envs *envs, bool only_envs)
-{
-	t_list	*tmp;
-	t_env	*env;
-
-	tmp = envs;
-	printf("envs %p\n", envs);
-	while (tmp)
-	{
-		env = tmp->content;
-		if (only_envs && env->exported)
-			printf("%s=%s\n", env->name, env->value);
-		else if (!only_envs)
-			printf("%s=%s\n", env->name, env->value);
-		tmp = tmp->next;
-	}
-}
-
-/** @brief get shell var VALUE
- * Get the Value of the shell variable with the given name.
- * If the variable is not found, return NULL.
- *
- * */
-char	*get_shell_var_value(t_envs *envs, char *name)
-{
-	t_list	*tmp;
-	t_env	*env;
-
-	tmp = envs;
-	while (tmp)
-	{
-		env = tmp->content;
-		if (ft_strncmp(env->name, name, ft_strlen(name)) == 0)
-			return (env->value);
-		tmp = tmp->next;
-	}
-	return (NULL);
 }
 
 /** 
@@ -110,24 +80,58 @@ char	*get_shell_var_value(t_envs *envs, char *name)
  * */
 int	set_shell_var(t_envs *envs, char *name, char *value)
 {
-	char	*tmp;
+	t_env	*existing;
 	t_env	*new;
 	t_list	*node;
+	char	*new_value;
 
-	tmp = get_shell_var_value(envs, name);
-	if (tmp)
+	existing = get_shell_var(envs, name);
+	if (existing)
 	{
-		tmp = value;
+		new_value = ft_strdup(value);
+		if (!new_value)
+			return (1);
+		free(existing->value);
+		existing->value = value;
 		return (0);
 	}
-	new = malloc(sizeof(t_env));
+	new = set_new_shell_var(name, value);
 	if (!new)
+	{
 		return (1);
-	new->name = name;
-	new->value = value;
+	}
 	node = ft_lstnew(new);
 	if (!node)
-		return (1);
+		return (_env_mem_err(new));
 	ft_lstadd_back(&envs, node);
 	return (0);
+}
+
+static t_env	*set_new_shell_var(char *name, char *value)
+{
+	t_env	*new;
+
+	new = malloc(sizeof(t_env));
+	if (!new)
+		return (NULL);
+	new->name = ft_strdup(name);
+	if (!new->name)
+	{
+		_env_mem_err(new);
+		return (NULL);
+	}
+	new->value = ft_strdup(value);
+	if (!new->value)
+	{
+		_env_mem_err(new);
+		return (NULL);
+	}
+	return (new);
+}
+
+static int	_env_mem_err(t_env *env)
+{
+	print_error(MALLOC_ERROR_MSG);
+	free_env(env);
+	return (1);
 }

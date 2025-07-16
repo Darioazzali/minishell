@@ -49,7 +49,10 @@ SRCS_FILES		=	error.c			\
 					token_recognizing.c \
 					env.c			\
 					env2.c			\
-					export.c
+					export.c		\
+					variables.c		\
+					unset.c			\
+					lst_utils.c	
 
 HEADERS			=	$(INC_DIR)/minishell.h \
 					$(SRCS_DIR)/log.h \

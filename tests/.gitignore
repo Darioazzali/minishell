@@ -2,6 +2,7 @@
 output
 /expander
 /tokenizer
+/export
 /quote_removal
 /token_recognition
 expected/expander/test_pid

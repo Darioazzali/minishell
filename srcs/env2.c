@@ -6,32 +6,11 @@
 /*   By: dazzali <dazzali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 09:59:05 by dazzali           #+#    #+#             */
-/*   Updated: 2025/07/16 15:03:49 by dazzali          ###   ########.fr       */
+/*   Updated: 2025/07/16 15:55:38 by dazzali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "env.h"
-
-/**
- * @brief Set the env variable exported.
- * */
-void	set_env_from_shell_var(t_envs *envs, char *name)
-{
-	t_list	*tmp;
-	t_env	*env;
-
-	tmp = envs;
-	while (tmp)
-	{
-		env = tmp->content;
-		if (ft_strncmp(env->name, name, ft_strlen(name)) == 0)
-		{
-			env->exported = true;
-			return ;
-		}
-		tmp = tmp->next;
-	}
-}
 
 /**
 * @brief Returns the environment variable with the given name.

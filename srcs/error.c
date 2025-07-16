@@ -42,3 +42,14 @@ void	print_shell_error(char *message)
 		print_error("A generic error occurred");
 	print_error("\n");
 }
+
+void	*print_shell_error_ret_null(char *message)
+{
+	print_error("minishell: ");
+	if (message)
+		print_error(message);
+	else
+		print_error("A generic error occurred");
+	print_error("\n");
+	return (NULL);
+}

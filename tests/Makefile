@@ -19,6 +19,7 @@ DEBUG			?=	0
 # LOG_LEVEL	 	= 	0
 EXPANDER		= expander
 TOKENIZER		= tokenizer
+EXPORT_BTIN		= export
 TOKEN_RECOGNITION		= token_recognition
 QUOTE_REMOVAL	= quote_removal
 LIBFT_DIR		= ../libft
@@ -27,7 +28,7 @@ UTILS			= $(BUILD_DIR)/test.o
 CFLAGS 			+= -I $(CJSON_DIR)
 OBJS            := $(patsubst $(SRCS_DIR)/%.c,$(BUILD_DIR)/%.o,$(SRCS))
 
-all: $(EXPANDER) $(TOKENIZER) $(QUOTE_REMOVAL) $(TOKEN_RECOGNITION) 
+all: $(EXPANDER) $(TOKENIZER) $(QUOTE_REMOVAL) $(TOKEN_RECOGNITION) $(EXPORT_BTIN)
 
 $(EXPANDER):$(BUILD_DIR)/expander.o $(OBJS) $(CJSON_OBJ) $(LIBFT)
 	make -C .. libminishell.a DEBUG=$(DEBUG)
@@ -42,6 +43,10 @@ $(TOKEN_RECOGNITION):$(BUILD_DIR)/token_recognition.o $(OBJS) $(CJSON_OBJ) $(LIB
 	$(CC)  $< $(OBJS) $(CJSON_OBJ) $(LDFLAGS)  -o $@
 
 $(QUOTE_REMOVAL):$(BUILD_DIR)/quote_removal.o $(OBJS) $(CJSON_OBJ) $(LIBFT) force
+	make -C .. libminishell.a DEBUG=$(DEBUG)
+	$(CC)  $< $(OBJS) $(CJSON_OBJ) $(LDFLAGS)  -o $@
+
+$(EXPORT_BTIN):$(BUILD_DIR)/export.o $(OBJS) $(CJSON_OBJ) $(LIBFT) force
 	make -C .. libminishell.a DEBUG=$(DEBUG)
 	$(CC)  $< $(OBJS) $(CJSON_OBJ) $(LDFLAGS)  -o $@
 

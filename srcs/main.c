@@ -13,16 +13,18 @@
 #include "minishell.h"
 #include "log.h"
 #include "parser.h"
-#include <readline/readline.h>
 
-static int	init_program(t_ctx **ctx);
+static int	init_program(t_ctx **ctx, char **env);
 static int	read_user_line(t_ctx *ctx);
-int	main(void)
+
+int	main(int argc, char **argv, char **env)
 {
 	t_ctx	*ctx;
 
+	(void) argc;
+	(void) argv;
 	ctx = NULL;
-	if (!init_program(&ctx))
+	if (!init_program(&ctx, env))
 		return (1);
 	read_user_line(ctx);
 	save_to_history_file(ctx->history);
@@ -31,8 +33,10 @@ int	main(void)
 	return (0);
 }
 
-static int	init_program(t_ctx **ctx)
+static int	init_program(t_ctx **ctx, char **env)
 {
+	t_envs	*envs;
+
 	*ctx = init_ctx();
 	if (!*ctx)
 		return (0);
@@ -42,6 +46,18 @@ static int	init_program(t_ctx **ctx)
 		perror("Error: Couldn't initialize history\n");
 		return (0);
 	}
+	envs = parse_envs(env);
+	if (!envs)
+	{
+		free_ctx(*ctx);
+		return (0);
+	}
+	(*ctx)->envs = envs;
+	if (!(*ctx)->envs)
+	{
+		free_ctx(*ctx);
+		return (0);
+	}
 	return (1);
 }
 
@@ -49,6 +65,7 @@ static int	read_user_line(t_ctx *ctx)
 {
 	char		*line;
 	t_ast_node	*ast_root;
+
 	while (1)
 	{
 		line = readline("> ");
@@ -71,15 +88,11 @@ static int	read_user_line(t_ctx *ctx)
 				continue ;
 			}
 			log_debug(ctx->logger, "AST ready for execution");
-
 			free_ast_node(ast_root);
 			free(line);
 		}
 		else
-		{
-			printf("exit\n");
-			break ;
-		}
+			return (printf("exit\n"));
 	}
 	return (0);
 }

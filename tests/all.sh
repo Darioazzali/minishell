@@ -6,7 +6,7 @@
 #    By: dazzali <dazzali@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/06/05 17:30:24 by dazzali           #+#    #+#              #
-#    Updated: 2025/06/19 08:26:18 by dazzali          ###   ########.fr        #
+#    Updated: 2025/07/16 15:56:41 by dazzali          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,3 +27,4 @@ make_test "expansion"
 make_test "tokenizer"
 make_test "quote_removal"
 make_test "token_recognition"
+make_test "export"

@@ -46,7 +46,14 @@ SRCS_FILES		=	error.c			\
 					string_utils.c	\
 					ast_parser.c	\
 					ast_debug.c	\
-					token_recognizing.c
+					token_recognizing.c \
+					env.c			\
+					env2.c			\
+					env3.c			\
+					export.c		\
+					variables.c		\
+					unset.c			\
+					lst_utils.c	
 
 HEADERS			=	$(INC_DIR)/minishell.h \
 					$(SRCS_DIR)/log.h \
@@ -56,6 +63,7 @@ HEADERS			=	$(INC_DIR)/minishell.h \
 
 ECHO			=	echo
 PWD				=	pwd
+EXPORT				=	export
 BUILTIN_UTILS	=	$(ECHO) $(PWD)
 
 #Object files

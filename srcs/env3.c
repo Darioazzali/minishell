@@ -30,7 +30,7 @@ void	free_split_result(char **split_result)
 	int	i;
 
 	if (!split_result)
-		return;
+		return ;
 	i = 0;
 	while (split_result[i])
 	{

@@ -17,7 +17,10 @@ static int		_env_mem_err(t_env *env);
 static t_env	*set_new_shell_var(char *name, char *value);
 
 /** @brief parse the envs string.
- *	Parse the environment variables string into a t_envs list.
+ *	Parse the environment variables string format into a t_envs list.
+ *
+ *	@param str The string to parse from the **env** variable
+ *
  * */
 t_envs	*parse_envs(char **str)
 {
@@ -32,11 +35,13 @@ t_envs	*parse_envs(char **str)
 	{
 		tmp = parse_env_str(*ptr);
 		if (!tmp)
-		{
-			free(envs);
-			return (NULL);
-		}
+			return (free_envs(envs));
 		node = ft_lstnew(tmp);
+		if (!node)
+		{
+			free_env(tmp);
+			return (free_envs(envs));
+		}
 		ft_lstadd_back(&envs, node);
 		ptr++;
 	}
@@ -111,6 +116,11 @@ int	set_shell_var(t_envs *envs, char *name, char *value)
 	return (0);
 }
 
+/** @brief set new shell var
+ *
+ * Create a new t_env struct with the given name and value.
+ * */
+
 static t_env	*set_new_shell_var(char *name, char *value)
 {
 	t_env	*new;
@@ -130,6 +140,7 @@ static t_env	*set_new_shell_var(char *name, char *value)
 		_env_mem_err(new);
 		return (NULL);
 	}
+	new->exported = false;
 	return (new);
 }
 

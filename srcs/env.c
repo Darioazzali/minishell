@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "env.h"
-#include "log.h"
 
 static t_env	*parse_env_str(char *str);
 static int		_env_mem_err(t_env *env);
@@ -54,20 +53,25 @@ static t_env	*parse_env_str(char *str)
 
 	env = malloc(sizeof(t_env));
 	if (!env)
-	{
-		print_shell_error(MALLOC_ERROR_MSG);
-		return (NULL);
-	}
+		return (print_shell_error_ret_null(MALLOC_ERROR_MSG));
 	tmp = ft_split(str, '=');
 	if (!tmp)
 	{
 		_env_mem_err(env);
 		return (NULL);
 	}
-	env->name = tmp[0];
-	env->value = tmp[1];
+	env->name = ft_strdup(tmp[0]);
+	if (tmp[1])
+		env->value = ft_strdup(tmp[1]);
+	else
+		env->value = ft_strdup("");
 	env->exported = true;
-	free(tmp);
+	if (!env->name || !env->value)
+	{
+		free_env(env);
+		env = NULL;
+	}
+	free_split_result(tmp);
 	return (env);
 }
 
@@ -92,7 +96,7 @@ int	set_shell_var(t_envs *envs, char *name, char *value)
 		if (!new_value)
 			return (1);
 		free(existing->value);
-		existing->value = value;
+		existing->value = new_value;
 		return (0);
 	}
 	new = set_new_shell_var(name, value);

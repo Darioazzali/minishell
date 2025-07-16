@@ -49,6 +49,7 @@ SRCS_FILES		=	error.c			\
 					token_recognizing.c \
 					env.c			\
 					env2.c			\
+					env3.c			\
 					export.c		\
 					variables.c		\
 					unset.c			\

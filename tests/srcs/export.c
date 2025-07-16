@@ -6,7 +6,7 @@
 /*   By: dazzali <dazzali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 14:16:16 by dazzali           #+#    #+#             */
-/*   Updated: 2025/07/16 15:19:54 by dazzali          ###   ########.fr       */
+/*   Updated: 2025/07/16 15:37:56 by dazzali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ int	main(int argc, char **argv, char **env)
 	_make_test(&test_ret, test_2, "test_2", envs);
 	_make_test(&test_ret, test_unset, "test_unset", envs);
 	_make_test(&test_ret, test_edit, "test_edit", envs);
+	free_envs(envs);
 	return (test_ret);
 }
 
@@ -57,12 +58,12 @@ int	test_1(t_envs *envs)
 
 static int	test_2(t_envs *envs)
 {
-	char	*list[2]={"variable", NULL};
-	char	*key = "allora";
+	char	*key = "variable";
+	char	*list[2]={key, NULL};
 	char	*expected = "ciao";
 	t_env	*val;
 
-	set_shell_var(envs, "variable", "ciao");
+	set_shell_var(envs, key, "ciao");
 	export_builtin(list, envs);
 	val = get_shell_var(envs, key);
 	if (!val)

@@ -26,8 +26,6 @@ int	main(int argc, char **argv, char **env)
 	ctx = NULL;
 	if (!init_program(&ctx, env))
 		return (1);
-	print_vars(ctx->envs, 0);
-	print_vars(ctx->envs, 0);
 	read_user_line(ctx);
 	save_to_history_file(ctx->history);
 	rl_clear_history();

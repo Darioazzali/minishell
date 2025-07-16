@@ -6,7 +6,7 @@
 /*   By: dazzali <dazzali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 14:15:08 by dazzali           #+#    #+#             */
-/*   Updated: 2025/07/16 13:59:58 by dazzali          ###   ########.fr       */
+/*   Updated: 2025/07/16 15:38:30 by dazzali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,4 +98,5 @@ t_env			*parse_variable_assignment(char *str);
 void			ft_lstremove_node(t_list **head,
 					t_list *node, void (*del)(void *));
 int				unset_builtin(t_envs **envs, char **keys);
+void			*free_envs(t_envs *envs);
 #endif

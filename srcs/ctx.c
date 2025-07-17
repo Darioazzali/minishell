@@ -38,6 +38,8 @@ void	*free_ctx(t_ctx *ctx)
 		free(ctx->logger);
 	if (ctx->history)
 		free_history_struct(ctx->history);
+	if (ctx->envs)
+		free_envs(ctx->envs);
 	free(ctx);
 	return (NULL);
 }

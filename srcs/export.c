@@ -51,7 +51,7 @@ int	export_builtin(char **av, t_envs *envs)
 
 void	_export_var(t_envs *envs, char *name, char *value)
 {
-	t_env	*env;
+	t_sh_var	*env;
 
 	if (!name)
 		return ;
@@ -76,7 +76,7 @@ void	_export_var(t_envs *envs, char *name, char *value)
  * */
 static int	_handle_assignment(char *arg, t_envs *envs)
 {
-	t_env	*env;
+	t_sh_var	*env;
 
 	env = parse_variable_assignment(arg);
 	if (!env)

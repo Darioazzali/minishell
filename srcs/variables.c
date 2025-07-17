@@ -12,8 +12,29 @@
 
 #include "env.h"
 
-static int	_split_assignment(char *str, t_env **env);
+static int	_split_assignment(char *str, t_sh_var **env);
 static bool	_is_valid_var_name(char *str);
+
+/** @brief print the shell variables
+ *	Print the environment variables in the format name=value
+ *	for debugging purposes
+ * */
+void	print_vars(t_envs *envs, bool only_envs)
+{
+	t_list		*tmp;
+	t_sh_var	*env;
+
+	tmp = envs;
+	while (tmp)
+	{
+		env = tmp->content;
+		if (only_envs && env->exported)
+			printf("%s=%s\n", env->name, env->value);
+		else if (!only_envs)
+			printf("%s=%s\n", env->name, env->value);
+		tmp = tmp->next;
+	}
+}
 
 /** @brief parse the variable assignment
  *
@@ -24,13 +45,13 @@ static bool	_is_valid_var_name(char *str);
  * - invalid variable name
  * - invalid variable assignment
  * */
-t_env	*parse_variable_assignment(char *str)
+t_sh_var	*parse_variable_assignment(char *str)
 {
-	t_env	*res;
+	t_sh_var	*res;
 
 	if (!str)
 		return (NULL);
-	res = malloc(sizeof(t_env));
+	res = malloc(sizeof(t_sh_var));
 	if (!res)
 		return (print_shell_error_ret_null(MALLOC_ERROR_MSG));
 	res->name = NULL;
@@ -61,7 +82,7 @@ t_env	*parse_variable_assignment(char *str)
  * @note Can fail only if an allocation error occurs.
  *
  * */
-static int	_split_assignment(char *str, t_env **env)
+static int	_split_assignment(char *str, t_sh_var **env)
 {
 	int		eq_idx;
 	char	*key;
@@ -112,23 +133,4 @@ static bool	_is_valid_var_name(char *str)
 		ptr++;
 	}
 	return (true);
-}
-
-/** @brief free the environment
- *
- * Free the environment structure.
- *
- * @param env The environment
- *
- * */
-void	*free_env(t_env *env)
-{
-	if (!env)
-		return (NULL);
-	if (env->name)
-		free(env->name);
-	if (env->value)
-		free(env->value);
-	free(env);
-	return (NULL);
 }

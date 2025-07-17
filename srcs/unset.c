@@ -14,7 +14,7 @@
 
 static t_list	*_find_var_node(char *key, t_envs *envs);
 static void		_free_env_lst(void *content);
-static void		unset_env(t_envs **envs, char *key);
+static void		remove_shell_var(t_envs **envs, char *key);
 
 /** @brief unset the given keys from the environment
  *
@@ -32,19 +32,19 @@ int	unset_builtin(t_envs **envs, char **keys)
 	ptr = keys;
 	while (*ptr)
 	{
-		unset_env(envs, *ptr);
+		remove_shell_var(envs, *ptr);
 		ptr++;
 	}
 	return (0);
 }
 
-/** @brief Unset the environment variable
+/** @brief Remove a variable from the environment
  * 
- * Remove the environment variable with the given key from the environment list
+ * Remove the shell variable with the given key from the environment list
  * @param envs The environment list
  * @param key The key of the variable to unset
  * */
-static void	unset_env(t_envs **envs, char *key)
+static void	remove_shell_var(t_envs **envs, char *key)
 {
 	t_list	*found;
 
@@ -67,17 +67,17 @@ static void	unset_env(t_envs **envs, char *key)
  * */
 static t_list	*_find_var_node(char *key, t_envs *envs)
 {
-	t_list	*tmp;
-	t_env	*env;
-	size_t	key_len;
+	t_list		*tmp;
+	t_sh_var	*env;
+	size_t		len;
 
 	tmp = envs;
-	key_len = ft_strlen(key);
+	len = ft_strlen(key);
 	while (tmp)
 	{
 		env = tmp->content;
-		if (ft_strlen(env->name) == key_len
-			&& !ft_strncmp(env->name, key, key_len))
+		if (ft_strlen(env->name) == len
+			&& !ft_strncmp(env->name, key, len))
 			return (tmp);
 		tmp = tmp->next;
 	}
@@ -90,7 +90,7 @@ static t_list	*_find_var_node(char *key, t_envs *envs)
  * */
 static void	_free_env_lst(void *content)
 {
-	t_env	*env;
+	t_sh_var	*env;
 
 	env = content;
 	free_env(env);

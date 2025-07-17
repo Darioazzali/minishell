@@ -45,14 +45,15 @@ SRCS_FILES		=	error.c			\
 					history_file.c	\
 					string_utils.c	\
 					ast_parser.c	\
-					ast_debug.c	\
+					ast_debug.c		\
 					token_recognizing.c \
-					env.c			\
-					env2.c			\
-					env3.c			\
+					env_get_set.c	\
+					env_clean.c		\
+					env_parse.c		\
 					export.c		\
 					variables.c		\
 					unset.c			\
+					utils.c			\
 					lst_utils.c	
 
 HEADERS			=	$(INC_DIR)/minishell.h \

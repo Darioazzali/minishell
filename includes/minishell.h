@@ -6,7 +6,7 @@
 /*   By: dazzali <dazzali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 14:15:08 by dazzali           #+#    #+#             */
-/*   Updated: 2025/07/17 08:37:28 by dazzali          ###   ########.fr       */
+/*   Updated: 2025/07/17 08:57:09 by dazzali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,9 @@ void			save_to_history_file(t_history *hist);
 void			load_history_from_file(t_history *hist);
 int				expand_buffer(char **line, int *capacity);
 int				is_empty_line(char *line);
+void			free_split_result(char **split_result);
 int				recognize_tokens(t_ctx *ctx);
+//Envs
 void			print_vars(t_envs *envs, bool env);
 t_envs			*parse_envs(char **str);
 char			*get_shell_var_value(t_envs *envs, char *name);
@@ -99,5 +101,4 @@ void			ft_lstremove_node(t_list **head,
 					t_list *node, void (*del)(void *));
 int				unset_builtin(t_envs **envs, char **keys);
 void			*free_envs(t_envs *envs);
-void			free_split_result(char **split_result);
 #endif

@@ -49,7 +49,12 @@ void	*free_env(t_sh_var *var)
 	return (NULL);
 }
 
-int	_env_mem_err(t_sh_var *env)
+/** @brief Clean the shell variable memory and print an error message
+ *  Utility function to handle malloc errors for shell variables.
+ *
+ *  @return 1
+ * */
+int	_env_malloc_err(t_sh_var *env)
 {
 	print_error(MALLOC_ERROR_MSG);
 	free_env(env);

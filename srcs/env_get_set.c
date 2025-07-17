@@ -6,7 +6,7 @@
 /*   By: dazzali <dazzali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 09:59:05 by dazzali           #+#    #+#             */
-/*   Updated: 2025/07/17 08:48:02 by dazzali          ###   ########.fr       */
+/*   Updated: 2025/07/17 08:58:53 by dazzali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ int	set_shell_var(t_envs *envs, char *name, char *value)
 	}
 	node = ft_lstnew(new);
 	if (!node)
-		return (_env_mem_err(new));
+		return (_env_malloc_err(new));
 	ft_lstadd_back(&envs, node);
 	return (0);
 }
@@ -140,13 +140,13 @@ static t_sh_var	*set_new_shell_var(char *name, char *value)
 	new->name = ft_strdup(name);
 	if (!new->name)
 	{
-		_env_mem_err(new);
+		_env_malloc_err(new);
 		return (NULL);
 	}
 	new->value = ft_strdup(value);
 	if (!new->value)
 	{
-		_env_mem_err(new);
+		_env_malloc_err(new);
 		return (NULL);
 	}
 	new->exported = false;

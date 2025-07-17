@@ -6,7 +6,7 @@
 /*   By: dazzali <dazzali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 08:25:51 by dazzali           #+#    #+#             */
-/*   Updated: 2025/07/17 08:26:39 by dazzali          ###   ########.fr       */
+/*   Updated: 2025/07/17 08:58:53 by dazzali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ static t_sh_var	*parse_env_str(char *str)
 	tmp = ft_split(str, '=');
 	if (!tmp)
 	{
-		_env_mem_err(env);
+		_env_malloc_err(env);
 		return (NULL);
 	}
 	env->name = ft_strdup(tmp[0]);

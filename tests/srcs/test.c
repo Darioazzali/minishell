@@ -208,3 +208,19 @@ t_list	*from_array_to_ll(char **arr, int size)
 	}
 	return (lst);
 }
+
+void	test_fail(char *test_name, char *message)
+{
+	if (message)
+		fprintf(stderr, "%s %s: %s\n", R_BALLOT, test_name, message);
+	else
+		fprintf(stderr, "%s %s\n", R_BALLOT, test_name);
+}
+
+void	test_success(char *test_name, char *message)
+{
+	if (message)
+		printf("%s %s: %s\n", G_CHECKMARK, test_name, message);
+	else
+		printf("%s %s\n", G_CHECKMARK, test_name);
+}

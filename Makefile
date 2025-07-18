@@ -54,7 +54,9 @@ SRCS_FILES		=	error.c			\
 					variables.c		\
 					unset.c			\
 					utils.c			\
-					lst_utils.c	
+					lst_utils.c		\
+					cd.c			\
+					pwd.c
 
 HEADERS			=	$(INC_DIR)/minishell.h \
 					$(SRCS_DIR)/log.h \
@@ -63,9 +65,8 @@ HEADERS			=	$(INC_DIR)/minishell.h \
 #Built-ins utilities
 
 ECHO			=	echo
-PWD				=	pwd
 EXPORT				=	export
-BUILTIN_UTILS	=	$(ECHO) $(PWD)
+BUILTIN_UTILS	=	$(ECHO)
 
 #Object files
 SRCS			=	$(addprefix $(SRCS_DIR)/,$(SRCS_FILES))
@@ -118,11 +119,11 @@ $(ECHO):$(BUILD_DIR)/echo.o $(UTILS_OBJS)
 	@$(CC) $< $(UTILS_OBJS) $(LIBFT) $(LDFLAGS) -o $@
 	printf "$(GREEN)✅ Echo built$(RESET)\n"
 
-$(PWD):$(BUILD_DIR)/pwd.o $(UTILS_OBJS)
-	printf "$(YELLOW)🔨 Building pwd...$(RESET)\n"
-	@$(CC) $< $(UTILS_OBJS) $(LIBFT) $(LDFLAGS) -o $@
-	printf "$(GREEN)✅ Pwd built$(RESET)\n"
-
+# $(PWD):$(BUILD_DIR)/pwd.o $(UTILS_OBJS)
+# 	printf "$(YELLOW)🔨 Building pwd...$(RESET)\n"
+# 	@$(CC) $< $(UTILS_OBJS) $(LIBFT) $(LDFLAGS) -o $@
+# 	printf "$(GREEN)✅ Pwd built$(RESET)\n"
+#
 #Object files compilation
 $(BUILD_DIR)/%.o:$(SRCS_DIR)/%.c $(HEADERS) Makefile $(CONFIG_FILE)
 	@mkdir -p $(BUILD_DIR)

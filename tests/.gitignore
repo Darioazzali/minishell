@@ -3,6 +3,7 @@ output
 /expander
 /tokenizer
 /export
+/cd
 /quote_removal
 /token_recognition
 expected/expander/test_pid

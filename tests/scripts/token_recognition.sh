@@ -6,7 +6,7 @@
 #    By: dazzali <dazzali@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/06/16 17:01:31 by dazzali           #+#    #+#              #
-#    Updated: 2025/06/19 08:28:48 by dazzali          ###   ########.fr        #
+#    Updated: 2025/07/19 11:56:32 by dazzali          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -46,3 +46,7 @@ for file in "${token_recognition_tests[@]}"; do
 	fi
 done
 resume_test $tests_passed $tests_failed
+
+if [[ $tests_failed -gt 0 ]]; then
+	exit 1
+fi

@@ -37,25 +37,11 @@ pwd_test() {
 	compare_pwds
 	if [[ $? -ne 0 ]]; then
 		tests_failed=$((tests_failed + 1))
+		return 1
 	else
 		tests_passed=$((tests_passed + 1))
+		return 0
 	fi
-}
-
-pwd_no_existent_dir() {
-	mkdir -p "prova"
-	cd prova
-	_cwd=$(pwd)
-	rmdir $_cwd
-	pwd >/dev/null 2>&1
-	if [[ $? == 0 ]]; then
-		tests_failed=$((tests_failed + 1))
-		test_fail "No existent directory" "No existent directory does not return error"
-	else
-		tests_passed=$((tests_passed + 1))
-		test_pass "basic pwd" "basic"
-	fi
-	return "$diff_err_code"
 }
 
 pwd_no_existent_dir() {
@@ -89,3 +75,7 @@ pwd_test
 pwd_no_existent_dir
 resume_test $tests_passed $tests_failed
 clean_files
+
+if [[ $tests_failed -gt 0 ]]; then
+	exit 1
+fi

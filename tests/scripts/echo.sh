@@ -16,11 +16,11 @@ TEST_DIR="$ECHO_DIR/../"
 ROOT_DIR="$(dirname "$ECHO_DIR")/../.."
 ECHO="$ROOT_DIR/echo"
 source "$TEST_DIR/test_utils.sh"
-make -C $ROOT_DIR echo >/dev/null
+make -C $ROOT_DIR "echo" >/dev/null
 
 compare_echos() {
-	local original=$2
 	local ours=$1
+	local original=$2
 	$ECHO "$ours" >$ECHO_DIR/basic.txt
 	echo "$original" >$ECHO_DIR/basic_real.txt
 	diff "$ECHO_DIR/basic.txt" "$ECHO_DIR/basic_real.txt" >"$ECHO_DIR/.fail_res"
@@ -57,3 +57,7 @@ echo_test "-n hello" "-n hello"
 echo_test "$SHELL" "$SHELL"
 resume_test $tests_passed $tests_failed
 clean_up_files
+
+if [[ $tests_failed -gt 0 ]]; then
+	exit 1
+fi

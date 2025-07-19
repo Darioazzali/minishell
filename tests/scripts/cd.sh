@@ -34,3 +34,6 @@ builtin_cd() {
 tests_passed=0
 tests_failed=0
 builtin_cd
+if [[ $tests_failed -gt 0 ]]; then
+	exit 1
+fi

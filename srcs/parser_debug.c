@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "parser.h"
+#include "debug.h"
 
 static t_token	*extract_token(t_list *lst);
 static char		*format_token_struct(t_list *tok);
@@ -80,26 +81,30 @@ char	*get_token_type_str(t_tok_type tok)
 		return ("OR");
 	if (tok == TOK_AND)
 		return ("AND");
-	else
-		return ("TOK_WORD");
+	return ("TOK_WORD");
 }
 
 static char	*format_token_struct(t_list *tok)
 {
-	char	*ret;
-	char	*tmp;
+	t_buffer_ctx	ctx;
+	t_token			*token;
+	char			*formatted;
+	int				total_len;
 
-	ret = ft_strdup("{\n");
-	tmp = ret;
-	ret = ft_strjoin(tmp, extract_token(tok)->value);
-	ret = ft_strjoin(ret, "\n");
-	ret = ft_strjoin(ret, get_token_type_str(extract_token(tok)->type));
-	free(tmp);
-	tmp = ret;
-	ret = ft_strjoin(tmp, "\n");
-	ret = ft_strjoin(ret, "}");
-	free(tmp);
-	return (ret);
+	token = extract_token(tok);
+	total_len = strlen("{\n  token_value: \n  token_type:  \n}")
+		+ ft_strlen(token->value)
+		+ ft_strlen(get_token_type_str(token->type)) + 100;
+	formatted = malloc(total_len);
+	if (!formatted)
+		return (NULL);
+	ctx = init_buffer_ctx(formatted, formatted, total_len);
+	append_to_buffer(&ctx, "{\n  " TOKEN_VALUE_LABEL);
+	append_to_buffer(&ctx, token->value);
+	append_to_buffer(&ctx, RESET "\n  " TOKEN_TYPE_LABEL);
+	append_to_buffer(&ctx, get_token_type_str(token->type));
+	append_to_buffer(&ctx, RESET "\n}");
+	return (formatted);
 }
 
 static	t_token	*extract_token(t_list *lst)

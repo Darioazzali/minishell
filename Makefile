@@ -56,11 +56,13 @@ SRCS_FILES		=	error.c			\
 					utils.c			\
 					lst_utils.c		\
 					cd.c			\
-					pwd.c
+					pwd.c			\
+					token_debug.c			
 
-HEADERS			=	$(INC_DIR)/minishell.h \
-					$(SRCS_DIR)/log.h \
-					$(SRCS_DIR)/parser.h
+HEADERS			=	$(INC_DIR)/minishell.h 	\
+					$(SRCS_DIR)/log.h 		\
+					$(SRCS_DIR)/parser.h	\
+					$(SRCS_DIR)/debug.h
 
 #Built-ins utilities
 

@@ -72,3 +72,7 @@ for file in "${expansion_tests[@]}"; do
 done
 make_test_pid
 resume_test $tests_passed $tests_failed
+
+if [[ $tests_failed -gt 0 ]]; then
+	exit 1
+fi

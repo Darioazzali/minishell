@@ -20,10 +20,11 @@ static char	*ft_trim_double_quotes(char	*str);
 int	remove_quotes(t_ctx *ctx)
 {
 	t_list		*next;
-	t_parser	*parser;
+	t_tokenizer	*parser;
 	char		*tmp;
 
-	parser = ctx->tokenizer;
+	parser = ctx->parser;
+	parser->stage = P_QUOTES_REM;
 	if (parser->tokens == NULL)
 		return (0);
 	next = parser->tokens;
@@ -36,8 +37,7 @@ int	remove_quotes(t_ctx *ctx)
 		next->content = tmp;
 		next = next->next;
 	}
-	log_debug(ctx->logger, "Quotes removed");
-	log_debug(ctx->logger, deb_format_tokens(parser->tokens));
+	log_debug_struct(parser->tokens, deb_format_tokens);
 	return (0);
 }
 

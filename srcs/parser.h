@@ -13,7 +13,6 @@
 #ifndef PARSER_H
 # define PARSER_H
 # include "minishell.h"
-# include "log.h"
 
 typedef enum e_lexi
 {
@@ -50,12 +49,22 @@ typedef struct s_ast_node
 	struct s_ast_node	*right;
 }	t_ast_node;
 
+typedef enum e_p_stage
+{
+	P_TOKENIZING,
+	P_EXPANDING,
+	P_QUOTES_REM,
+	P_TOKEN_REC,
+	P_PARSING
+}	t_p_stage;
+
 typedef struct s_parser
 {
 	t_parser_mode	mode;
+	t_p_stage		stage;
 	char			*ptr;
 	t_list			*tokens;
-}	t_parser;
+}	t_tokenizer;
 
 typedef struct s_token
 {
@@ -81,8 +90,8 @@ typedef struct s_expander
 	t_ctx				*ctx;
 }	t_expander;
 
-char		*deb_format_tokens(t_list *lst);
-char		*deb_format_tokens_type(t_list *lst);
+char		*deb_format_tokens(void *lst);
+char		*deb_format_tokens_type(void *lst);
 char		*deb_ast_to_string(t_ast_node *node);
 char		*get_token_type_str(t_tok_type tok);
 int			init_expander(t_expander *expander, t_ctx *ctx, const char *token);
@@ -92,11 +101,14 @@ void		*exp_error_fail(t_expander *expander);
 void		*expand_err_null(t_expander *expander, t_expander_error exp_err);
 int			expand_err_code(t_expander *expander, t_expander_error exp_err,
 				int code);
-int			add_token(t_ctx *ctx, char *start, char *end);
-char		*handle_metachar(t_ctx *ctx, char *line);
+int			add_token(t_tokenizer *tokenizer, char *start, char *end);
+char		*handle_metachar(t_parser *tokenizer, char *line);
 bool		is_metachar(char *c);
 t_ast_node	*build_ast(t_ctx *ctx);
 void		free_ast_node(t_ast_node *node);
 char		*deb_ast_to_string(t_ast_node *node);
-
+void		init_tokenizer(t_parser *tokenizer, const char *line);
+void		reset_tokenizer(t_parser *tokenizer, const char *line);
+void		cleanup_tokenizer(t_parser *tokenizer);
+void		free_token(void *token);
 #endif

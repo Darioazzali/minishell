@@ -93,5 +93,5 @@ static void	_free_env_lst(void *content)
 	t_sh_var	*env;
 
 	env = content;
-	free_env(env);
+	free_sh_var(env);
 }

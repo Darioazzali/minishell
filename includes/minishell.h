@@ -6,7 +6,7 @@
 /*   By: dazzali <dazzali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 14:15:08 by dazzali           #+#    #+#             */
-/*   Updated: 2025/07/18 10:30:15 by dazzali          ###   ########.fr       */
+/*   Updated: 2025/07/22 11:03:22 by dazzali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,16 +22,13 @@
 # include "libft.h"
 # include <readline/readline.h>
 # include <readline/history.h>
-# include <sys/time.h>
-# ifndef LOG_LEVEL
-#  define LOG_LEVEL 2
-# endif
+# include "errors.h"
+# include "log.h"
 
 # define INITIAL_CAPACITY	10
 # define HISTORY_FILE		".minishell_history"
 # define MALLOC_ERROR_MSG	"Failed to allocate memory"
 
-typedef struct s_log_ctx	t_log_ctx;
 typedef struct s_parser		t_parser;
 typedef struct s_sh_var
 {
@@ -48,37 +45,21 @@ typedef struct s_history
 	int		capacity;
 }	t_history;
 
-typedef enum e_log_level
-{
-	LEVEL_DEBUG = 0,
-	LEVEL_WARN = 1,
-	LEVEL_ERROR = 2
-}	t_log_level;
-
 typedef struct s_ctx
 {
-	t_log_ctx		*logger;
-	t_parser		*tokenizer;
+	t_parser		*parser;
 	int				pid;
 	t_history		*history;
 	t_envs			*envs;
 	int				exit_status;
 }	t_ctx;
 
-int				ltos(long usec, char *res);
-void			print_program_error(char *program_name, char *message);
-int				print_shell_error_ret_int(char *message, int errcode);
-void			print_error(char *message);
-void			print_shell_error(char *message);
-void			*print_shell_error_ret_null(char *message);
-t_log_ctx		*init_logger(t_log_level level);
 void			*free_ctx(t_ctx *ctx);
 t_ctx			*init_ctx(void);
-int				tokenize_line(t_ctx *ctx, const char *line);
+int				tokenize_line(t_parser *parser, const char *line);
 int				expand_tokens(t_ctx *ctx);
 void			*free_parser(t_ctx *ctx);
 int				remove_quotes(t_ctx *ctx);
-bool			ft_is_whitespace(char c);
 //History
 t_history		*init_history(void);
 void			add_to_history_struct(char *line, t_history *hist);
@@ -87,7 +68,6 @@ void			save_to_history_file(t_history *hist);
 void			load_history_from_file(t_history *hist);
 int				expand_buffer(char **line, int *capacity);
 int				is_empty_line(char *line);
-void			free_split_result(char **split_result);
 int				recognize_tokens(t_ctx *ctx);
 //Envs
 void			print_vars(t_envs *envs, bool env);
@@ -95,14 +75,18 @@ t_envs			*parse_envs(char **str);
 char			*get_shell_var_value(t_envs *envs, char *name);
 t_sh_var		*get_shell_var(t_envs *envs, char *name);
 int				set_shell_var(t_envs *envs, char *name, char *value);
-void			_export_var(t_envs *envs, char *name, char *value);
+void			*free_envs(t_envs *envs);
+//Builtins
 int				export_builtin(char **av, t_envs *envs);
-t_sh_var		*parse_variable_assignment(char *str);
+int				unset_builtin(t_envs **envs, char **keys);
+int				_built_chdir(int ac, const char **av, t_envs *envs);
+int				_pwd(void);
+//List utils
 void			ft_lstremove_node(t_list **head,
 					t_list *node, void (*del)(void *));
-int				unset_builtin(t_envs **envs, char **keys);
-void			*free_envs(t_envs *envs);
-int				_built_chdir(int ac, const char **av, t_envs *envs);
 int				ft_strcmp(const char *s1, const char *s2);
-int				_pwd(void);
+char			**list_to_array(t_list *lst);
+void			*clean_str_array(char **array, int i);
+void			free_split_result(char **split_result);
+bool			ft_is_whitespace(char c);
 #endif

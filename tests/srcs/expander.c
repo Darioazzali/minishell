@@ -18,12 +18,13 @@ static	void	print_tokens(t_list *tokens);
 
 int	main(int ac, char **av, char **env)
 {
-	t_ctx	*ctx;
-	t_list	*tok_lst;
-	FILE	*fp;
-	char	*line;
-	size_t	len;
-	ssize_t	read;
+	t_ctx		*ctx;
+	t_list		*tok_lst;
+	FILE		*fp;
+	char		*line;
+	size_t		len;
+	ssize_t		read;
+	t_parser	tokenizer={0};
 
 	if (ac < 2)
 		return (-1);
@@ -33,18 +34,20 @@ int	main(int ac, char **av, char **env)
 	tok_lst = NULL;
 	fp = fopen(av[1], "r");
 	if (!fp)
+	{
+		fprintf(stderr, "cannot open file\n");
 		exit(1);
+	}
 	while ((read = getline(&line, &len, fp)) != -1)
 		ft_lstadd_back(&tok_lst, ft_lstnew(ft_strdup(strip_newline(line))));
 	fclose(fp);
-	ctx->tokenizer = malloc(sizeof(t_parser));
-	if (!ctx->tokenizer)
+	ctx->parser = &tokenizer;
+	if (!ctx->parser)
 		return (-1);
-	ctx->tokenizer->tokens = tok_lst;
+	ctx->parser->tokens = tok_lst;
 	expand_tokens(ctx);
 	print_tokens(tok_lst);
 }
-
 
 static	void	print_tokens(t_list *tokens)
 {

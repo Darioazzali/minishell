@@ -6,13 +6,12 @@
 /*   By: aluque-v <aluque-v@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 08:59:40 by dazzali           #+#    #+#             */
-/*   Updated: 2025/06/20 17:30:06 by dazzali          ###   ########.fr       */
+/*   Updated: 2025/07/21 07:07:46 by dazzali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// static char	*read_line_from_fd(int fd);
 static int	process_line_from_file(t_history *hist, char *line);
 static int	resize_for_file_load(t_history *hist);
 
@@ -84,39 +83,6 @@ static int	resize_for_file_load(t_history *hist)
 	hist->commands = tmp;
 	return (1);
 }
-
-// static char	*read_line_from_fd(int fd)
-// {
-// 	char	*line;
-// 	char	buffer;
-// 	int		len;
-// 	int		capacity;
-//
-// 	len = 0;
-// 	capacity = 64;
-// 	line = malloc(64 + 1);
-// 	if (!line)
-// 		return (NULL);
-// 	while (read(fd, &buffer, 1) > 0)
-// 	{
-// 		if (buffer == '\n')
-// 			break ;
-// 		if (len >= capacity)
-// 		{
-// 			if (!expand_buffer(&line, &capacity))
-// 				return (NULL);
-// 		}
-// 		line[len] = buffer;
-// 		len++;
-// 	}
-// 	line[len] = '\0';
-// 	if (len == 0)
-// 	{
-// 		free(line);
-// 		return (NULL);
-// 	}
-// 	return (line);
-// }
 
 int	is_empty_line(char *line)
 {

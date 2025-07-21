@@ -14,7 +14,7 @@
 
 static bool	is_empty(char *start, char *end);
 
-int	add_token(t_ctx *ctx, char *start, char *end)
+int	add_token(t_tokenizer *tokenizer, char *start, char *end)
 {
 	t_list	*new;
 	char	*new_str;
@@ -24,14 +24,13 @@ int	add_token(t_ctx *ctx, char *start, char *end)
 	new_str = ft_substr(start, 0, end - start);
 	if (!new_str)
 		return (0);
-	log_debug(ctx->logger, "Adding token");
 	new = ft_lstnew(new_str);
 	if (!new)
 	{
 		free(new_str);
 		return (0);
 	}
-	ft_lstadd_back(&ctx->tokenizer->tokens, new);
+	ft_lstadd_back(&tokenizer->tokens, new);
 	return (1);
 }
 
@@ -57,18 +56,18 @@ bool	is_metachar(char *c)
 	return (false);
 }
 
-char	*handle_metachar(t_ctx *ctx, char *line)
+char	*handle_metachar(t_parser *tokenizer, char *line)
 {
 	if (ft_strncmp(line, ">>", 2) == 0
 		|| ft_strncmp(line, "<<", 2) == 0
 		|| ft_strncmp(line, "&&", 2) == 0)
 	{
-		add_token(ctx, line, line + 2);
+		add_token(tokenizer, line, line + 2);
 		return (line + 2);
 	}
 	else
 	{
-		add_token(ctx, line, line + 1);
+		add_token(tokenizer, line, line + 1);
 		return (line + 1);
 	}
 }

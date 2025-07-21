@@ -6,18 +6,16 @@
 /*   By: aluque-v <aluque-v@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 16:48:47 by aluque-v          #+#    #+#             */
-/*   Updated: 2025/06/30 17:10:06 by dazzali          ###   ########.fr       */
+/*   Updated: 2025/07/22 10:59:35 by dazzali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "log.h"
 #include "parser.h"
 
 static t_ast_node	*parse_logical(t_list **current);
 static t_ast_node	*parse_pipeline(t_list **current);
 static t_ast_node	*parse_command(t_list **current);
 static t_ast_node	*create_node(t_ast_type type, char *value);
-static char			**list_to_array(t_list *lst);
 
 t_ast_node	*build_ast(t_ctx *ctx)
 {
@@ -25,23 +23,23 @@ t_ast_node	*build_ast(t_ctx *ctx)
 	t_ast_node	*ast;
 	char		*debug_str;
 
-	log_debug(ctx->logger, "=== Starting AST construction ===");
-	current = ctx->tokenizer->tokens;
+	log_debug("=== Starting AST construction ===\n");
+	current = ctx->parser->tokens;
 	if (!current)
 	{
-		log_warn(ctx->logger, "No tokens to parse");
+		log_warn("No tokens to parse\n");
 		return (NULL);
 	}
 	ast = parse_logical(&current);
 	if (!ast)
 	{
-		log_error(ctx->logger, "Failed to build AST");
+		log_error("Failed to build AST\n");
 		return (NULL);
 	}
 	//DEBUG
 	debug_str = deb_ast_to_string(ast);
-	log_debug(ctx->logger, "AST construction completed:");
-	log_debug(ctx->logger, debug_str);
+	log_debug("AST construction completed:\n");
+	log_debug(debug_str);
 	free(debug_str);
 	//DEBUG END
 	return (ast);
@@ -121,7 +119,7 @@ static t_ast_node	*parse_command(t_list **current)
 
 	if (!*current)
 		return (NULL);
-	token = (t_token *)(*current)->content;
+	token = (*current)->content;
 	if (token->type != TOK_WORD)
 		return (NULL);
 	cmd = create_node(AST_COMMAND, token->value);
@@ -158,34 +156,4 @@ static t_ast_node	*create_node(t_ast_type type, char *value)
 	node->left = NULL;
 	node->right = NULL;
 	return (node);
-}
-
-static char	**list_to_array(t_list *lst)
-{
-	int		size;
-	char	**array;
-	int		i;
-
-	if (!lst)
-		return (NULL);
-	size = ft_lstsize(lst);
-	i = 0;
-	array = malloc(sizeof(char *) * (size + 1));
-	if (!array)
-		return (NULL);
-	while (lst)
-	{
-		array[i] = ft_strdup((char *)lst->content);
-		if (!array[i])
-		{
-			while (--i >= 0)
-				free(array[i]);
-			free(array);
-			return (NULL);
-		}
-		lst = lst->next;
-		i++;
-	}
-	array[i] = NULL;
-	return (array);
 }

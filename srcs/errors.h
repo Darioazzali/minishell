@@ -1,23 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser.c                                           :+:      :+:    :+:   */
+/*   errors.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dazzali <dazzali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/13 13:27:48 by dazzali           #+#    #+#             */
-/*   Updated: 2025/07/22 10:59:35 by dazzali          ###   ########.fr       */
+/*   Created: 2025/07/21 07:01:38 by dazzali           #+#    #+#             */
+/*   Updated: 2025/07/21 07:02:03 by dazzali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parser.h"
+#ifndef ERRORS_H
 
-void	*free_parser(t_ctx *ctx)
-{
-	if (!ctx->parser)
-		return (NULL);
-	if (ctx->parser->tokens)
-		ft_lstclear(&ctx->parser->tokens, free);
-	free(ctx->parser);
-	return (NULL);
-}
+# define ERRORS_H
+
+void			print_program_error(char *program_name, char *message);
+int				print_shell_error_ret_int(char *message, int errcode);
+void			print_error(char *message);
+void			print_shell_error(char *message);
+void			*print_shell_error_ret_null(char *message);
+#endif

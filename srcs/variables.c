@@ -58,16 +58,16 @@ t_sh_var	*parse_variable_assignment(char *str)
 	res->value = NULL;
 	if (!ft_strchr(str, '='))
 	{
-		free_env(res);
+		free_sh_var(res);
 		print_shell_error("Invalid variable assignment");
 		return (NULL);
 	}
 	if (_split_assignment(str, &res) != 0)
-		return (free_env(res));
+		return (free_sh_var(res));
 	if (!_is_valid_var_name(res->name))
 	{
 		print_shell_error("Invalid variable name");
-		return (free_env(res));
+		return (free_sh_var(res));
 	}
 	return (res);
 }

@@ -49,7 +49,7 @@ int	export_builtin(char **av, t_envs *envs)
 	return (status);
 }
 
-void	_export_var(t_envs *envs, char *name, char *value)
+void	export_var(t_envs *envs, char *name, char *value)
 {
 	t_sh_var	*env;
 
@@ -81,7 +81,7 @@ static int	_handle_assignment(char *arg, t_envs *envs)
 	env = parse_variable_assignment(arg);
 	if (!env)
 		return (1);
-	_export_var(envs, env->name, env->value);
-	free_env(env);
+	export_var(envs, env->name, env->value);
+	free_sh_var(env);
 	return (0);
 }

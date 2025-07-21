@@ -18,24 +18,23 @@ static bool	confront_tokens(t_list *tok_lst, t_list *expected);
 
 int	main(int ac, char **av)
 {
-	t_ctx			*ctx;
 	t_list			*expected;
 	t_json_input_t	*input;
 	int				ret_val;
+	t_parser		tokenizer={0};
 
 	if (ac < 2)
 		return (-1);
-	ctx = init_ctx();
 	input = read_json_input(av[1]);
 	if (!input)
 		return (1);
 	ret_val = 0;
 	if (input)
 	{
-		if (tokenize_line(ctx, input->input_line) != 0)
+		if (tokenize_line(&tokenizer, input->input_line) != 0)
 			return (1);
 		expected = from_array_to_ll(input->input_array, input->array_size);
-		if (!confront_tokens(ctx->tokenizer->tokens, expected))
+		if (!confront_tokens(tokenizer.tokens, expected))
 			ret_val = 1;
 		free_json_input(input);
 	}
@@ -59,6 +58,7 @@ static bool	confront_tokens(t_list *tok_lst, t_list *expected)
 	char	*expected_str;
 	char	*tok_str;
 
+	print_tokens(tok_lst);
 	while (tok_lst)
 	{
 		tok_str = (char *)tok_lst->content;

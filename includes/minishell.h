@@ -1,13 +1,13 @@
 /* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: dazzali <dazzali@student.42.fr>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/01 14:15:08 by dazzali           #+#    #+#             */
-/*   Updated: 2025/07/22 11:03:22 by dazzali          ###   ########.fr       */
-/*                                                                            */
+/*																			  */
+/*														  :::	   ::::::::   */
+/*	 minishell.h										:+:		 :+:	:+:   */
+/*													  +:+ +:+		  +:+	  */
+/*	 By: dazzali <dazzali@student.42.fr>			+#+  +:+	   +#+		  */
+/*												  +#+#+#+#+#+	+#+			  */
+/*	 Created: 2025/07/01 14:15:08 by dazzali		   #+#	  #+#			  */
+/*	 Updated: 2025/07/22 13:07:25 by dazzali		  ###	########.fr		  */
+/*																			  */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
@@ -40,9 +40,9 @@ typedef t_list				t_envs;
 
 typedef struct s_history
 {
-	char	**commands;
-	int		count;
-	int		capacity;
+	t_list	*head;
+	t_list	*last_saved;
+
 }	t_history;
 
 typedef struct s_ctx
@@ -82,6 +82,7 @@ int				unset_builtin(t_envs **envs, char **keys);
 int				_built_chdir(int ac, const char **av, t_envs *envs);
 int				_pwd(void);
 //List utils
+void			ft_lstadd_or_assign(t_list **head, t_list *new_node);
 void			ft_lstremove_node(t_list **head,
 					t_list *node, void (*del)(void *));
 int				ft_strcmp(const char *s1, const char *s2);

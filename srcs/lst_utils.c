@@ -13,8 +13,6 @@
 #include "minishell.h"
 
 static void		_remove_head_node(t_list **head, void (*del)(void *));
-static void		_remove_middle_node(t_list *previous,
-					t_list *current, void (*del)(void *));
 static t_list	*_find_node_and_previous(t_list *head,
 					t_list *target, t_list **previous);
 
@@ -41,7 +39,20 @@ void	ft_lstremove_node(t_list **head, t_list *node, void (*del)(void *))
 	if (previous == NULL)
 		_remove_head_node(head, del);
 	else
-		_remove_middle_node(previous, current, del);
+	{
+		previous->next = current->next;
+		ft_lstdelone(current, del);
+	}
+}
+
+void	ft_lstadd_or_assign(t_list **head, t_list *new_node)
+{
+	if (!head)
+		return ;
+	if (!*head)
+		(*head) = new_node;
+	else
+		ft_lstadd_back(head, new_node);
 }
 
 static void	_remove_head_node(t_list **head, void (*del)(void *))
@@ -51,13 +62,6 @@ static void	_remove_head_node(t_list **head, void (*del)(void *))
 	old_head = *head;
 	*head = old_head->next;
 	ft_lstdelone(old_head, del);
-}
-
-static void	_remove_middle_node(t_list *previous,
-							t_list *current, void (*del)(void *))
-{
-	previous->next = current->next;
-	ft_lstdelone(current, del);
 }
 
 static t_list	*_find_node_and_previous(t_list *head,

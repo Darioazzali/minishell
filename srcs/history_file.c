@@ -1,20 +1,27 @@
 /* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   history_file.c                                     :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: aluque-v <aluque-v@student.42barcelon      +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/20 08:59:40 by dazzali           #+#    #+#             */
-/*   Updated: 2025/07/21 07:07:46 by dazzali          ###   ########.fr       */
-/*                                                                            */
+/*																			  */
+/*														  :::	   ::::::::   */
+/*	 history_file.c										:+:		 :+:	:+:   */
+/*													  +:+ +:+		  +:+	  */
+/*	 By: aluque-v <aluque-v@student.42barcelon		+#+  +:+	   +#+		  */
+/*												  +#+#+#+#+#+	+#+			  */
+/*	 Created: 2025/06/20 08:59:40 by dazzali		   #+#	  #+#			  */
+/*	 Updated: 2025/07/22 13:23:40 by dazzali		  ###	########.fr		  */
+/*																			  */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 static int	process_line_from_file(t_history *hist, char *line);
-static int	resize_for_file_load(t_history *hist);
+static void	set_last_saved(t_history *hist);
 
+/** @brief Load history from file
+ * Load history from file and add it to the history list
+ *
+ * @param hist history structure
+ *
+ * @note Can fail if open fails
+ * */
 void	load_history_from_file(t_history *hist)
 {
 	int		fd;
@@ -26,21 +33,20 @@ void	load_history_from_file(t_history *hist)
 		return ;
 	fd = open(HISTORY_FILE, O_RDONLY);
 	if (fd == -1)
-	{
-		perror("Error opening history file");
-		return ;
-	}
+		return (perror("Error opening history file"));
 	line = get_next_line(fd);
 	while ((line) != NULL)
 	{
 		if (!process_line_from_file(hist, line))
 		{
+			ft_lstclear(&hist->head, free);
 			close(fd);
 			return (free(line));
 		}
 		free(line);
 		line = get_next_line(fd);
 	}
+	set_last_saved(hist);
 	close(fd);
 }
 
@@ -48,6 +54,7 @@ static int	process_line_from_file(t_history *hist, char *line)
 {
 	char	*new_line;
 	size_t	len;
+	t_list	*node;
 
 	if (is_empty_line(line))
 		return (1);
@@ -56,31 +63,16 @@ static int	process_line_from_file(t_history *hist, char *line)
 		new_line = ft_substr(line, 0, len - 1);
 	else
 		new_line = ft_strdup(line);
+	if (!new_line)
+		print_shell_error_ret_int(MALLOC_ERROR_MSG, 0);
 	add_history(new_line);
-	if (hist->count >= hist->capacity)
+	node = ft_lstnew(new_line);
+	if (!node)
 	{
-		if (!resize_for_file_load(hist))
-			return (0);
+		free(new_line);
+		print_shell_error_ret_int(MALLOC_ERROR_MSG, 0);
 	}
-	hist->commands[hist->count] = ft_strdup(new_line);
-	if (hist->commands[hist->count])
-		hist->count++;
-	free(new_line);
-	return (1);
-}
-
-static int	resize_for_file_load(t_history *hist)
-{
-	char	**tmp;
-
-	if (hist->capacity == 0)
-		hist->capacity = INITIAL_CAPACITY;
-	else
-		hist->capacity = hist->capacity * 2;
-	tmp = ft_realloc(hist->commands, hist->capacity * sizeof(char *));
-	if (!tmp)
-		return (0);
-	hist->commands = tmp;
+	ft_lstadd_or_assign(&hist->head, node);
 	return (1);
 }
 
@@ -98,4 +90,12 @@ int	is_empty_line(char *line)
 		i++;
 	}
 	return (1);
+}
+
+static void	set_last_saved(t_history *hist)
+{
+	if (ft_lstlast(hist->head))
+		hist->last_saved = ft_lstlast(hist->head);
+	else
+		hist->last_saved = NULL;
 }

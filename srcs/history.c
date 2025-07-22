@@ -6,22 +6,30 @@
 /*   By: aluque-v <aluque-v@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 12:43:38 by aluque-v          #+#    #+#             */
-/*   Updated: 2025/06/20 09:16:11 by dazzali          ###   ########.fr       */
+/*   Updated: 2025/07/22 15:51:41 by dazzali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+/** @brief Initialize the history
+ * Allocate memory for the history struct
+ * load history from file
+ * @return A pointer to the history struct or NULL if failed
+ *
+ * @note Can fail if malloc fails
+ * */
 t_history	*init_history(void)
 {
 	t_history	*hist;
 
 	hist = malloc(sizeof(t_history));
 	if (!hist)
+	{
+		print_error(MALLOC_ERROR_MSG);
 		return (NULL);
-	hist->commands = NULL;
-	hist->count = 0;
-	hist->capacity = 0;
+	}
+	hist->head = NULL;
 	load_history_from_file(hist);
 	return (hist);
 }
@@ -35,24 +43,38 @@ static void	write_command_to_file(int fd, char *command)
 	}
 }
 
+/** @brief Save history to file
+ * Save the history to a file from the last saved node
+ * update the last saved node
+ * 
+ * @param hist history structure
+ * @note Can fail if open fails or write fails
+ * */
 void	save_to_history_file(t_history *hist)
 {
-	int	fd;
-	int	i;
+	int		fd;
+	char	*command;
+	t_list	*start_node;
 
-	if (!hist || !hist->commands)
-		return ;
-	fd = open(HISTORY_FILE, O_CREAT | O_WRONLY | O_TRUNC, 0644);
-	if (fd == -1)
+	if (!hist)
 	{
-		perror("Error creating history file");
+		print_error("No history\n");
 		return ;
 	}
-	i = 0;
-	while (i < hist->count)
+	if (hist->last_saved)
+		start_node = hist->last_saved->next;
+	else
+		start_node = hist->head;
+	if (!start_node)
+		return ;
+	fd = open(HISTORY_FILE, O_CREAT | O_WRONLY | O_APPEND, 0644);
+	if (fd == -1)
+		return (perror("Error creating history file"));
+	while (start_node)
 	{
-		write_command_to_file(fd, hist->commands[i]);
-		i++;
+		command = start_node->content;
+		write_command_to_file(fd, command);
+		start_node = start_node->next;
 	}
 	close (fd);
 }

@@ -72,6 +72,7 @@ void	free_history_struct(t_history *hist)
 		}
 		free(hist->commands);
 	}
+	free(hist);
 }
 
 int	expand_buffer(char **line, int *capacity)

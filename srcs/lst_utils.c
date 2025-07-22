@@ -1,13 +1,13 @@
 /* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   lst_utils.c                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: dazzali <dazzali@student.42.fr>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/16 12:54:03 by dazzali           #+#    #+#             */
-/*   Updated: 2025/07/16 12:59:38 by dazzali          ###   ########.fr       */
-/*                                                                            */
+/*																			  */
+/*														  :::	   ::::::::   */
+/*	 lst_utils.c										:+:		 :+:	:+:   */
+/*													  +:+ +:+		  +:+	  */
+/*	 By: dazzali <dazzali@student.42.fr>			+#+  +:+	   +#+		  */
+/*												  +#+#+#+#+#+	+#+			  */
+/*	 Created: 2025/07/16 12:54:03 by dazzali		   #+#	  #+#			  */
+/*	 Updated: 2025/07/21 06:27:22 by dazzali		  ###	########.fr		  */
+/*																			  */
 /* ************************************************************************** */
 
 #include "minishell.h"
@@ -20,13 +20,13 @@ static t_list	*_find_node_and_previous(t_list *head,
 
 /** @brief Remove a node from a list
  * 
- *  Remove the node from the list and free its content.
- *  @param head The head of the list
- *  @param node The node to remove
- *  @param del The function to free the content
+ *	Remove the node from the list and free its content.
+ *	@param head The head of the list
+ *	@param node The node to remove
+ *	@param del The function to free the content
  *
- *  @note This function is used to remove a node from a list and update
- *  the list in contrary to ft_lstdelone that only free the node and its content.
+ *	@note This function is used to remove a node from a list and update
+ *	the list in contrary to ft_lstdelone that only free the node and its content.
  * */
 void	ft_lstremove_node(t_list **head, t_list *node, void (*del)(void *))
 {
@@ -75,4 +75,51 @@ static t_list	*_find_node_and_previous(t_list *head,
 		current = current->next;
 	}
 	return (NULL);
+}
+
+/** @brief Converts a linked list of strings to a null-terminated string array
+* 
+* Creates a new array of string pointers by copying each string from the linked
+* list. Each string is duplicated using ft_strdup, making the resulting array
+* independent of the original list. The array is null-terminated following
+* standard C conventions.
+* 
+* @param lst Pointer to the first node of the linked list containing string data
+* 
+* @return On success, returns a pointer to a newly allocated null-terminated
+*    array of string pointers. Each string is a copy of the corresponding
+*    list node content. Returns NULL if:
+*    - Input list is NULL
+*    - Memory allocation fails for the array
+*    - Memory allocation fails for any string copy (partial cleanup performed)
+* 
+* @note The caller is responsible for freeing the returned array and all its
+*       string elements. Use a cleanup function like clean_str_array() to
+*       properly deallocate.
+* 
+*/
+char	**list_to_array(t_list *lst)
+{
+	char	**array;
+	int		i;
+
+	if (!lst)
+		return (NULL);
+	i = 0;
+	array = ft_calloc(ft_lstsize(lst) + 1, sizeof(char *));
+	if (!array)
+		return (NULL);
+	while (lst)
+	{
+		array[i] = ft_strdup((char *)lst->content);
+		if (!array[i])
+		{
+			print_shell_error(MALLOC_ERROR_MSG);
+			return (clean_str_array(array, i));
+		}
+		lst = lst->next;
+		i++;
+	}
+	array[i] = NULL;
+	return (array);
 }

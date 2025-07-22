@@ -6,7 +6,7 @@
 /*   By: dazzali <dazzali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 08:25:51 by dazzali           #+#    #+#             */
-/*   Updated: 2025/07/17 08:58:53 by dazzali          ###   ########.fr       */
+/*   Updated: 2025/07/21 06:55:34 by dazzali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ t_envs	*parse_envs(char **str)
 		node = ft_lstnew(tmp);
 		if (!node)
 		{
-			free_env(tmp);
+			free_sh_var(tmp);
 			return (free_envs(envs));
 		}
 		ft_lstadd_back(&envs, node);
@@ -71,7 +71,7 @@ static t_sh_var	*parse_env_str(char *str)
 	env->exported = true;
 	if (!env->name || !env->value)
 	{
-		free_env(env);
+		free_sh_var(env);
 		env = NULL;
 	}
 	free_split_result(tmp);

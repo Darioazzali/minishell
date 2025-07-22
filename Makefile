@@ -30,7 +30,9 @@ LDFLAGS			=	-lreadline -L$(LIBFT_DIR) -lft
 #Source files
 SRCS_FILES		=	error.c			\
 					logger.c		\
+					debug_utils.c	\
 					conversion.c	\
+					tokenize.c		\
 					tokenizer.c		\
 					tokenizer2.c	\
 					ctx.c			\
@@ -62,7 +64,9 @@ SRCS_FILES		=	error.c			\
 HEADERS			=	$(INC_DIR)/minishell.h 	\
 					$(SRCS_DIR)/log.h 		\
 					$(SRCS_DIR)/parser.h	\
-					$(SRCS_DIR)/debug.h
+					$(SRCS_DIR)/debug.h		\
+					$(SRCS_DIR)/env.h		\
+					$(SRCS_DIR)/errors.h
 
 #Built-ins utilities
 

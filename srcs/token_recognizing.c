@@ -20,17 +20,17 @@ int	recognize_tokens(t_ctx *ctx)
 	t_list	*token;
 	t_list	*ret;
 
-	token = ctx->tokenizer->tokens;
+	token = ctx->parser->tokens;
+	ctx->parser->stage = P_TOKEN_REC;
 	ret = ft_lstmap(token, recognize_token, free);
 	if (!ret)
 	{
 		print_shell_error(MALLOC_ERROR_MSG);
 		return (-1);
 	}
-	ft_lstclear(&ctx->tokenizer->tokens, free);
-	ctx->tokenizer->tokens = ret;
-	log_debug(ctx->logger, "Quotes removed");
-	log_debug(ctx->logger, deb_format_tokens_type(ctx->tokenizer->tokens));
+	ft_lstclear(&ctx->parser->tokens, free);
+	ctx->parser->tokens = ret;
+	log_debug_struct(ctx->parser->tokens, deb_format_tokens_type);
 	return (0);
 }
 
@@ -65,4 +65,13 @@ static t_tok_type	get_type(char *token)
 	else if (token[0] == '<')
 		return (TOK_REDIR_IN);
 	return (TOK_WORD);
+}
+
+void	free_token(void *token)
+{
+	t_token	*t;
+
+	t = token;
+	free(t->value);
+	free(t);
 }

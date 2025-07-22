@@ -16,7 +16,7 @@
 static t_token	*extract_token(t_list *lst);
 static char		*format_token_struct(t_list *tok);
 
-char	*deb_format_tokens(t_list *lst)
+char	*deb_format_tokens(void *lst)
 {
 	t_list	*tmp;
 	char	*str;
@@ -38,10 +38,13 @@ char	*deb_format_tokens(t_list *lst)
 		free(old_fmt);
 		tmp = tmp->next;
 	}
+	old_fmt = fmt;
+	fmt = ft_strjoin(fmt, "\n");
+	free(old_fmt);
 	return (fmt);
 }
 
-char	*deb_format_tokens_type(t_list *lst)
+char	*deb_format_tokens_type(void *lst)
 {
 	t_list	*tmp;
 	char	*str;
@@ -54,7 +57,9 @@ char	*deb_format_tokens_type(t_list *lst)
 	fmt = ft_strdup("Tokens:");
 	while (tmp)
 	{
+		old_fmt = fmt;
 		fmt = ft_strjoin(fmt, "\n");
+		free(old_fmt);
 		str = format_token_struct(tmp);
 		old_fmt = fmt;
 		fmt = ft_strjoin(fmt, str);
@@ -62,6 +67,9 @@ char	*deb_format_tokens_type(t_list *lst)
 		free(str);
 		tmp = tmp->next;
 	}
+	old_fmt = fmt;
+	fmt = ft_strjoin(fmt, "\n");
+	free(old_fmt);
 	return (fmt);
 }
 

@@ -98,6 +98,11 @@ static char	*handle_shell_parameter(t_expander *expander)
 
 void	*exp_error_fail(t_expander *expander)
 {
+	if (expander->expanded)
+	{
+		free(expander->expanded);
+		expander->expanded = NULL;
+	}
 	if (expander->err == EXP_ERR_MALLOC)
 		print_shell_error(MALLOC_ERROR_MSG);
 	if (expander->err == EXP_ERR_OTHER)

@@ -19,12 +19,6 @@ t_ctx	*init_ctx(void)
 	ctx = malloc(sizeof(t_ctx));
 	if (!ctx)
 		return (NULL);
-	ctx->logger = init_logger(LOG_LEVEL);
-	if (!ctx->logger)
-	{
-		free(ctx);
-		return (NULL);
-	}
 	ctx->pid = getpid();
 	ctx->exit_status = 0;
 	return (ctx);
@@ -34,8 +28,6 @@ void	*free_ctx(t_ctx *ctx)
 {
 	if (!ctx)
 		return (NULL);
-	if (ctx->logger)
-		free(ctx->logger);
 	if (ctx->history)
 		free_history_struct(ctx->history);
 	if (ctx->envs)

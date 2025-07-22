@@ -18,11 +18,12 @@ static	void	print_tokens(t_list *tokens);
 
 int	main(int ac, char **av)
 {
-	t_ctx	*ctx;
-	t_list	*tok_lst;
-	FILE	*fp;
-	char	*line;
-	size_t	len;
+	t_ctx		*ctx;
+	t_list		*tok_lst;
+	FILE		*fp;
+	char		*line;
+	size_t		len;
+	t_parser	parser = {0};
 
 	if (ac < 2)
 		return (-1);
@@ -34,10 +35,10 @@ int	main(int ac, char **av)
 	while (getline(&line, &len, fp) != -1)
 		ft_lstadd_back(&tok_lst, ft_lstnew(ft_strdup(strip_newline(line))));
 	fclose(fp);
-	ctx->tokenizer = malloc(sizeof(t_parser));
-	if (!ctx->tokenizer)
+	ctx->parser = &parser;
+	if (!ctx->parser)
 		return (-1);
-	ctx->tokenizer->tokens = tok_lst;
+	parser.tokens = tok_lst;
 	remove_quotes(ctx);
 	print_tokens(tok_lst);
 }

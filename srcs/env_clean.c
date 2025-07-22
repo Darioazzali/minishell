@@ -27,7 +27,7 @@ void	*free_envs(t_envs *envs)
 
 static void	free_env_node(void *content)
 {
-	free_env((t_sh_var *)content);
+	free_sh_var((t_sh_var *)content);
 }
 
 /** @brief free the shell var memory
@@ -37,7 +37,7 @@ static void	free_env_node(void *content)
  * @param var A pointer to the shell variable
  *
  * */
-void	*free_env(t_sh_var *var)
+void	*free_sh_var(t_sh_var *var)
 {
 	if (!var)
 		return (NULL);
@@ -57,6 +57,6 @@ void	*free_env(t_sh_var *var)
 int	_env_malloc_err(t_sh_var *env)
 {
 	print_error(MALLOC_ERROR_MSG);
-	free_env(env);
+	free_sh_var(env);
 	return (1);
 }

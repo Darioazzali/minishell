@@ -34,13 +34,13 @@ int	main(int ac, char **av)
 	while (getline(&line, &len, fp) != -1)
 		ft_lstadd_back(&tok_lst, ft_lstnew(ft_strdup(strip_newline(line))));
 	fclose(fp);
-	ctx->tokenizer = malloc(sizeof(t_parser));
-	if (!ctx->tokenizer)
+	ctx->parser = malloc(sizeof(t_parser));
+	if (!ctx->parser)
 		return (-1);
-	ctx->tokenizer->tokens = tok_lst;
+	ctx->parser->tokens = tok_lst;
 	remove_quotes(ctx);
 	recognize_tokens(ctx);
-	print_tokens_type(ctx->tokenizer->tokens);
+	print_tokens_type(ctx->parser->tokens);
 }
 
 static	void	print_tokens_type(t_list *tokens)

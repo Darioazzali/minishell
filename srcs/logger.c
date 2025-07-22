@@ -11,59 +11,36 @@
 /* ************************************************************************** */
 
 #include "log.h"
+#include "libft.h"
 
-static void	_log(t_log_ctx *ctx, char *s, t_log_level level);
+static void			_log(char *s, t_log_level level);
+static t_log_ctx	*_get_logger_instance(void);
 
-t_log_ctx	*init_logger(t_log_level level)
+void	log_debug(char *s)
 {
-	t_log_ctx	*ctx;
-	int			fd;
-
-	ctx = malloc(sizeof(t_log_ctx));
-	if (!ctx)
-	{
-		print_error("Malloc error: Failed to allocate memory"
-			"for logger\n");
-		return (NULL);
-	}
-	ctx->level = level;
-	if (!LOG_FILE_PATH || ft_strlen(LOG_FILE_PATH) == 0)
-		ctx->fd = STDERR_FILENO;
-	else
-	{
-		fd = open(LOG_FILE_PATH, O_WRONLY | O_CREAT | O_APPEND, 0644);
-		if (fd < 0)
-		{
-			free(ctx);
-			return (NULL);
-		}
-		else
-			ctx->fd = fd;
-	}
-	return (ctx);
+	_log(s, LEVEL_DEBUG);
 }
 
-void	log_debug(t_log_ctx *ctx, char *s)
+void	log_error(char *s)
 {
-	_log(ctx, s, LEVEL_DEBUG);
+	_log(s, LEVEL_ERROR);
 }
 
-void	log_error(t_log_ctx *ctx, char *s)
+void	log_warn(char *s)
 {
-	_log(ctx, s, LEVEL_ERROR);
+	_log(s, LEVEL_WARN);
 }
 
-void	log_warn(t_log_ctx *ctx, char *s)
-{
-	_log(ctx, s, LEVEL_WARN);
-}
-
-static void	_log(t_log_ctx *ctx, char *s, t_log_level level)
+static void	_log(char *s, t_log_level level)
 {
 	struct timeval	t;
 	char			timestamp[10];
 	int				log_fd;
+	t_log_ctx		*ctx;
 
+	ctx = _get_logger_instance();
+	if (!ctx)
+		return ;
 	log_fd = ctx->fd;
 	if (DEBUG == 0)
 		return ;
@@ -80,5 +57,33 @@ static void	_log(t_log_ctx *ctx, char *s, t_log_level level)
 	else if (level == LEVEL_ERROR)
 		write(log_fd, ERR_STR, ft_strlen(ERR_STR));
 	write(log_fd, s, ft_strlen(s));
-	write(log_fd, "\n", 1);
+}
+
+/** @brief Get logger instance
+ *
+ * Get the logger instance that is lazy initialized.
+ * */
+static t_log_ctx	*_get_logger_instance(void)
+{
+	static t_log_ctx	ctx = {0};
+	static int			initialized = 0;
+
+	if (!initialized)
+	{
+		ctx.level = LOG_LEVEL;
+		if (!LOG_FILE_PATH || ft_strlen(LOG_FILE_PATH) == 0)
+			ctx.fd = STDERR_FILENO;
+		else
+		{
+			ctx.fd = open(LOG_FILE_PATH, O_WRONLY | O_CREAT | O_APPEND, 0644);
+			if (ctx.fd < 0)
+			{
+				print_error("Error opening log file\n");
+				ctx.fd = STDERR_FILENO;
+				return (NULL);
+			}
+		}
+		initialized = 1;
+	}
+	return (&ctx);
 }

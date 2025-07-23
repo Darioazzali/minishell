@@ -1,0 +1,4 @@
+{
+  "input": "hola'hola'\"entonces\"",
+  "expected": ["hola'hola'\"entonces\""]
+}

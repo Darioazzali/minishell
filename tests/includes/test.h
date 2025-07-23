@@ -17,6 +17,7 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
+# include "assert.h"
 
 # define G_CHECKMARK "\033[32m✓\033[0m"  // Green checkmark
 # define R_BALLOT    "\033[31m✗\033[0m"  // Red X
@@ -54,4 +55,6 @@ char			**extract_string_array(cJSON *json_array, int *array_size);
 t_list			*from_array_to_ll(char **arr, int size);
 void			test_fail(char *test_name, char *message);
 void			test_success(char *test_name, char *message);
+void			_print_test_result(t_cd_t *t);
+void			init_test_result(t_cd_t *t);
 #endif

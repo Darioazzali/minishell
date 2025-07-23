@@ -1,3 +1,5 @@
+#/bin/bash
+
 # **************************************************************************** #
 #                                                                              #
 #                                                         :::      ::::::::    #
@@ -6,7 +8,7 @@
 #    By: dazzali <dazzali@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/06/05 17:30:24 by dazzali           #+#    #+#              #
-#    Updated: 2025/07/19 11:57:31 by dazzali          ###   ########.fr        #
+#    Updated: 2025/07/26 09:52:20 by dazzali          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,22 +25,36 @@ failed_tests=()
 VERBOSE=${VERBOSE:-false}
 QUIET=${QUIET:-false}
 SHOW_SUMMARY=${SHOW_SUMMARY:-true}
-ALL_TESTS=("echo" "pwd" "expansion" "tokenizer" "quote_removal" "token_recognition" "export" "cd")
+ALL_TESTS=("echo"
+	"pwd"
+	"expansion"
+	"tokenizer"
+	"quote_removal"
+	"token_recognition"
+	"export"
+	"cd"
+	"execute_command"
+	"ast")
+
+# Check if single test is requested
+TESTS_TO_RUN=("${ALL_TESTS[@]}")
+if [[ -n "$1" ]]; then
+	# Check if the provided test name is valid
+	if [[ " ${ALL_TESTS[*]} " =~ " $1 " ]]; then
+		TESTS_TO_RUN=("$1")
+		printf "${BOLD}${YELLOW}Running single test: $1${NORMAL}\n"
+	else
+		printf "${RED}Error: Test '$1' not found${NORMAL}\n"
+		printf "Available tests: ${ALL_TESTS[*]}\n"
+		exit 1
+	fi
+fi
 
 make_test() {
 	local test_name=$1
 	printf "${BOLD}${BLUE}Running ${test_name} tests${NORMAL}\n"
 	(cd $SCRIPT_DIR && ./${test_name}.sh)
 }
-# make_test "echo"
-# make_test "pwd"
-# make_test "expansion"
-# make_test "tokenizer"
-# make_test "quote_removal"
-# make_test "token_recognition"
-# make_test "export"
-# make_test "cd"
-
 run_test() {
 	local test_name=$1
 	local test_script="${SCRIPT_DIR}${test_name}.sh"
@@ -105,7 +121,7 @@ show_summary() {
 }
 printf "${BOLD}Starting test suite...${NORMAL}\n"
 
-for test_name in "${ALL_TESTS[@]}"; do
+for test_name in "${TESTS_TO_RUN[@]}"; do
 	run_test "$test_name" || true # Don't exit on individual test failure
 done
 

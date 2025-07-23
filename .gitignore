@@ -9,3 +9,4 @@ libminishell.a
 .build_config
 .minishell_history
 .DS_Store
+readline.supp

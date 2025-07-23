@@ -29,6 +29,7 @@ int	main(int ac, char **av)
 	if (!input)
 		return (1);
 	ret_val = 0;
+	init_tokenizer(&tokenizer, input->input_line);
 	if (input)
 	{
 		if (tokenize_line(&tokenizer, input->input_line) != 0)

@@ -1,4 +1,3 @@
-
 #Compiler and flags
 CC				=	cc
 CFLAGS			=	-Wall -Wextra -Werror -g
@@ -27,62 +26,73 @@ LIBFT			=	$(LIBFT_DIR)/libft.a
 LMINISHELL		=	libminishell.a
 LDFLAGS			=	-lreadline -L$(LIBFT_DIR) -lft
 
-#Source files
-SRCS_FILES		=	error.c			\
-					logger.c		\
-					debug_utils.c	\
-					conversion.c	\
-					tokenize.c		\
-					tokenizer.c		\
-					tokenizer2.c	\
-					ctx.c			\
-					parser_debug.c	\
-					parser.c		\
-					expand.c		\
-					expander.c		\
-					expander2.c		\
-					quote_removal.c	\
-					history.c		\
-					history_utils.c	\
-					history_file.c	\
-					string_utils.c	\
-					ast_parser.c	\
-					ast_debug.c		\
-					token_recognizing.c \
-					env_get_set.c	\
-					env_clean.c		\
-					env_parse.c		\
-					export.c		\
-					variables.c		\
-					unset.c			\
-					utils.c			\
-					lst_utils.c		\
-					cd.c			\
-					pwd.c			\
-					token_debug.c			
+# Module directories
+BUILTIN_DIR		=	$(SRCS_DIR)/builtin
+CONTEXT_DIR		=	$(SRCS_DIR)/context
+DEBUG_DIR		=	$(SRCS_DIR)/debug
+ERRORS_DIR		=	$(SRCS_DIR)/errors
+EXECUTION_DIR	=	$(SRCS_DIR)/execution
+HISTORY_DIR		=	$(SRCS_DIR)/history
+PARSING_DIR		=	$(SRCS_DIR)/parsing
+UTILS_DIR		=	$(SRCS_DIR)/utils
+VARIABLES_DIR	=	$(SRCS_DIR)/variables
 
-HEADERS			=	$(INC_DIR)/minishell.h 	\
-					$(SRCS_DIR)/log.h 		\
-					$(SRCS_DIR)/parser.h	\
-					$(SRCS_DIR)/debug.h		\
-					$(SRCS_DIR)/env.h		\
-					$(SRCS_DIR)/errors.h
+# Module source files
+BUILTIN_SRCS	=	cd.c echo.c export.c pwd.c unset.c exit.c
+CONTEXT_SRCS	=	ctx.c
+DEBUG_SRCS		=	debug_utils.c logger.c
+ERRORS_SRCS		=	error.c error2.c
+EXECUTION_SRCS	=	execute.c execute_command.c path.c pipeline.c redirections.c 
+HISTORY_SRCS	=	history.c history_file.c history_utils.c
+PARSING_SRCS	=	ast.c ast_debug2.c ast_debug.c ast_parse_command2.c \
+					ast_parse_command.c ast_parser.c ast_traversal.c \
+					expand.c expand2.c expander_error.c expander.c parser.c \
+					parser_debug.c parse_user_line.c quote_removal.c \
+					token_debug.c tokenize.c tokenizer2.c tokenizer.c \
+					token_recognizing.c expand_var.c
+UTILS_SRCS		=	conversion.c list_iter.c lst_utils.c string_utils.c utils.c
+VARIABLES_SRCS	=	env_clean.c env_get_set.c env_parse.c variables.c
+
+# Combine all sources with their module paths
+SRCS_FILES		=	$(addprefix builtin/,$(BUILTIN_SRCS)) \
+					$(addprefix context/,$(CONTEXT_SRCS)) \
+					$(addprefix debug/,$(DEBUG_SRCS)) \
+					$(addprefix errors/,$(ERRORS_SRCS)) \
+					$(addprefix execution/,$(EXECUTION_SRCS)) \
+					$(addprefix history/,$(HISTORY_SRCS)) \
+					$(addprefix parsing/,$(PARSING_SRCS)) \
+					$(addprefix utils/,$(UTILS_SRCS)) \
+					$(addprefix variables/,$(VARIABLES_SRCS))
+
+# Headers with module paths
+HEADERS			=	$(INC_DIR)/minishell.h 		\
+					$(DEBUG_DIR)/log.h 			\
+					$(DEBUG_DIR)/debug.h		\
+					$(PARSING_DIR)/parser.h		\
+					$(PARSING_DIR)/expander.h		\
+					$(PARSING_DIR)/ast.h		\
+					$(PARSING_DIR)/ast_debug.h	\
+					$(ERRORS_DIR)/errors.h		\
+					$(VARIABLES_DIR)/env.h		\
+					$(EXECUTION_DIR)/execute.h
 
 #Built-ins utilities
-
-ECHO			=	echo
-EXPORT				=	export
-BUILTIN_UTILS	=	$(ECHO)
+# ECHO			=	echo
+# EXPORT			=	export
+# BUILTIN_UTILS	=	$(ECHO)
 
 #Object files
 SRCS			=	$(addprefix $(SRCS_DIR)/,$(SRCS_FILES))
 OBJS			=	$(patsubst $(SRCS_DIR)/%.c,$(BUILD_DIR)/%.o,$(SRCS))
 DEP_FILES		=	$(OBJS:.o=.d)
-UTILS_OBJS		=	$(BUILD_DIR)/error.o $(BUILD_DIR)/logger.o $(BUILD_DIR)/conversion.o
+UTILS_OBJS		=	$(BUILD_DIR)/errors/error.o \
+					$(BUILD_DIR)/debug/error2.o \
+					$(BUILD_DIR)/debug/logger.o \
+					$(BUILD_DIR)/utils/conversion.o
 
 #Configuration
 CONFIG_FILE		=	.build_config
-DEBUG			?=	1
+DEBUG			?=	0
 LOG_LEVEL		=	0
 LOG_FILE_PATH 	?=	
 
@@ -120,19 +130,14 @@ $(LMINISHELL): $(OBJS)
 	printf "$(GREEN)✅ Library created$(RESET)\n"
 
 #Built-in utilities
-$(ECHO):$(BUILD_DIR)/echo.o $(UTILS_OBJS)
-	printf "$(YELLOW)🔨 Building echo...$(RESET)\n"
-	@$(CC) $< $(UTILS_OBJS) $(LIBFT) $(LDFLAGS) -o $@
-	printf "$(GREEN)✅ Echo built$(RESET)\n"
-
-# $(PWD):$(BUILD_DIR)/pwd.o $(UTILS_OBJS)
-# 	printf "$(YELLOW)🔨 Building pwd...$(RESET)\n"
+# $(ECHO):$(BUILD_DIR)/builtin/echo.o $(UTILS_OBJS)
+# 	printf "$(YELLOW)🔨 Building echo...$(RESET)\n"
 # 	@$(CC) $< $(UTILS_OBJS) $(LIBFT) $(LDFLAGS) -o $@
-# 	printf "$(GREEN)✅ Pwd built$(RESET)\n"
-#
-#Object files compilation
+# 	printf "$(GREEN)✅ Echo built$(RESET)\n"
+
+#Object files compilation - Updated to handle subdirectories
 $(BUILD_DIR)/%.o:$(SRCS_DIR)/%.c $(HEADERS) Makefile $(CONFIG_FILE)
-	@mkdir -p $(BUILD_DIR)
+	@mkdir -p $(dir $@)
 	printf "$(GREEN)Compiling: $(WHITE)$<$(RESET)\r"
 	@$(CC) $(CFLAGS) \
 	-D DEBUG=$(DEBUG) \
@@ -141,10 +146,14 @@ $(BUILD_DIR)/%.o:$(SRCS_DIR)/%.c $(HEADERS) Makefile $(CONFIG_FILE)
 	-I $(LIBFT_DIR) \
 	-I $(INC_DIR) \
 	-I $(SRCS_DIR) \
+	-I $(DEBUG_DIR) \
+	-I $(PARSING_DIR) \
+	-I $(ERRORS_DIR) \
+	-I $(VARIABLES_DIR) \
 	-MD -MP \
 	-c $< -o $@
 
-# Special compilation rule for main and utilities (also generate deps)
+# Special compilation rule for main
 $(BUILD_DIR)/main.o: $(SRCS_DIR)/main.c Makefile $(CONFIG_FILE)
 	@mkdir -p $(BUILD_DIR)
 	printf "$(GREEN)Compiling: $(WHITE)$<$(RESET)\n"
@@ -155,32 +164,10 @@ $(BUILD_DIR)/main.o: $(SRCS_DIR)/main.c Makefile $(CONFIG_FILE)
 		-I $(LIBFT_DIR) \
 		-I $(INC_DIR) \
 		-I $(SRCS_DIR) \
-		-MD -MP \
-		-c $< -o $@
-
-$(BUILD_DIR)/echo.o: $(SRCS_DIR)/echo.c Makefile $(CONFIG_FILE)
-	@mkdir -p $(BUILD_DIR)
-	printf "$(GREEN)Compiling: $(WHITE)$<$(RESET)\n"
-	@$(CC) $(CFLAGS) \
-		-D DEBUG=$(DEBUG) \
-		-D LOG_FILE_PATH='"$(LOG_FILE_PATH)"' \
-		-D LOG_LEVEL=$(LOG_LEVEL) \
-		-I $(LIBFT_DIR) \
-		-I $(INC_DIR) \
-		-I $(SRCS_DIR) \
-		-MD -MP \
-		-c $< -o $@
-
-$(BUILD_DIR)/pwd.o: $(SRCS_DIR)/pwd.c Makefile $(CONFIG_FILE)
-	@mkdir -p $(BUILD_DIR)
-	printf "$(GREEN)Compiling: $(WHITE)$<$(RESET)\n"
-	@$(CC) $(CFLAGS) \
-		-D DEBUG=$(DEBUG) \
-		-D LOG_FILE_PATH='"$(LOG_FILE_PATH)"' \
-		-D LOG_LEVEL=$(LOG_LEVEL) \
-		-I $(LIBFT_DIR) \
-		-I $(INC_DIR) \
-		-I $(SRCS_DIR) \
+		-I $(DEBUG_DIR) \
+		-I $(PARSING_DIR) \
+		-I $(ERRORS_DIR) \
+		-I $(VARIABLES_DIR) \
 		-MD -MP \
 		-c $< -o $@
 
@@ -216,5 +203,3 @@ norminette:
 	norminette $(SRCS_DIR) $(INC_DIR)
 	
 .PHONY: all clean fclean re force norminette force
-#Include dependency files (if exists)
--include $(DEP_FILES)

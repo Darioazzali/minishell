@@ -41,6 +41,9 @@ make_test "${input_dir}/test.json"
 make_test "${input_dir}/test1.json"
 make_test "${input_dir}/test2.json"
 make_test "${input_dir}/test3.json"
+make_test "${input_dir}/test4.json"
+make_test "${input_dir}/test5.json"
+make_test "${input_dir}/test6.json"
 resume_test $tests_passed $tests_failed
 
 if [[ $tests_failed -gt 0 ]]; then

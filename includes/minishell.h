@@ -24,12 +24,13 @@
 # include <readline/history.h>
 # include "errors.h"
 # include "log.h"
+# include <sys/wait.h>
 
 # define INITIAL_CAPACITY	10
 # define HISTORY_FILE		".minishell_history"
 # define MALLOC_ERROR_MSG	"Failed to allocate memory"
 
-typedef struct s_parser		t_parser;
+typedef struct s_lexer		t_lexer;
 typedef struct s_sh_var
 {
 	char	*name;
@@ -45,18 +46,31 @@ typedef struct s_history
 
 }	t_history;
 
+typedef struct s_ast_node	t_ast_node;
+
 typedef struct s_ctx
 {
-	t_parser		*parser;
+	t_lexer			*lexer;
 	int				pid;
 	t_history		*history;
 	t_envs			*envs;
+	t_ast_node		*ast;
 	int				exit_status;
 }	t_ctx;
 
 void			*free_ctx(t_ctx *ctx);
 t_ctx			*init_ctx(void);
-int				tokenize_line(t_parser *parser, const char *line);
+int				tokenize_line(t_lexer *parser, const char *line);
+
+/** @brief 	Expands the tokens
+ * 			
+ *	After the lexical tokenization of the input, the
+ *	tokens that represent variables are expanded.
+ *
+ *	@param 	ctx The application context.
+ *	@note 	The expansion is done in place using the tokens
+ *			field stored in the ctx.
+ * */
 int				expand_tokens(t_ctx *ctx);
 void			*free_parser(t_ctx *ctx);
 int				remove_quotes(t_ctx *ctx);
@@ -77,10 +91,11 @@ t_sh_var		*get_shell_var(t_envs *envs, char *name);
 int				set_shell_var(t_envs *envs, char *name, char *value);
 void			*free_envs(t_envs *envs);
 //Builtins
-int				export_builtin(char **av, t_envs *envs);
-int				unset_builtin(t_envs **envs, char **keys);
-int				_built_chdir(int ac, const char **av, t_envs *envs);
-int				_pwd(void);
+int				export_btin(char **av, t_envs *envs);
+int				unset_btin(t_envs **envs, char **keys);
+int				chdir_btin(int ac, const char **av, t_envs *envs);
+int				pwd_btin(void);
+int				exit_btin(int argc, char **argv, t_ctx *ctx);
 //List utils
 void			ft_lstadd_or_assign(t_list **head, t_list *new_node);
 void			ft_lstremove_node(t_list **head,
@@ -88,6 +103,12 @@ void			ft_lstremove_node(t_list **head,
 int				ft_strcmp(const char *s1, const char *s2);
 char			**list_to_array(t_list *lst);
 void			*clean_str_array(char **array, int i);
-void			free_split_result(char **split_result);
+void			free_str_array(char **split_result);
 bool			ft_is_whitespace(char c);
+int				init_program(t_ctx **ctx, char **env);
+int				read_user_line(t_ctx *ctx);
+int				echo_btin(char **av);
+int				ft_strcmp(const char *s1, const char *s2);
+int				count_words(char **args);
+char			**envs_to_strarr(t_envs *envs);
 #endif

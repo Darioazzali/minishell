@@ -16,7 +16,6 @@
 static int	_cd_null_dir(t_envs *envs);
 static int	_cd_perm_den(t_envs *envs);
 static int	_cd_parent(t_envs *envs);
-static void	_print_test_result(t_cd_t *t);
 static int	make_test(int (*fun) (t_envs *), t_envs *envs,
 				char *test_name, t_cd_t *t);
 static int	_cd_no_args(t_envs *envs);
@@ -58,7 +57,7 @@ static int	_cd_too_many_args(t_envs *envs)
 {
 	char *av[4] = {"cd", "arg1", "arg2", NULL};
 
-	return (_built_chdir(3, (const char **)av, envs) == 0); // Should fail
+	return (chdir_btin(3, (const char **)av, envs) == 0); // Should fail
 }
 
 static int	_cd_zero_args(t_envs *envs)
@@ -68,7 +67,7 @@ static int	_cd_zero_args(t_envs *envs)
 	char	*pwd;
 	int		result;
 
-	if (_built_chdir(1, (const char **)av, envs) != 0)
+	if (chdir_btin(1, (const char **)av, envs) != 0)
 		return (1);
 	pwd = getcwd(NULL, 0);
 	result = strcmp(pwd, home);
@@ -80,7 +79,7 @@ static int	_cd_null_dir(t_envs *envs)
 {
 	char	*av[2]={"cd", ""};
 
-	if (_built_chdir(2, (const char **)av, envs) != 1)
+	if (chdir_btin(2, (const char **)av, envs) != 1)
 	{
 		test_fail((char *)__func__, NULL);
 		return (1);
@@ -96,7 +95,7 @@ static int	_cd_perm_den(t_envs *envs)
 {
 	char	*av[2]={"cd", "/root"};
 
-	if (_built_chdir(2, (const char **)av, envs) != 1)
+	if (chdir_btin(2, (const char **)av, envs) != 1)
 	{
 		test_fail((char *)__func__, NULL);
 		return (1);
@@ -116,7 +115,7 @@ static int	_cd_parent(t_envs *envs)
 	pwd = getcwd(NULL, 0);
 	printf("%s\n", pwd);
 	free(pwd);
-	return (_built_chdir(2, (const char **)av, envs) != 0);
+	return (chdir_btin(2, (const char **)av, envs) != 0);
 }
 
 static int	make_test(int (*fun) (t_envs *), t_envs *envs,
@@ -141,23 +140,9 @@ static int	make_test(int (*fun) (t_envs *), t_envs *envs,
 	test_success(test_name, NULL);
 	t->t_succ++;
 	back[1] = pwd;
-	_built_chdir(2, (const char **)back, envs);
+	chdir_btin(2, (const char **)back, envs);
 	free(pwd);
 	return (0);
-}
-
-static void	_print_test_result(t_cd_t *t)
-{
-	if (t->t_succ == t->t_total)
-	{
-		printf("%sALL Test Passed: %s", GREEN_BOLD, NORMAL);
-		printf("%zu/%zu\n", t->t_succ, t->t_total);
-		return ;
-	}
-	printf("%sTest Passed: %s", GREEN_BOLD, NORMAL);
-	printf("%zu/%zu\n", t->t_succ, t->t_total);
-	if (t->t_fail)
-		printf("%sFail: %zu%s\n", RED_BOLD, t->t_fail, NORMAL);
 }
 
 static int	_cd_no_args(t_envs *envs)
@@ -167,7 +152,7 @@ static int	_cd_no_args(t_envs *envs)
 	char	*pwd;
 
 	_home = getenv("HOME");
-	_built_chdir(2, (const char **)av, envs);
+	chdir_btin(2, (const char **)av, envs);
 	pwd = getcwd(NULL, 0);
 	return (strcmp(pwd, _home));
 }
@@ -179,7 +164,7 @@ static int	_cd_tilde(t_envs *envs)
 	char	*_home;
 
 	_home = getenv("HOME");
-	_built_chdir(2, (const char **)av, envs);
+	chdir_btin(2, (const char **)av, envs);
 	pwd = getcwd(NULL, 0);
 	return (strcmp(pwd, _home));
 }
@@ -190,7 +175,7 @@ static int	_cd_absolute_path(t_envs *envs)
 	char	*av[2]={"cd", tmp};
 	char	*pwd;
 
-	_built_chdir(2, (const char **)av, envs);
+	chdir_btin(2, (const char **)av, envs);
 	pwd = getcwd(NULL, 0);
 	return (strcmp(pwd, tmp));
 }
@@ -199,14 +184,14 @@ static int	_cd_nonexistent(t_envs *envs)
 {
 	char	*av[2]={"cd","/nonexistent"};
 
-	return (_built_chdir(2, (const char **)av, envs) == 0);
+	return (chdir_btin(2, (const char **)av, envs) == 0);
 }
 
 static int	_cd_file_not_dir(t_envs *envs)
 {
 	char	*av[2]={"cd","/etc/passwd"};
 
-	return (_built_chdir(2, (const char **)av, envs) == 0);
+	return (chdir_btin(2, (const char **)av, envs) == 0);
 }
 
 static int	_cd_oldpwd(t_envs *envs)
@@ -217,11 +202,11 @@ static int	_cd_oldpwd(t_envs *envs)
 	char	curr_pwd[1024];
 
 	old_pwd = getcwd(NULL, 0);
-	_built_chdir(2, (const char **)av, envs);
+	chdir_btin(2, (const char **)av, envs);
 	getcwd(curr_pwd, 1024);
 	if (strcmp(curr_pwd, old_pwd) == 0)
 		return (1);
-	_built_chdir(2, (const char **)av_1, envs);
+	chdir_btin(2, (const char **)av_1, envs);
 	getcwd(curr_pwd, 1024);
 	if (strcmp(curr_pwd, old_pwd) != 0)
 		return (1);
@@ -234,8 +219,8 @@ static int	_cd_home_not_set(t_envs *envs)
 	char	*av_2[2] = {"HOME", NULL};
 	int		result;
 
-	unset_builtin(&envs, av_2);
-	result = (_built_chdir(1, (const char **)av, envs) == 0);
+	unset_btin(&envs, av_2);
+	result = (chdir_btin(1, (const char **)av, envs) == 0);
 	set_shell_var(envs, "HOME", "/home");
 	return (result);
 }

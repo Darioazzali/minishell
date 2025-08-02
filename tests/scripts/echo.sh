@@ -12,11 +12,14 @@
 # **************************************************************************** #
 
 ECHO_DIR=$(dirname "$0")
-TEST_DIR="$ECHO_DIR/../"
-ROOT_DIR="$(dirname "$ECHO_DIR")/../.."
-ECHO="$ROOT_DIR/echo"
+TEST_DIR="$ECHO_DIR/.."
+ECHO="$TEST_DIR/echo"
 source "$TEST_DIR/test_utils.sh"
-make -C $ROOT_DIR "echo" >/dev/null
+make -C $TEST_DIR "echo" >/dev/null
+if [[ $? -ne 0 ]]; then
+	printf "Failed to make echo\n"
+	exit 1
+fi
 
 compare_echos() {
 	local ours=$1

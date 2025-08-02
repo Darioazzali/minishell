@@ -21,7 +21,7 @@ int	main(int ac, char **av)
 	t_list			*expected;
 	t_json_input_t	*input;
 	int				ret_val;
-	t_parser		tokenizer={0};
+	t_lexer		tokenizer={0};
 
 	if (ac < 2)
 		return (-1);
@@ -29,6 +29,7 @@ int	main(int ac, char **av)
 	if (!input)
 		return (1);
 	ret_val = 0;
+	init_tokenizer(&tokenizer, input->input_line);
 	if (input)
 	{
 		if (tokenize_line(&tokenizer, input->input_line) != 0)

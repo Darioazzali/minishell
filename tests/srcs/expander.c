@@ -24,7 +24,7 @@ int	main(int ac, char **av, char **env)
 	char		*line;
 	size_t		len;
 	ssize_t		read;
-	t_parser	tokenizer={0};
+	t_lexer	tokenizer={0};
 
 	if (ac < 2)
 		return (-1);
@@ -41,10 +41,10 @@ int	main(int ac, char **av, char **env)
 	while ((read = getline(&line, &len, fp)) != -1)
 		ft_lstadd_back(&tok_lst, ft_lstnew(ft_strdup(strip_newline(line))));
 	fclose(fp);
-	ctx->parser = &tokenizer;
-	if (!ctx->parser)
+	ctx->lexer = &tokenizer;
+	if (!ctx->lexer)
 		return (-1);
-	ctx->parser->tokens = tok_lst;
+	ctx->lexer->tokens = tok_lst;
 	expand_tokens(ctx);
 	print_tokens(tok_lst);
 }

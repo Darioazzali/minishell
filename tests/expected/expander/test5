@@ -1,5 +1,5 @@
 hola mundo
-\\
-\$HOLA
+\
+$HOLA
 'ciao $HOLA'
 "ciao hola mundo"

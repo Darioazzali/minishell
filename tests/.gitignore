@@ -2,9 +2,14 @@
 output
 /expander
 /tokenizer
+/ast_parse
 /export
 /cd
+/echo
+/pwd
 /quote_removal
 /token_recognition
+/execute_command
 expected/expander/test_pid
 .error
+vgcore*

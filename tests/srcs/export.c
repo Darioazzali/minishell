@@ -6,7 +6,7 @@
 /*   By: dazzali <dazzali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 14:16:16 by dazzali           #+#    #+#             */
-/*   Updated: 2025/07/17 08:16:31 by dazzali          ###   ########.fr       */
+/*   Updated: 2025/07/26 08:21:08 by dazzali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int	test_1(t_envs *envs)
 	char	*expected = "ciao";
 	t_sh_var	*val;
 
-	export_builtin(list, envs);
+	export_btin(list, envs);
 	val = get_shell_var(envs, key);
 	if (!val)
 	{
@@ -64,7 +64,7 @@ static int	test_2(t_envs *envs)
 	t_sh_var	*val;
 
 	set_shell_var(envs, key, "ciao");
-	export_builtin(list, envs);
+	export_btin(list, envs);
 	val = get_shell_var(envs, key);
 	if (!val)
 	{
@@ -84,7 +84,7 @@ static int	test_edit(t_envs *envs)
 	t_sh_var	*val;
 
 	set_shell_var(envs, key, "ciao");
-	export_builtin(list, envs);
+	export_btin(list, envs);
 	val = get_shell_var(envs, key);
 	if (!val)
 	{
@@ -104,7 +104,7 @@ static int	test_unset(t_envs *envs)
 	t_sh_var	*val;
 
 	set_shell_var(envs, key, "ciao");
-	export_builtin(list, envs);
+	export_btin(list, envs);
 	val = get_shell_var(envs, key);
 	if (!val)
 	{
@@ -113,7 +113,7 @@ static int	test_unset(t_envs *envs)
 	}
 	if (strcmp(val->value, expected))
 		return (1);
-	unset_builtin(&envs, list);
+	unset_btin(&envs, list);
 	val = get_shell_var(envs, key);
 	if (val)
 		return (1);

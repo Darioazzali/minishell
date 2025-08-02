@@ -13,10 +13,14 @@
 
 PWD_DIR=$(dirname "$0")
 TEST_DIR="$PWD_DIR/../"
-ROOT_DIR="$(dirname "$PWD_DIR")/../.."
+ROOT_DIR="$(dirname "$PWD_DIR")/.."
 _PWD="$ROOT_DIR/pwd"
 source "$TEST_DIR/test_utils.sh"
-make -C $ROOT_DIR echo >/dev/null
+make -C $ROOT_DIR "pwd" >/dev/null
+if [[ $? -ne 0 ]]; then
+	printf "Failed to make pwd"
+	exit 1
+fi
 
 # Compare the pwd comand with the one implemented by us.
 # If the output is different, report the difference

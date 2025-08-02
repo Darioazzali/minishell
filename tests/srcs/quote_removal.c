@@ -23,7 +23,9 @@ int	main(int ac, char **av)
 	FILE		*fp;
 	char		*line;
 	size_t		len;
-	t_parser	parser = {0};
+	t_list		*node;
+	char		*cloned;
+	t_lexer	parser = {0};
 
 	if (ac < 2)
 		return (-1);
@@ -32,15 +34,25 @@ int	main(int ac, char **av)
 	fp = fopen(av[1], "r");
 	if (!fp)
 		exit(1);
+	line = NULL;
 	while (getline(&line, &len, fp) != -1)
-		ft_lstadd_back(&tok_lst, ft_lstnew(ft_strdup(strip_newline(line))));
+	{
+		cloned = ft_strdup(strip_newline(line));
+		node = ft_lstnew(cloned);
+		ft_lstadd_back(&tok_lst, node);
+		free(line);
+		line = NULL;
+	}
+	free(line);
 	fclose(fp);
-	ctx->parser = &parser;
-	if (!ctx->parser)
+	ctx->lexer = &parser;
+	if (!ctx->lexer)
 		return (-1);
 	parser.tokens = tok_lst;
 	remove_quotes(ctx);
 	print_tokens(tok_lst);
+	ft_lstclear(&tok_lst, free);
+	free_ctx(ctx);
 }
 
 static	void	print_tokens(t_list *tokens)

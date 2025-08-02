@@ -224,3 +224,25 @@ void	test_success(char *test_name, char *message)
 	else
 		printf("%s %s\n", G_CHECKMARK, test_name);
 }
+
+void	_print_test_result(t_cd_t *t)
+{
+	if (t->t_succ == t->t_total)
+	{
+		printf("%sALL Test Passed: %s", GREEN_BOLD, NORMAL);
+		printf("%zu/%zu\n", t->t_succ, t->t_total);
+		return ;
+	}
+	printf("%sTest Passed: %s", GREEN_BOLD, NORMAL);
+	printf("%zu/%zu\n", t->t_succ, t->t_total);
+	if (t->t_fail)
+		printf("%sFail: %zu%s\n", RED_BOLD, t->t_fail, NORMAL);
+}
+
+void	init_test_result(t_cd_t *t)
+{
+	t->t_fail = 0;
+	t->t_succ = 0;
+	t->t_total = 0;
+	t->status = 0;
+}

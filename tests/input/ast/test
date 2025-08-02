@@ -1,0 +1,60 @@
+TEST: basic command
+INPUT: ls
+EXPECTED: cmd:ls
+---
+TEST: command with single argument
+INPUT: echo hello
+EXPECTED: cmd:echo[hello]
+---
+TEST: command with multiple arguments
+INPUT: grep -n pattern file.txt
+EXPECTED: cmd:grep[-n,pattern,file.txt]
+---
+TEST: simple pipe
+INPUT: ls | grep txt
+EXPECTED: pipe(,cmd:ls,cmd:grep[txt])
+---
+TEST: pipe with arguments
+INPUT: cat file | head -5
+EXPECTED: pipe(,cmd:cat[file],cmd:head[-5])
+---
+TEST: triple pipe
+INPUT: ps aux | grep bash | wc -l
+EXPECTED: pipe(,pipe(,cmd:ps[aux],cmd:grep[bash]),cmd:wc[-l])
+---
+TEST: output redirection
+INPUT: echo hello > file.txt
+EXPECTED: cmd:echo[hello]{>file.txt}
+---
+TEST: input redirection
+INPUT: cat < input.txt
+EXPECTED: cmd:cat{<input.txt}
+---
+TEST: append redirection
+INPUT: echo log >> logfile
+EXPECTED: cmd:echo[log]{>>logfile}
+---
+TEST: multiple redirections
+INPUT: cat < input.txt > output.txt
+EXPECTED: cmd:cat{<input.txt,>output.txt}
+---
+TEST: pipe with redirection
+INPUT: ls | grep txt > results.txt
+EXPECTED: pipe(,cmd:ls,cmd:grep[txt]{>results.txt})
+---
+TEST: quoted arguments
+INPUT: echo "hello world"
+EXPECTED: cmd:echo[hello world]
+---
+TEST: single quoted arguments
+INPUT: echo 'test file'
+EXPECTED: cmd:echo[test file]
+---
+TEST: mixed quotes in pipe
+INPUT: echo "hello world" | grep 'test'
+EXPECTED: pipe(,cmd:echo[hello world],cmd:grep[test])
+---
+TEST: complex combination
+INPUT: cat file.txt | sort | uniq > sorted.txt
+EXPECTED: pipe(,pipe(,cmd:cat[file.txt],cmd:sort),cmd:uniq{>sorted.txt})
+---

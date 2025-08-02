@@ -39,6 +39,7 @@ make_test() {
 		tests_failed=$((tests_failed + 1))
 	else
 		test_pass "${filename}"
+		printf "Test passed\n"
 		tests_passed=$((tests_passed + 1))
 	fi
 	unset HOLA

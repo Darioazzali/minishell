@@ -79,7 +79,7 @@ static t_test	*_setup(void)
 
 static int	make_test(char *line, char *expected)
 {
-	static t_parser	parser = {0};
+	static t_lexer	parser = {0};
 	t_ast_node		*node;
 	t_test			*test;
 	int				status;

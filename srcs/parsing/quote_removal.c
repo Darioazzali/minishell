@@ -12,16 +12,17 @@
 
 #include "expander.h"
 
-static char	*handle_quotes_removal(t_ctx *ctx, char *content);
-static char	*handle_escapes_char(t_ctx *ctx, char *token);
-static int	append_escaped_sym(t_expander *expander, char symbol);
-static char	*ft_trim_double_quotes(char	*str);
+static void	handle_quotes_removal(char *content);
+// static char	*handle_escapes_char(t_ctx *ctx, char *token);
+// static int	append_escaped_sym(t_expander *expander, char symbol);
+// static char	*ft_trim_double_quotes(char	*str);
+static void	handle_double_quotes(char **read_ptr, char **write_ptr,
+				t_parser_mode *mode);
 
 int	remove_quotes(t_ctx *ctx)
 {
 	t_list		*next;
 	t_lexer		*parser;
-	char		*tmp;
 
 	parser = ctx->lexer;
 	parser->stage = P_QUOTES_REM;
@@ -30,89 +31,94 @@ int	remove_quotes(t_ctx *ctx)
 	next = parser->tokens;
 	while (next)
 	{
-		tmp = handle_quotes_removal(ctx, next->content);
-		if (tmp == NULL)
-			return (-1);
-		free(next->content);
-		next->content = tmp;
+		handle_quotes_removal(next->content);
 		next = next->next;
 	}
 	log_debug_struct(parser->tokens, deb_format_tokens);
 	return (0);
 }
 
-static char	*handle_quotes_removal(t_ctx *ctx, char *token)
+static void	handle_quotes_removal(char *token)
 {
-	char	*ret;
-	char	*tmp;
-	bool	single_quote;
+	char			*read_ptr;
+	char			*write_ptr;
+	t_parser_mode	mode;
 
-	single_quote = false;
-	if (*token == '\'')
-		single_quote = true;
-	if (single_quote)
-		return (ft_strtrim(token, "'"));
-	ret = ft_trim_double_quotes(token);
-	if (!ret)
-		return (NULL);
-	tmp = handle_escapes_char(ctx, ret);
-	if (!tmp)
+	read_ptr = token;
+	write_ptr = token;
+	mode = LEXI_NORMAL;
+	while (*read_ptr)
 	{
-		free(ret);
-		return (NULL);
+		if (mode == LEXI_NORMAL)
+		{
+			if (*read_ptr == '\\' && *(read_ptr + 1)
+				&& (*(read_ptr + 1) != '"'
+					|| *(read_ptr + 1) != '\'' )
+			)
+			{
+				read_ptr++;
+				*(write_ptr) = *read_ptr;
+				read_ptr++;
+				write_ptr++;
+			}
+			else if (*read_ptr == '"')
+			{
+				mode = LEXI_D_QUOTE;
+				read_ptr++;
+			}
+			else if (*read_ptr == '\'')
+			{
+				mode = LEXI_S_QUOTE;
+				read_ptr++;
+			}
+			else
+			{
+				*(write_ptr) = *read_ptr;
+				read_ptr++;
+				write_ptr++;
+			}
+		}
+		else if (mode == LEXI_S_QUOTE)
+		{
+			if (*read_ptr == '\'')
+			{
+				mode = LEXI_NORMAL;
+				read_ptr++;
+			}
+			else
+			{
+				(*write_ptr) = *read_ptr;
+				read_ptr++;
+				write_ptr++;
+			}
+		}
+		else if (mode == LEXI_D_QUOTE)
+		{
+			handle_double_quotes(&read_ptr, &write_ptr, &mode);
+		}
 	}
-	free(ret);
-	ret = tmp;
-	return (ret);
+	*write_ptr = '\0';
 }
 
-static char	*handle_escapes_char(t_ctx *ctx, char *token)
+static void	handle_double_quotes(char **read_ptr, char **write_ptr, t_parser_mode *mode)
 {
-	char		*ret;
-	t_expander	expander;
-
-	init_expander(&expander, ctx, token);
-	while (*expander.cursor)
+	if (**read_ptr == '\\' && *(*read_ptr + 1)
+		&& *(*read_ptr + 1) == '"')
 	{
-		if (*expander.cursor == '\\' && *(expander.cursor + 1))
-			append_escaped_sym(&expander, *(expander.cursor + 1));
-		else
-			expander.cursor++;
+		(*read_ptr)++;
+		**write_ptr = **read_ptr;
+		(*read_ptr)++;
+		(*write_ptr)++;
 	}
-	if (join_until_cursor(&expander) == -1)
-		return (NULL);
-	ret = expander.expanded;
-	expander.expanded = NULL;
-	return (ret);
-}
-
-static int	append_escaped_sym(t_expander *expander, char symbol)
-{
-	char	*tmp;
-	char	s_char[2];
-
-	s_char[0] = symbol;
-	s_char[1] = '\0';
-	if (join_until_cursor(expander) == -1)
-		expand_err_code(expander, EXP_ERR_MALLOC, -1);
-	tmp = ft_strjoin(expander->expanded, s_char);
-	if (!tmp)
-		expand_err_code(expander, EXP_ERR_MALLOC, -1);
-	free(expander->expanded);
-	expander->expanded = tmp;
-	expander->cursor += 2;
-	expander->start = expander->cursor;
-	return (0);
-}
-
-static char	*ft_trim_double_quotes(char	*str)
-{
-	size_t	len;
-	char	*res;
-
-	if (*str != '"')
-		return (ft_strdup(str));
-	len = ft_strlen(str);
-	res = ft_substr(str, 1, len - 2);
-	return (res);
+	else if (**read_ptr == '"')
+	{
+		*mode = LEXI_NORMAL;
+		(*read_ptr)++;
+	}
+	else
+	{
+		**write_ptr = **read_ptr;
+		(*write_ptr)++;
+		(*read_ptr)++;
+	}
 }

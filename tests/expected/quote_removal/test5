@@ -4,8 +4,8 @@ $SHELL
 ciao $SHELL
 ciao $SHELL
 
-value$var
+value\$var
 He said "hello"
 a"b"c
-path\to\file
+path\\to\\file
 """"

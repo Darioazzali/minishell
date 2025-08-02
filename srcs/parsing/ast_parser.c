@@ -46,7 +46,7 @@ t_ast_node	*build_ast(t_ctx *ctx)
 	t_ast_node	*ast;
 
 	log_debug("=== Starting AST construction ===\n");
-	current = ctx->parser->tokens;
+	current = ctx->lexer->tokens;
 	if (!current)
 	{
 		log_warn("No tokens to parse\n");

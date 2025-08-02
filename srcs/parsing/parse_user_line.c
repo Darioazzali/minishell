@@ -12,7 +12,7 @@
 
 #include "ast.h"
 
-static int	_parse_error(t_parser *parser, char *line, char *message);
+static int	_parse_error(t_lexer *parser, char *line, char *message);
 static void	process_new_line(char *line, t_ctx *ctx);
 
 int	read_user_line(t_ctx *ctx)
@@ -32,7 +32,7 @@ int	read_user_line(t_ctx *ctx)
 
 static void	process_new_line(char *line, t_ctx *ctx)
 {
-	static t_parser		parser = {0};
+	static t_lexer		parser = {0};
 	t_ast_node			*ast_root;
 	char				*tmp;
 
@@ -56,12 +56,12 @@ static void	process_new_line(char *line, t_ctx *ctx)
 	free(line);
 }
 
-t_ast_node	*parse_new_line(char *line, t_parser *parser, t_ctx *ctx)
+t_ast_node	*parse_new_line(char *line, t_lexer *parser, t_ctx *ctx)
 {
 	t_ast_node	*ast_root;
 
 	reset_tokenizer(parser, line);
-	ctx->parser = parser;
+	ctx->lexer = parser;
 	if (parse_line(line, ctx) == -1)
 	{
 		log_error("Failed to parse line\n");
@@ -78,20 +78,20 @@ t_ast_node	*parse_new_line(char *line, t_parser *parser, t_ctx *ctx)
 
 int	parse_line(char *line, t_ctx *ctx)
 {
-	reset_tokenizer(ctx->parser, line);
-	if (tokenize_line(ctx->parser, line) == -1)
-		return (_parse_error(ctx->parser, line, "Failed to tokenize line\n"));
+	reset_tokenizer(ctx->lexer, line);
+	if (tokenize_line(ctx->lexer, line) == -1)
+		return (_parse_error(ctx->lexer, line, "Failed to tokenize line\n"));
 	if (expand_tokens(ctx) == -1)
-		return (_parse_error(ctx->parser, line, "Failed to expand tokens\n"));
+		return (_parse_error(ctx->lexer, line, "Failed to expand tokens\n"));
 	if (remove_quotes(ctx) == -1)
-		return (_parse_error(ctx->parser, line, "Failed to remove tokens\n"));
+		return (_parse_error(ctx->lexer, line, "Failed to remove tokens\n"));
 	if (recognize_tokens(ctx) == -1)
-		return (_parse_error(ctx->parser,
+		return (_parse_error(ctx->lexer,
 				line, "Failed to recognize tokens\n"));
 	return (0);
 }
 
-static int	_parse_error(t_parser *parser, char *line, char *message)
+static int	_parse_error(t_lexer *parser, char *line, char *message)
 {
 	if (message)
 		log_error(message);

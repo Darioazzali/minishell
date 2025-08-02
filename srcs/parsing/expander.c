@@ -12,7 +12,7 @@
 
 #include "expander.h"
 
-int	init_expander(t_expander *expander, t_ctx *ctx, const char *token)
+int	init_expander(t_expander *expander, t_ctx *ctx, const char *const token)
 {
 	expander->token = token;
 	expander->cursor = (char *)token;
@@ -30,17 +30,17 @@ int	init_expander(t_expander *expander, t_ctx *ctx, const char *token)
 int	join_until_cursor(t_expander *expander)
 {
 	char	*tmp;
-	char	*prev;
+	char	*substr;
 	int		start_idx;
 	int		end_idx;
 
 	start_idx = expander->start - expander->token;
 	end_idx = expander->cursor - expander->start;
-	prev = ft_substr(expander->token, start_idx, end_idx);
-	if (!prev)
+	substr = ft_substr(expander->token, start_idx, end_idx);
+	if (!substr)
 		return (expand_err_code(expander, EXP_ERR_MALLOC, -1));
-	tmp = ft_strjoin(expander->expanded, prev);
-	free(prev);
+	tmp = ft_strjoin(expander->expanded, substr);
+	free(substr);
 	if (!tmp)
 		return (expand_err_code(expander, EXP_ERR_MALLOC, -1));
 	free(expander->expanded);
@@ -48,7 +48,7 @@ int	join_until_cursor(t_expander *expander)
 	return (0);
 }
 
-void	*exp_error_fail(t_expander *expander)
+void	*clean_expander(t_expander *expander)
 {
 	if (expander->expanded)
 	{

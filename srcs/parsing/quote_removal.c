@@ -20,10 +20,10 @@ static char	*ft_trim_double_quotes(char	*str);
 int	remove_quotes(t_ctx *ctx)
 {
 	t_list		*next;
-	t_tokenizer	*parser;
+	t_lexer		*parser;
 	char		*tmp;
 
-	parser = ctx->parser;
+	parser = ctx->lexer;
 	parser->stage = P_QUOTES_REM;
 	if (parser->tokens == NULL)
 		return (0);

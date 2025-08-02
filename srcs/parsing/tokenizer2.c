@@ -14,7 +14,7 @@
 
 static bool	is_empty(char *start, char *end);
 
-int	add_token(t_tokenizer *tokenizer, char *end)
+int	add_token(t_lexer *tokenizer, char *end)
 {
 	t_list	*new;
 	char	*new_str;
@@ -59,7 +59,7 @@ bool	is_metachar(char *c)
 	return (false);
 }
 
-char	*handle_metachar(t_parser *tokenizer, char *line)
+char	*handle_metachar(t_lexer *tokenizer, char *line)
 {
 	if (ft_strncmp(line, ">>", 2) == 0
 		|| ft_strncmp(line, "<<", 2) == 0
@@ -75,7 +75,7 @@ char	*handle_metachar(t_parser *tokenizer, char *line)
 	}
 }
 
-void	skip_whitespace(t_parser *tokenizer)
+void	skip_whitespace(t_lexer *tokenizer)
 {
 	if (*tokenizer->ptr == ' ')
 	{

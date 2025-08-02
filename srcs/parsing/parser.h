@@ -61,14 +61,24 @@ typedef enum e_p_stage
 	P_PARSING
 }	t_p_stage;
 
-typedef struct s_parser
+/** @brief Tokenizer struct
+ * The toeknizer structure is initialized
+ * after reading the input line.
+ * The structure is Updated during the consequence
+ * phases of parsing:
+ * 1. Tokenizing
+ * 2. Variable expansion
+ * 3. Quotes removal
+ * 4. Token recognition
+ * */
+typedef struct s_lexer
 {
 	t_parser_mode	mode;
 	t_p_stage		stage;
 	char			*ptr;
-	char			*t_start;
-	t_list			*tokens;
-}	t_tokenizer;
+	char			*t_start; /// Pointer to the beginning of the next token
+	t_list			*tokens; /// Linked list of token
+}	t_lexer;
 
 typedef struct s_token
 {
@@ -76,40 +86,23 @@ typedef struct s_token
 	char		*value;
 }	t_token;
 
-typedef enum e_expander_error
-{
-	EXP_NO_ERROR,
-	EXP_ERR_MALLOC,
-	EXP_ERR_OTHER
-}	t_expander_error;
-
-typedef struct s_expander	t_expander;
-
 char		*deb_format_tokens(void *lst);
 char		*deb_format_tokens_type(void *lst);
 char		*deb_ast_to_string(t_ast_node *node);
 char		*get_token_type_str(t_tok_type tok);
-int			init_expander(t_expander *expander, t_ctx *ctx, const char *token);
-int			join_until_cursor(t_expander *expander);
-char		*expand_shell_param(t_expander *expander);
-void		*exp_error_fail(t_expander *expander);
-void		*expand_err_null(t_expander *expander, t_expander_error exp_err);
-int			expand_err_code(t_expander *expander, t_expander_error exp_err,
-				int code);
-char		*handle_metachar(t_parser *tokenizer, char *line);
+char		*handle_metachar(t_lexer *tokenizer, char *line);
 bool		is_metachar(char *c);
 t_ast_node	*build_ast(t_ctx *ctx);
 void		free_ast_node(t_ast_node *node);
 char		*deb_ast_to_string(t_ast_node *node);
-void		init_tokenizer(t_parser *tokenizer, const char *line);
-void		reset_tokenizer(t_parser *tokenizer, const char *line);
-void		cleanup_tokenizer(t_parser *tokenizer);
+void		init_tokenizer(t_lexer *tokenizer, const char *line);
+void		reset_tokenizer(t_lexer *tokenizer, const char *line);
+void		cleanup_tokenizer(t_lexer *tokenizer);
 void		free_token(void *token);
 int			parse_line(char *line, t_ctx *ctx);
-t_ast_node	*parse_new_line(char *line, t_parser *parser, t_ctx *ctx);
+t_ast_node	*parse_new_line(char *line, t_lexer *parser, t_ctx *ctx);
 void		execute(t_ast_node *node, void *ctx);
-// void		prepare_pipeline(t_ast_node *node, void *ctx);
 void		ast_setup_pipeline(t_ast_node *ast_root, void *ctx);
-int			add_token(t_tokenizer *tokenizer, char *end);
-void		skip_whitespace(t_parser *tokenizer);
+int			add_token(t_lexer *tokenizer, char *end);
+void		skip_whitespace(t_lexer *tokenizer);
 #endif

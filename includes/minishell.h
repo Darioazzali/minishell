@@ -30,7 +30,7 @@
 # define HISTORY_FILE		".minishell_history"
 # define MALLOC_ERROR_MSG	"Failed to allocate memory"
 
-typedef struct s_parser		t_parser;
+typedef struct s_lexer		t_lexer;
 typedef struct s_sh_var
 {
 	char	*name;
@@ -50,7 +50,7 @@ typedef struct s_ast_node	t_ast_node;
 
 typedef struct s_ctx
 {
-	t_parser		*parser;
+	t_lexer			*lexer;
 	int				pid;
 	t_history		*history;
 	t_envs			*envs;
@@ -60,7 +60,17 @@ typedef struct s_ctx
 
 void			*free_ctx(t_ctx *ctx);
 t_ctx			*init_ctx(void);
-int				tokenize_line(t_parser *parser, const char *line);
+int				tokenize_line(t_lexer *parser, const char *line);
+
+/** @brief 	Expands the tokens
+ * 			
+ *	After the lexical tokenization of the input, the
+ *	tokens that represent variables are expanded.
+ *
+ *	@param 	ctx The application context.
+ *	@note 	The expansion is done in place using the tokens
+ *			field stored in the ctx.
+ * */
 int				expand_tokens(t_ctx *ctx);
 void			*free_parser(t_ctx *ctx);
 int				remove_quotes(t_ctx *ctx);

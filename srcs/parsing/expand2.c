@@ -6,7 +6,7 @@
 /*   By: dazzali <dazzali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 12:24:37 by dazzali           #+#    #+#             */
-/*   Updated: 2025/08/01 17:03:44 by dazzali          ###   ########.fr       */
+/*   Updated: 2025/08/02 07:38:14 by dazzali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,8 @@
 static void	handle_normal_char(t_expander *expander);
 static void	handle_double_quote_char(t_expander *expander);
 static void	handle_quotes(t_expander *expander);
-static void	handle_escape(t_expander *expander);
+static void	handle_escape_char(t_expander *expander);
 
-/** @brief Process a character of the string.*/
 void	exp_process_char(t_expander *expander)
 {
 	if (expander->mode == LEXI_S_QUOTE)
@@ -38,7 +37,7 @@ static void	handle_normal_char(t_expander *expander)
 	if (*expander->cursor == '\'' || *expander->cursor == '"')
 		return (handle_quotes(expander));
 	if (*expander->cursor == '\\' && *(expander->cursor + 1))
-		return (handle_escape(expander));
+		return (handle_escape_char(expander));
 	if (*expander->cursor == '$')
 		return (append_shell_variable(expander));
 	expander->cursor++;
@@ -58,7 +57,7 @@ static void	handle_double_quote_char(t_expander *expander)
 			|| *(expander->cursor + 1) == '"'
 			|| *(expander->cursor + 1) == '\\'
 		))
-		return (handle_escape(expander));
+		return (handle_escape_char(expander));
 	if (*expander->cursor == '$')
 		return (append_shell_variable(expander));
 	expander->cursor++;
@@ -88,7 +87,7 @@ static void	handle_quotes(t_expander *expander)
  *
  * @param expander The expander
  * */
-static void	handle_escape(t_expander *expander)
+static void	handle_escape_char(t_expander *expander)
 {
 	if (join_until_cursor(expander) == -1)
 	{

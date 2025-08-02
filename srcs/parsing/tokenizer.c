@@ -12,7 +12,7 @@
 
 #include "parser.h"
 
-void	init_tokenizer(t_parser *tokenizer, const char *line)
+void	init_tokenizer(t_lexer *tokenizer, const char *line)
 {
 	tokenizer->ptr = (char *)line;
 	tokenizer->t_start = NULL;
@@ -21,7 +21,7 @@ void	init_tokenizer(t_parser *tokenizer, const char *line)
 	tokenizer->stage = P_TOKENIZING;
 }
 
-void	reset_tokenizer(t_parser *tokenizer, const char *line)
+void	reset_tokenizer(t_lexer *tokenizer, const char *line)
 {
 	cleanup_tokenizer(tokenizer);
 	tokenizer->ptr = (char *)line;
@@ -30,7 +30,7 @@ void	reset_tokenizer(t_parser *tokenizer, const char *line)
 	tokenizer->tokens = NULL;
 }
 
-void	cleanup_tokenizer(t_parser *tokenizer)
+void	cleanup_tokenizer(t_lexer *tokenizer)
 {
 	void	(*free_fun)(void*);
 

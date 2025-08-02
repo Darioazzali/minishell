@@ -23,7 +23,7 @@ int	main(int ac, char **av)
 	FILE		*fp;
 	char		*line;
 	size_t		len;
-	t_parser	parser = {0};
+	t_lexer	parser = {0};
 
 	if (ac < 2)
 		return (-1);
@@ -35,8 +35,8 @@ int	main(int ac, char **av)
 	while (getline(&line, &len, fp) != -1)
 		ft_lstadd_back(&tok_lst, ft_lstnew(ft_strdup(strip_newline(line))));
 	fclose(fp);
-	ctx->parser = &parser;
-	if (!ctx->parser)
+	ctx->lexer = &parser;
+	if (!ctx->lexer)
 		return (-1);
 	parser.tokens = tok_lst;
 	remove_quotes(ctx);

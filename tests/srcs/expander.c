@@ -41,10 +41,10 @@ int	main(int ac, char **av, char **env)
 	while ((read = getline(&line, &len, fp)) != -1)
 		ft_lstadd_back(&tok_lst, ft_lstnew(ft_strdup(strip_newline(line))));
 	fclose(fp);
-	ctx->parser = &tokenizer;
-	if (!ctx->parser)
+	ctx->tokenizer = &tokenizer;
+	if (!ctx->tokenizer)
 		return (-1);
-	ctx->parser->tokens = tok_lst;
+	ctx->tokenizer->tokens = tok_lst;
 	expand_tokens(ctx);
 	print_tokens(tok_lst);
 }

@@ -12,12 +12,12 @@
 
 #include "parser.h"
 
-static char	*handle_normal_mode(t_parser *tokenizer, char *line);
-static char	*handle_single_quotes(t_parser *tokenizer, char *line);
-static char	*handle_double_quotes(t_parser *ctx, char *line);
-static char	*scan_utill_boundary(t_parser *tokenizer, char *line);
+static char	*handle_normal_mode(t_lexer *tokenizer, char *line);
+static char	*handle_single_quotes(t_lexer *tokenizer, char *line);
+static char	*handle_double_quotes(t_lexer *ctx, char *line);
+static char	*scan_utill_boundary(t_lexer *tokenizer, char *line);
 
-int	tokenize_line(t_parser *tokenizer, const char *line)
+int	tokenize_line(t_lexer *tokenizer, const char *line)
 {
 	init_tokenizer(tokenizer, line);
 	if (!tokenizer)
@@ -43,7 +43,7 @@ int	tokenize_line(t_parser *tokenizer, const char *line)
 	return (0);
 }
 
-static	char	*handle_normal_mode(t_parser *tokenizer, char *line)
+static	char	*handle_normal_mode(t_lexer *tokenizer, char *line)
 {
 	if (*line && is_metachar(line))
 	{
@@ -60,7 +60,7 @@ static	char	*handle_normal_mode(t_parser *tokenizer, char *line)
 	return (line);
 }
 
-static char	*scan_utill_boundary(t_parser *tokenizer, char *line)
+static char	*scan_utill_boundary(t_lexer *tokenizer, char *line)
 {
 	while (*line && !is_metachar(line) && *line != ' ')
 	{
@@ -82,7 +82,7 @@ static char	*scan_utill_boundary(t_parser *tokenizer, char *line)
 	return (line);
 }
 
-static	char	*handle_single_quotes(t_parser *tokenizer, char *line)
+static	char	*handle_single_quotes(t_lexer *tokenizer, char *line)
 {
 	line++;
 	while (*line)
@@ -98,7 +98,7 @@ static	char	*handle_single_quotes(t_parser *tokenizer, char *line)
 	return (line);
 }
 
-static	char	*handle_double_quotes(t_parser *tokenizer, char *line)
+static	char	*handle_double_quotes(t_lexer *tokenizer, char *line)
 {
 	line++;
 	while (*line)

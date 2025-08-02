@@ -18,24 +18,24 @@ static void	_debug_tokens(t_list *tokens);
 int	expand_tokens(t_ctx *ctx)
 {
 	t_list		*token;
-	char		*tmp;
+	char		*expanded;
 
-	token = ctx->parser->tokens;
-	ctx->parser->stage = P_EXPANDING;
+	token = ctx->lexer->tokens;
+	ctx->lexer->stage = P_EXPANDING;
 	while (token)
 	{
-		tmp = expand_token(ctx, token->content);
-		if (!tmp)
+		expanded = expand_token(ctx, token->content);
+		if (!expanded)
 		{
 			print_shell_error(MALLOC_ERROR_MSG);
 			return (-1);
 		}
 		free(token->content);
-		token->content = tmp;
+		token->content = expanded;
 		token = token->next;
 	}
 	log_debug("expanded tokens:\n");
-	_debug_tokens(ctx->parser->tokens);
+	_debug_tokens(ctx->lexer->tokens);
 	return (0);
 }
 
@@ -49,11 +49,11 @@ static char	*expand_token(t_ctx *ctx, const char *token)
 	{
 		exp_process_char(&expander);
 		if (expander.err != EXP_NO_ERROR)
-			return (exp_error_fail(&expander));
+			return (clean_expander(&expander));
 	}
 	join_until_cursor(&expander);
 	if (expander.err != EXP_NO_ERROR)
-		return (exp_error_fail(&expander));
+		return (clean_expander(&expander));
 	ret = ft_strdup(expander.expanded);
 	free(expander.expanded);
 	if (!ret)
@@ -61,11 +61,6 @@ static char	*expand_token(t_ctx *ctx, const char *token)
 	return (ret);
 }
 
-/* @brief Append shell parameter to the expanded token
- * Append the character processed, expand the shell variable/parameter
- * and append it to the string.
- * The cursor is advanced to the end of the shell variable/parameter.
- * */
 void	append_shell_variable(t_expander *expander)
 {
 	char	*tmp;

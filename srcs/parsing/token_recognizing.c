@@ -20,17 +20,17 @@ int	recognize_tokens(t_ctx *ctx)
 	t_list	*token;
 	t_list	*ret;
 
-	token = ctx->parser->tokens;
-	ctx->parser->stage = P_TOKEN_REC;
+	token = ctx->lexer->tokens;
+	ctx->lexer->stage = P_TOKEN_REC;
 	ret = ft_lstmap(token, recognize_token, free);
 	if (!ret)
 	{
 		print_shell_error(MALLOC_ERROR_MSG);
 		return (-1);
 	}
-	ft_lstclear(&ctx->parser->tokens, free);
-	ctx->parser->tokens = ret;
-	log_debug_struct(ctx->parser->tokens, deb_format_tokens_type);
+	ft_lstclear(&ctx->lexer->tokens, free);
+	ctx->lexer->tokens = ret;
+	log_debug_struct(ctx->lexer->tokens, deb_format_tokens_type);
 	return (0);
 }
 

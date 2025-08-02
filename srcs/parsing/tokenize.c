@@ -39,7 +39,7 @@ int	tokenize_line(t_lexer *tokenizer, const char *line)
 	if (tokenizer->t_start)
 		add_token(tokenizer, tokenizer->ptr);
 	if (tokenizer->mode != LEXI_NORMAL)
-		return (-1);
+		return (print_shell_error_ret_int("error: Unterminated quotes", -1));
 	return (0);
 }
 

@@ -45,6 +45,8 @@ static void	*recognize_token(void *token)
 		return (NULL);
 	tok->type = get_type(t);
 	tok->value = ft_strdup(t);
+	if (!tok->value)
+		return (NULL);
 	return (tok);
 }
 

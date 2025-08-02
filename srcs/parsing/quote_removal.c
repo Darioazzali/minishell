@@ -10,15 +10,17 @@
 /*																			  */
 /* ************************************************************************** */
 
-#include "expander.h"
+#include "parser.h"
 
 static void	handle_quotes_removal(char *content);
-// static char	*handle_escapes_char(t_ctx *ctx, char *token);
-// static int	append_escaped_sym(t_expander *expander, char symbol);
-// static char	*ft_trim_double_quotes(char	*str);
 static void	handle_double_quotes(char **read_ptr, char **write_ptr,
 				t_parser_mode *mode);
+static void	handle_single_quotes(char **read_ptr,
+				char **write_ptr, t_parser_mode *mode);
+static void	handle_normal_mode(char **read_ptr, char **write_ptr,
+				t_parser_mode *mode);
 
+/** Remove the quotes from the tokens in place*/
 int	remove_quotes(t_ctx *ctx)
 {
 	t_list		*next;
@@ -27,13 +29,14 @@ int	remove_quotes(t_ctx *ctx)
 	parser = ctx->lexer;
 	parser->stage = P_QUOTES_REM;
 	if (parser->tokens == NULL)
-		return (0);
+		return (-1);
 	next = parser->tokens;
 	while (next)
 	{
 		handle_quotes_removal(next->content);
 		next = next->next;
 	}
+	log_debug("tokens with quotes removed:\n");
 	log_debug_struct(parser->tokens, deb_format_tokens);
 	return (0);
 }
@@ -50,57 +53,17 @@ static void	handle_quotes_removal(char *token)
 	while (*read_ptr)
 	{
 		if (mode == LEXI_NORMAL)
-		{
-			if (*read_ptr == '\\' && *(read_ptr + 1)
-				&& (*(read_ptr + 1) != '"'
-					|| *(read_ptr + 1) != '\'' )
-			)
-			{
-				read_ptr++;
-				*(write_ptr) = *read_ptr;
-				read_ptr++;
-				write_ptr++;
-			}
-			else if (*read_ptr == '"')
-			{
-				mode = LEXI_D_QUOTE;
-				read_ptr++;
-			}
-			else if (*read_ptr == '\'')
-			{
-				mode = LEXI_S_QUOTE;
-				read_ptr++;
-			}
-			else
-			{
-				*(write_ptr) = *read_ptr;
-				read_ptr++;
-				write_ptr++;
-			}
-		}
+			handle_normal_mode(&read_ptr, &write_ptr, &mode);
 		else if (mode == LEXI_S_QUOTE)
-		{
-			if (*read_ptr == '\'')
-			{
-				mode = LEXI_NORMAL;
-				read_ptr++;
-			}
-			else
-			{
-				(*write_ptr) = *read_ptr;
-				read_ptr++;
-				write_ptr++;
-			}
-		}
+			handle_single_quotes(&read_ptr, &write_ptr, &mode);
 		else if (mode == LEXI_D_QUOTE)
-		{
 			handle_double_quotes(&read_ptr, &write_ptr, &mode);
-		}
 	}
 	*write_ptr = '\0';
 }
 
-static void	handle_double_quotes(char **read_ptr, char **write_ptr, t_parser_mode *mode)
+static void	handle_double_quotes(char **read_ptr, char **write_ptr,
+							t_parser_mode *mode)
 {
 	if (**read_ptr == '\\' && *(*read_ptr + 1)
 		&& *(*read_ptr + 1) == '"')
@@ -120,5 +83,50 @@ static void	handle_double_quotes(char **read_ptr, char **write_ptr, t_parser_mod
 		**write_ptr = **read_ptr;
 		(*write_ptr)++;
 		(*read_ptr)++;
+	}
+}
+
+static void	handle_single_quotes(char **read_ptr, char **write_ptr,
+							t_parser_mode *mode)
+{
+	if (**read_ptr == '\'')
+	{
+		*mode = LEXI_NORMAL;
+		(*read_ptr)++;
+	}
+	else
+	{
+		**write_ptr = **read_ptr;
+		(*read_ptr)++;
+		(*write_ptr)++;
+	}
+}
+
+static void	handle_normal_mode(char **read_ptr, char **write_ptr,
+							t_parser_mode *mode)
+{
+	if (**read_ptr == '\\' && *(*read_ptr + 1)
+		&& (*(*read_ptr + 1) == '"' || *(*read_ptr + 1) == '\'' ))
+	{
+		(*read_ptr)++;
+		**write_ptr = **read_ptr;
+		(*read_ptr)++;
+		(*write_ptr)++;
+	}
+	else if (**read_ptr == '"')
+	{
+		(*read_ptr)++;
+		*mode = LEXI_D_QUOTE;
+	}
+	else if (**read_ptr == '\'')
+	{
+		(*read_ptr)++;
+		*mode = LEXI_S_QUOTE;
+	}
+	else
+	{
+		**write_ptr = **read_ptr;
+		(*read_ptr)++;
+		(*write_ptr)++;
 	}
 }

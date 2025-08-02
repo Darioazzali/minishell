@@ -6,7 +6,7 @@
 /*   By: dazzali <dazzali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 12:24:37 by dazzali           #+#    #+#             */
-/*   Updated: 2025/08/02 07:38:14 by dazzali          ###   ########.fr       */
+/*   Updated: 2025/08/02 10:13:33 by dazzali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,14 @@ static void	handle_normal_char(t_expander *expander)
 	if (*expander->cursor == '\'' || *expander->cursor == '"')
 		return (handle_quotes(expander));
 	if (*expander->cursor == '\\' && *(expander->cursor + 1))
+	{
+		if (*(expander->cursor + 1) == '"' || *(expander->cursor + 1) == '\'')
+		{
+			expander->cursor += 2;
+			return ;
+		}
 		return (handle_escape_char(expander));
+	}
 	if (*expander->cursor == '$')
 		return (append_shell_variable(expander));
 	expander->cursor++;
@@ -53,8 +60,15 @@ static void	handle_double_quote_char(t_expander *expander)
 	}
 	if (*expander->cursor == '\\'
 		&& (
+			*(expander->cursor + 1) == '"'
+		))
+	{
+		(expander->cursor += 2);
+		return ;
+	}
+	if (*expander->cursor == '\\'
+		&& (
 			*(expander->cursor + 1) == '$'
-			|| *(expander->cursor + 1) == '"'
 			|| *(expander->cursor + 1) == '\\'
 		))
 		return (handle_escape_char(expander));

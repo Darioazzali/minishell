@@ -1,6 +1,6 @@
 $SHELL
-\
-$SHELL
+\\
+\$SHELL
 ciao $SHELL
 ciao $SHELL
 

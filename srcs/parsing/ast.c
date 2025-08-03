@@ -50,6 +50,7 @@ t_ast_node	*create_node(t_ast_type type, char *value)
 	node->left = NULL;
 	node->right = NULL;
 	node->redirs = NULL;
+	node->open_fds = NULL;
 	return (node);
 }
 
@@ -74,6 +75,8 @@ void	free_ast_node(t_ast_node *node)
 	free_ast_node(node->right);
 	if (node->redirs)
 		ft_lstclear(&node->redirs, free_redir_struct);
+	if (node->open_fds)
+		free(node->open_fds);
 	free(node);
 }
 

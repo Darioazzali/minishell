@@ -118,10 +118,10 @@ int	fork_and_exec(t_ast_node *node,
 	}
 	if (pid == 0)
 	{
-		if (manage_fds(node, open_fds, opened_fds) == -1)
+		if (manage_pipeline_fds(node, open_fds, opened_fds) == -1)
 		{
 			free(args);
-			return (-1);
+			exit(1);
 		}
 		execute_child_proc(node->value, args, ctx);
 	}

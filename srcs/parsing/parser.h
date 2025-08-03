@@ -50,6 +50,7 @@ typedef struct s_ast_node
 	t_list				*redirs;
 	int					input_fd;
 	int					output_fd;
+	int					*open_fds;
 }	t_ast_node;
 
 typedef enum e_p_stage

@@ -26,25 +26,25 @@ t_ast_node	*parse_command(t_list **current)
 	t_token_category	category;
 	t_ast_node			*node;
 
-	if (!current || !*current)
-		return (NULL);
 	parts = init_command_parts();
 	if (!parts)
 		return (_parse_error("Failed to allocate command parts\n", NULL));
 	while (*current)
 	{
 		token = (*current)->content;
+		if (!(*token->value))
+		{
+			*current = (*current)->next;
+			continue ;
+		}
 		category = classify_token(token);
 		if (category == TOKEN_COMMAND_END)
 			break ;
-		if (category == TOKEN_UNKNOWN)
-			return (_parse_error("Unknown token \n", parts));
 		if (!process_token(parts, category, current))
 			return (_parse_error("Failed to process token\n", parts));
 	}
 	node = build_ast_node(parts);
-	free_command_parts(parts);
-	return (node);
+	return (free_command_parts(parts), node);
 }
 
 static bool	process_token(t_command_parts *parts,

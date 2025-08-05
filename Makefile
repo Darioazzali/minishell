@@ -42,7 +42,7 @@ BUILTIN_SRCS	=	cd.c echo.c export.c pwd.c unset.c exit.c
 CONTEXT_SRCS	=	ctx.c
 DEBUG_SRCS		=	debug_utils.c logger.c
 ERRORS_SRCS		=	error.c error2.c
-EXECUTION_SRCS	=	execute.c execute_command.c path.c pipeline.c redirections.c 
+EXECUTION_SRCS	=	execute.c execute_command.c path.c pipeline.c redirections.c pipeline_utils.c
 HISTORY_SRCS	=	history.c history_file.c history_utils.c
 PARSING_SRCS	=	ast.c ast_debug2.c ast_debug.c ast_parse_command2.c \
 					ast_parse_command.c ast_parser.c ast_traversal.c \

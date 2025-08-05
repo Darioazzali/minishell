@@ -72,6 +72,8 @@ void	debug_ast_commands_fds(char *line, t_ast_node *node, int depth)
 	ft_strlcat(line, "OUTPUT_FD: ", BUF_SIZE);
 	ft_strlcat(line, output_fd, BUF_SIZE);
 	ft_strlcat(line, "]", BUF_SIZE);
+	free(input_fd);
+	free(output_fd);
 }
 
 void	append_node_type(char *line, t_ast_node *node)

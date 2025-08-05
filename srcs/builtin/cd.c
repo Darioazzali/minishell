@@ -47,7 +47,7 @@ int	chdir_btin(int ac, const char **av, t_envs *envs)
 	const char	*path;
 
 	if (ac > 1)
-		return (_cd_err("too many arguments"));
+		return (_cd_err("too many arguments"), 2);
 	if (ac == 0)
 		path = NULL;
 	else

@@ -41,5 +41,5 @@ int		handle_redirections(t_ast_node *node);
 int		manage_pipeline_fds(t_ast_node *node, int *open_fds, int opened_fds);
 int		execute_btin(char *prog_name, char **args, t_ctx *ctx);
 bool	is_builtin(char *command);
-
+void	wait_child_processes(t_ctx *ctx, pid_t *pids, size_t count);
 #endif

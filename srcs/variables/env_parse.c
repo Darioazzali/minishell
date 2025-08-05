@@ -98,20 +98,20 @@ static char	*_sh_var_to_str(t_sh_var *env)
 static t_sh_var	*parse_env_str(char *str)
 {
 	t_sh_var	*env;
-	char		**tmp;
+	char		*first_eq;
 
 	env = malloc(sizeof(t_sh_var));
 	if (!env)
 		return (print_shell_error_ret_null(MALLOC_ERROR_MSG));
-	tmp = ft_split(str, '=');
-	if (!tmp)
-	{
-		_env_malloc_err(env);
-		return (NULL);
-	}
-	env->name = ft_strdup(tmp[0]);
-	if (tmp[1])
-		env->value = ft_strdup(tmp[1]);
+	first_eq = ft_strchr(str, '=');
+	if (!first_eq)
+		return (print_shell_error_ret_null("Invalid env var\n"));
+	env->name = ft_substr(str, 0, first_eq - str);
+	if (!env->name)
+		return (free_sh_var(env), print_shell_error_ret_null(MALLOC_ERROR_MSG));
+	if (*(first_eq + 1))
+		env->value = ft_substr(str, first_eq - str + 1,
+				ft_strlen(str) - ft_strlen(env->name) - 1);
 	else
 		env->value = ft_strdup("");
 	env->exported = true;
@@ -120,6 +120,5 @@ static t_sh_var	*parse_env_str(char *str)
 		free_sh_var(env);
 		env = NULL;
 	}
-	free_str_array(tmp);
 	return (env);
 }

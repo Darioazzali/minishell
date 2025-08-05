@@ -54,7 +54,7 @@ t_ast_node	*build_ast_node(t_command_parts *parts)
 {
 	t_ast_node	*node;
 
-	if (!parts->com_name)
+	if (!parts->com_name || parts->com_name[0] == '\0')
 	{
 		parts->com_name = ft_strdup(":");
 		if (!parts->com_name)

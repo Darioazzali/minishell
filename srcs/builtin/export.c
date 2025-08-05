@@ -43,7 +43,12 @@ int	export_btin(char **av, t_envs *envs)
 		if (ft_strchr(*av, '='))
 			status |= _handle_assignment(*av, envs);
 		else
-			promote_var_to_env(envs, *av);
+		{
+			if (is_valid_var_name(*av))
+				promote_var_to_env(envs, *av);
+			else
+				status |= 1;
+		}
 		av++;
 	}
 	return (status);

@@ -25,7 +25,7 @@ int	exit_btin(int argc, char **argv, t_ctx *ctx)
 	if (argc != 1)
 	{
 		print_program_error("exit", "too many arguments");
-		return (1);
+		return (2);
 	}
 	str = argv[0];
 	if (*str == '+' || *str == '-')

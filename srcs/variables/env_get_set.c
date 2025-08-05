@@ -6,7 +6,7 @@
 /*   By: dazzali <dazzali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 09:59:05 by dazzali           #+#    #+#             */
-/*   Updated: 2025/07/17 08:58:53 by dazzali          ###   ########.fr       */
+/*   Updated: 2025/08/05 11:06:39 by dazzali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,9 +66,7 @@ int	set_shell_var(t_envs *envs, char *name, char *value)
 	}
 	new = set_new_shell_var(name, value);
 	if (!new)
-	{
 		return (1);
-	}
 	node = ft_lstnew(new);
 	if (!node)
 		return (_env_malloc_err(new));

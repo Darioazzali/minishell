@@ -10,3 +10,4 @@ libminishell.a
 .minishell_history
 .DS_Store
 readline.supp
+file*

@@ -22,13 +22,10 @@ static int	clean_pipelines_fds(t_list *node, int *open_fds, int idx);
 void	handle_pipeline(t_list *node, t_ctx *ctx)
 {
 	pid_t		*pids;
-	size_t		count;
 	int			*open_fds;
 	int			opened_fds;
-	size_t		i;
 
-	count = ft_lstsize(node);
-	open_fds = ft_calloc(count * 2, sizeof(int));
+	open_fds = ft_calloc(ft_lstsize(node) * 2, sizeof(int));
 	if (!open_fds)
 		return (print_shell_error(MALLOC_ERROR_MSG));
 	opened_fds = open_pipes(node, open_fds);
@@ -40,9 +37,7 @@ void	handle_pipeline(t_list *node, t_ctx *ctx)
 		clean_pipelines_fds(node, open_fds, opened_fds);
 		return ;
 	}
-	i = 0;
-	while (i < count)
-		waitpid(pids[i++], NULL, 0);
+	wait_child_processes(ctx, pids, ft_lstsize(node));
 	free(open_fds);
 	free(pids);
 }
@@ -125,6 +120,7 @@ int	fork_and_exec(t_ast_node *node,
 		}
 		execute_child_proc(node->value, args, ctx);
 	}
+	free(args);
 	return (pid);
 }
 

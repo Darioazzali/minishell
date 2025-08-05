@@ -13,7 +13,6 @@
 #include "env.h"
 
 static int	_split_assignment(char *str, t_sh_var **env);
-static bool	_is_valid_var_name(char *str);
 
 /** @brief print the shell variables
  *	Print the environment variables in the format name=value
@@ -64,7 +63,7 @@ t_sh_var	*parse_variable_assignment(char *str)
 	}
 	if (_split_assignment(str, &res) != 0)
 		return (free_sh_var(res));
-	if (!_is_valid_var_name(res->name))
+	if (!is_valid_var_name(res->name))
 	{
 		print_shell_error("Invalid variable name");
 		return (free_sh_var(res));
@@ -118,7 +117,7 @@ static int	_split_assignment(char *str, t_sh_var **env)
  * 		 alpha character or an underscore, and can only contain
  * 		 alphanumeric characters or underscores.
  * */
-static bool	_is_valid_var_name(char *str)
+bool	is_valid_var_name(char *str)
 {
 	char	*ptr;
 

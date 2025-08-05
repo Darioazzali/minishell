@@ -35,7 +35,11 @@ void	execute(t_ast_node *node, void *content)
 	}
 	if (node->type == AST_COMMAND)
 	{
-		execute_command_node(node, ctx);
+		if (*node->value)
+		{
+			if (node->value[0] != ':')
+				execute_command_node(node, ctx);
+		}
 		return ;
 	}
 }
@@ -61,28 +65,28 @@ void	execute(t_ast_node *node, void *content)
 */
 static void	execute_command_node(t_ast_node *node, t_ctx *ctx)
 {
-	int		saved_stdin;
-	int		saved_stdout;
+	int		std_stoud[2];
 
 	if (is_builtin(node->value))
 	{
-		if (_save_btin_fds(&saved_stdin, &saved_stdout) == -1)
+		if (_save_btin_fds(&std_stoud[0], &std_stoud[1]) == -1)
 			return ;
 		if (handle_redirections(node) == -1)
 		{
-			close(saved_stdin);
-			close(saved_stdout);
+			close(std_stoud[0]);
+			close(std_stoud[1]);
+			ctx->exit_status = 1;
 			return ;
 		}
 		ctx->exit_status = execute_btin(node->value, node->args, ctx);
-		if (dup2(saved_stdin, STDIN_FILENO) == -1
-			|| dup2(saved_stdout, STDOUT_FILENO) == -1)
+		if (dup2(std_stoud[0], STDIN_FILENO) == -1
+			|| dup2(std_stoud[1], STDOUT_FILENO) == -1)
 		{
 			print_shell_error(strerror(errno));
-			ctx->exit_status = -1;
+			ctx->exit_status = 1;
 		}
-		close(saved_stdin);
-		close(saved_stdout);
+		close(std_stoud[0]);
+		close(std_stoud[1]);
 	}
 	else
 		execute_single_command(node, ctx, node->value);

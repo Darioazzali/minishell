@@ -52,19 +52,19 @@ static void	*recognize_token(void *token)
 
 static t_tok_type	get_type(char *token)
 {
-	if (ft_strncmp(token, ">>", 2) == 0)
+	if (ft_strcmp(token, ">>") == 0)
 		return (TOK_REDIR_APPEND);
-	if (ft_strncmp(token, "<<", 2) == 0)
+	if (ft_strcmp(token, "<<") == 0)
 		return (TOK_REDIR_HEREDOC);
-	else if (ft_strncmp(token, "&&", 2) == 0)
+	else if (ft_strcmp(token, "&&") == 0)
 		return (TOK_AND);
-	if (token[0] == '|')
+	if (ft_strcmp(token, "|") == 0)
 		return (TOK_PIPE);
-	if (token[0] == '&')
+	if (ft_strcmp(token, "&") == 0)
 		return (TOK_AND);
-	else if (token[0] == '>')
+	if (ft_strcmp(token, ">") == 0)
 		return (TOK_REDIR_OUT);
-	else if (token[0] == '<')
+	if (ft_strcmp(token, "<") == 0)
 		return (TOK_REDIR_IN);
 	return (TOK_WORD);
 }

@@ -28,7 +28,7 @@ int	unset_btin(t_envs **envs, char **keys)
 	char	**ptr;
 
 	if (!keys)
-		return (1);
+		return (0);
 	ptr = keys;
 	while (*ptr)
 	{

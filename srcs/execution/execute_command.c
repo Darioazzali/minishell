@@ -12,6 +12,10 @@
 
 #include "execute.h"
 
+static void	_execute_external_command(char *prog_name, char **args, t_ctx *ctx);
+
+/** @brief Fork and execute the program specified in the node
+ * */
 int	execute_single_command(t_ast_node *node, t_ctx *ctx, char *prog_name)
 {
 	char	**args;
@@ -23,12 +27,13 @@ int	execute_single_command(t_ast_node *node, t_ctx *ctx, char *prog_name)
 		return (print_shell_error_ret_int(MALLOC_ERROR_MSG, -1));
 	pid = fork();
 	if (pid < 0)
-	{
-		free(args);
-		return (print_shell_error_ret_int("Fork error", -1));
-	}
+		return (free(args), print_shell_error_ret_int("Fork error", -1));
 	if (pid == 0)
+	{
+		if (handle_redirections(node) == -1)
+			exit(1);
 		execute_child_proc(prog_name, args, ctx);
+	}
 	waitpid(pid, &status, 0);
 	if (WIFEXITED(status))
 		ctx->exit_status = WEXITSTATUS(status);
@@ -56,8 +61,6 @@ int	execute_single_command(t_ast_node *node, t_ctx *ctx, char *prog_name)
 */
 void	execute_child_proc(char *prog_name, char **args, t_ctx *ctx)
 {
-	char	**envs;
-	char	*exec_path;
 	int		exit_status;
 
 	exit_status = 0;
@@ -67,6 +70,14 @@ void	execute_child_proc(char *prog_name, char **args, t_ctx *ctx)
 		free(args);
 		exit(exit_status);
 	}
+	_execute_external_command(prog_name, args, ctx);
+}
+
+static void	_execute_external_command(char *prog_name, char **args, t_ctx *ctx)
+{
+	char	**envs;
+	char	*exec_path;
+
 	envs = envs_to_strarr(ctx->envs);
 	if (!envs)
 	{

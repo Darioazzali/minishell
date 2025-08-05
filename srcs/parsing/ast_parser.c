@@ -116,6 +116,12 @@ static t_ast_node	*parse_pipeline(t_list **current)
 	return (left);
 }
 
+/** @brief	Flatten the AST subtree into a list of nodes
+ *
+ * Flatten the AST subtree into a list of nodes and return the list.
+ *
+ * @note The caller owns the returned list so is responsible for freeing it.
+ * */
 t_list	*flatten_pipeline_subtree(t_ast_node *node)
 {
 	t_list	*list;

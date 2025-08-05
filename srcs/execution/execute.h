@@ -37,8 +37,9 @@ t_list	*flatten_pipeline_subtree(t_ast_node *node);
 void	execute_child_proc(char *prog_name, char **args, t_ctx *ctx);;
 char	**build_args(t_ast_node *node);
 void	handle_pipeline(t_list *node, t_ctx *ctx);
-int		_manage_redir(t_ast_node *node);
-int		manage_fds(t_ast_node *node, int *open_fds, int opened_fds);
+int		handle_redirections(t_ast_node *node);
+int		manage_pipeline_fds(t_ast_node *node, int *open_fds, int opened_fds);
 int		execute_btin(char *prog_name, char **args, t_ctx *ctx);
 bool	is_builtin(char *command);
+
 #endif

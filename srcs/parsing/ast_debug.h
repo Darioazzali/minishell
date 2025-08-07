@@ -6,7 +6,7 @@
 /*   By: dazzali <dazzali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 11:39:31 by dazzali           #+#    #+#             */
-/*   Updated: 2025/07/29 10:24:44 by dazzali          ###   ########.fr       */
+/*   Updated: 2025/08/07 13:03:50 by dazzali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,4 +21,5 @@ void				debug_ast_command_redirs(char *line,
 						t_ast_node *node, int depth);
 void				debug_ast_commands_fds(char *line,
 						t_ast_node *node, int depth);
+void				debug_ast_node(t_ast_node *node);
 #endif

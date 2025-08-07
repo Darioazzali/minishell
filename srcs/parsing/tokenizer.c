@@ -34,10 +34,10 @@ void	cleanup_tokenizer(t_lexer *tokenizer)
 {
 	void	(*free_fun)(void*);
 
-	if (tokenizer->stage == P_TOKEN_REC)
-		free_fun = free_token;
-	else
+	if (tokenizer->stage == P_TOKENIZING)
 		free_fun = free;
+	else
+		free_fun = free_token;
 	ft_lstclear(&tokenizer->tokens, free_fun);
 	tokenizer->tokens = NULL;
 	if (tokenizer)

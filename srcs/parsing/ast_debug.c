@@ -15,6 +15,33 @@
 static void	ast_to_string_recursive(t_ast_node *node, char **result, int depth);
 static void	append_indent(char **result, int depth);
 
+void	debug_ast_node(t_ast_node *node)
+{
+	char	*temp;
+	char	*line;
+	char	*debug_str;
+
+	debug_str = ft_strdup("===Node debug===\n");
+	if (!node)
+		return ;
+	line = malloc(BUF_SIZE);
+	append_indent(&line, 0);
+	append_node_type(line, node);
+	if (node->type == AST_COMMAND && node->args)
+		debug_ast_command_args(line, node);
+	if (node->type == AST_COMMAND && node->redirs)
+		debug_ast_command_redirs(line, node, 0);
+	if (node->type == AST_COMMAND)
+		debug_ast_commands_fds(line, node, 0);
+	ft_strlcat(line, "\n", BUF_SIZE);
+	temp = ft_strjoin(debug_str, line);
+	free(debug_str);
+	free(line);
+	debug_str = temp;
+	log_debug(debug_str);
+	free(debug_str);
+}
+
 char	*deb_ast_to_string(t_ast_node *node)
 {
 	char	*result;

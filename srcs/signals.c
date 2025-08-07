@@ -1,30 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipeline_utils.c                                   :+:      :+:    :+:   */
+/*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dazzali <dazzali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/05 12:27:12 by dazzali           #+#    #+#             */
-/*   Updated: 2025/08/11 09:42:42 by dazzali          ###   ########.fr       */
+/*   Created: 2025/08/11 08:18:21 by dazzali           #+#    #+#             */
+/*   Updated: 2025/08/11 09:43:54 by dazzali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "execute.h"
+#include "minishell.h"
 
-void	wait_child_processes(t_ctx *ctx, pid_t *pids, size_t count)
+void	sig_handler_sigint(int sig)
 {
-	size_t	i;
-	int		status;
+	printf("\n");
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
+	(void) sig;
+}
 
-	i = 0;
-	while (i < count)
-	{
-		waitpid(pids[i++], &status, 0);
-	}
-	if (WIFEXITED(status))
-		ctx->exit_status = WEXITSTATUS(status);
-	if (WIFSIGNALED(status))
-		ctx->exit_status = 128 + WTERMSIG(status);
-	signal(SIGINT, sig_handler_sigint);
+void	sig_handler_sigint_in_heredoc(int sig)
+{
+	printf("\n");
+	(void) sig;
+	exit(130);
+}
+
+void	sig_handler_sigint_in_process(int sig)
+{
+	printf("\n");
+	(void) sig;
 }

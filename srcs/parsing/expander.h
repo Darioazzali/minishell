@@ -6,7 +6,7 @@
 /*   By: dazzali <dazzali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 12:26:49 by dazzali           #+#    #+#             */
-/*   Updated: 2025/08/02 07:44:16 by dazzali          ###   ########.fr       */
+/*   Updated: 2025/08/12 11:19:05 by dazzali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,4 +127,6 @@ int			join_until_cursor(t_expander *expander);
 void		*clean_expander(t_expander *expander);
 
 char		*expand_shell_param(t_expander *expander);
+char		*expand_token(t_ctx *ctx, const char *token);
+char		*line_expansion(char *line, t_ctx *ctx);
 #endif

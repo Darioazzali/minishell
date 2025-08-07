@@ -42,4 +42,7 @@ int		manage_pipeline_fds(t_ast_node *node, int *open_fds, int opened_fds);
 int		execute_btin(char *prog_name, char **args, t_ctx *ctx);
 bool	is_builtin(char *command);
 void	wait_child_processes(t_ctx *ctx, pid_t *pids, size_t count);
+int		handle_heredocs(t_ast_node *node, t_ctx *ctx);
+int		handle_pipes_heredocs(t_list *node, t_ctx *ctx);
+int		handle_builtin_node(t_ast_node *node, t_ctx *ctx);
 #endif

@@ -32,16 +32,26 @@ int	main(int ac, char **av)
 	if (!fp)
 		exit(1);
 	while (getline(&line, &len, fp) != -1)
+	{
 		ft_lstadd_back(&tok_lst, ft_lstnew(ft_strdup(strip_newline(line))));
+	}
 	fclose(fp);
 	ctx->lexer = malloc(sizeof(t_lexer));
 	if (!ctx->lexer)
 		return (-1);
 	ctx->lexer->tokens = tok_lst;
-	remove_quotes(ctx);
 	recognize_tokens(ctx);
 	print_tokens_type(ctx->lexer->tokens);
 }
+
+// static int	_add_token(t_list *tok_lst, char *line)
+// {
+// 	t_list *new_node;
+// 	t_token *tok;
+//
+//
+// 	ft_lstadd_back(&tok_lst, ft_lstnew(ft_strdup(strip_newline(line))));
+// }
 
 static	void	print_tokens_type(t_list *tokens)
 {

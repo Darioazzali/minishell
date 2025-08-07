@@ -61,3 +61,12 @@ void	*clean_expander(t_expander *expander)
 		print_shell_error("An error occurred in the expander");
 	return (NULL);
 }
+
+char	*line_expansion(char *line, t_ctx *ctx)
+{
+	char	*res;
+
+	res = expand_token(ctx, line);
+	free(line);
+	return (res);
+}

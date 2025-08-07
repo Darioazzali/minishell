@@ -25,6 +25,7 @@ int	remove_quotes(t_ctx *ctx)
 {
 	t_list		*next;
 	t_lexer		*parser;
+	t_token		*tok;
 
 	parser = ctx->lexer;
 	parser->stage = P_QUOTES_REM;
@@ -33,11 +34,12 @@ int	remove_quotes(t_ctx *ctx)
 	next = parser->tokens;
 	while (next)
 	{
-		handle_quotes_removal(next->content);
+		tok = next->content;
+		handle_quotes_removal(tok->value);
 		next = next->next;
 	}
 	log_debug("tokens with quotes removed:\n");
-	log_debug_struct(parser->tokens, deb_format_tokens);
+	log_debug_struct(parser->tokens, deb_format_tokens_type);
 	return (0);
 }
 

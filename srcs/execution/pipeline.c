@@ -31,6 +31,11 @@ void	handle_pipeline(t_list *node, t_ctx *ctx)
 	opened_fds = open_pipes(node, open_fds);
 	if (opened_fds == -1)
 		return ;
+	if (handle_pipes_heredocs(node, ctx) == -1)
+	{
+		clean_pipelines_fds(node, open_fds, opened_fds);
+		return ;
+	}
 	pids = execute_pipeline(node, ctx, open_fds, opened_fds);
 	if (!pids)
 	{
@@ -67,6 +72,7 @@ static int	*execute_pipeline(t_list *node, t_ctx *ctx,
 	pids = ft_calloc(ft_lstsize(node), sizeof(pid_t));
 	if (!pids)
 		return (print_shell_error_ret_null(MALLOC_ERROR_MSG));
+	signal(SIGINT, sig_handler_sigint_in_process);
 	idx = 0;
 	while (node)
 	{
@@ -76,8 +82,7 @@ static int	*execute_pipeline(t_list *node, t_ctx *ctx,
 		{
 			while (--idx >= 0)
 				waitpid(pids[idx], NULL, 0);
-			free(pids);
-			return (print_shell_error_ret_null(strerror(errno)));
+			return (free(pids), print_shell_error_ret_null(strerror(errno)));
 		}
 		if (((t_ast_node *)(node->content))->input_fd != STDIN_FILENO)
 			close(((t_ast_node *)(node->content))->input_fd);
@@ -133,7 +138,7 @@ int	fork_and_exec(t_ast_node *node,
  *	@param open_fds The array of opened fds
  *
  * @note The idx parameter is the number of opened pipes
- *       while the number of open_fds is 2 * idx
+ *		 while the number of open_fds is 2 * idx
  *	@return The length of the array
  * */
 static int	open_pipes(t_list *node, int *open_fds)
@@ -149,12 +154,12 @@ static int	open_pipes(t_list *node, int *open_fds)
 	last = ft_lstlast(node);
 	while (current && current != last)
 	{
+		node_content = (t_ast_node *)current->content;
 		if (pipe(fds) == -1)
 		{
 			print_shell_error(strerror(errno));
 			return (clean_pipelines_fds(node, open_fds, idx * 2));
 		}
-		node_content = (t_ast_node *)current->content;
 		node_content->output_fd = fds[1];
 		((t_ast_node *)(current->next->content))->input_fd = fds[0];
 		open_fds[idx * 2] = fds[0];
@@ -167,9 +172,9 @@ static int	open_pipes(t_list *node, int *open_fds)
 
 /** @brief Clean the opened pipes and return an error
  * Close the all file descriptors built by the pipeline
- *  reset the node states of all the pipe subtree,
- *  free the open_fds array and return -1.
- *  with errno indicating the
+ *	reset the node states of all the pipe subtree,
+ *	free the open_fds array and return -1.
+ *	with errno indicating the
  * error state.
  *
  * @param node The pipeline subtree

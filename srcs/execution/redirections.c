@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "execute.h"
+#include "ast_debug.h"
 
 static int	_traverse_redir(t_ast_node *node, int *fds);
 static int	_redirect(t_ast_node *node);
@@ -73,9 +74,7 @@ static int	_traverse_redir(t_ast_node *node, int *fds)
 	while (redirs)
 	{
 		content = redirs->content;
-		if (content->type == TOK_REDIR_IN
-			|| content->type == TOK_REDIR_OUT
-			|| content->type == TOK_REDIR_APPEND)
+		if (content->type != TOK_REDIR_HEREDOC)
 		{
 			if (open_and_assign_redirect(node, content, fds, &i) == -1)
 			{
@@ -145,6 +144,7 @@ int	manage_pipeline_fds(t_ast_node *node, int *open_fds, int opened_fds)
 		close(node->output_fd);
 		node->output_fd = STDOUT_FILENO;
 	}
+	debug_ast_node(node);
 	if (handle_redirections(node) == -1)
 		return (-1);
 	i = -1;

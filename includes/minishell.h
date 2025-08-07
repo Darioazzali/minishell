@@ -111,4 +111,7 @@ int				echo_btin(char **av);
 int				ft_strcmp(const char *s1, const char *s2);
 int				count_words(char **args);
 char			**envs_to_strarr(t_envs *envs);
+void			sig_handler_sigint(int sig);
+void			sig_handler_sigint_in_heredoc(int sig);
+void			sig_handler_sigint_in_process(int sig);
 #endif

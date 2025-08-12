@@ -42,7 +42,14 @@ BUILTIN_SRCS	=	cd.c echo.c export.c pwd.c unset.c exit.c
 CONTEXT_SRCS	=	ctx.c
 DEBUG_SRCS		=	debug_utils.c logger.c
 ERRORS_SRCS		=	error.c error2.c
-EXECUTION_SRCS	=	execute.c execute_command.c path.c pipeline.c redirections.c pipeline_utils.c
+EXECUTION_SRCS	=	execute.c \
+					execute_command.c \
+					path.c \
+					pipeline.c \
+					redirections.c \
+					pipeline_utils.c \
+					heredoc.c	\
+					builtin.c
 HISTORY_SRCS	=	history.c history_file.c history_utils.c
 PARSING_SRCS	=	ast.c ast_debug2.c ast_debug.c ast_parse_command2.c \
 					ast_parse_command.c ast_parser.c ast_traversal.c \
@@ -62,7 +69,8 @@ SRCS_FILES		=	$(addprefix builtin/,$(BUILTIN_SRCS)) \
 					$(addprefix history/,$(HISTORY_SRCS)) \
 					$(addprefix parsing/,$(PARSING_SRCS)) \
 					$(addprefix utils/,$(UTILS_SRCS)) \
-					$(addprefix variables/,$(VARIABLES_SRCS))
+					$(addprefix variables/,$(VARIABLES_SRCS)) \
+					signals.c
 
 # Headers with module paths
 HEADERS			=	$(INC_DIR)/minishell.h 		\

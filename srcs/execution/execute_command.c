@@ -14,6 +14,20 @@
 
 static void	_execute_external_command(char *prog_name, char **args, t_ctx *ctx);
 
+int	assign_status_to_ctx(int status, t_ast_node *node, t_ctx *ctx)
+{
+	signal(SIGINT, sig_handler_sigint);
+	if (node->input_fd != STDIN_FILENO)
+		close(node->input_fd);
+	if (WIFEXITED(status))
+		ctx->exit_status = WEXITSTATUS(status);
+	else if (WIFSIGNALED(status))
+		ctx->exit_status = 128 + WTERMSIG(status);
+	if (ctx->exit_status > 127)
+		return (-1);
+	return (0);
+}
+
 /** @brief Fork and execute the program specified in the node
  * */
 int	execute_single_command(t_ast_node *node, t_ctx *ctx, char *prog_name)
@@ -22,9 +36,12 @@ int	execute_single_command(t_ast_node *node, t_ctx *ctx, char *prog_name)
 	int		pid;
 	int		status;
 
+	if (handle_heredocs(node, ctx) == -1)
+		return (-1);
 	args = build_args(node);
 	if (!args)
 		return (print_shell_error_ret_int(MALLOC_ERROR_MSG, -1));
+	signal(SIGINT, SIG_IGN);
 	pid = fork();
 	if (pid < 0)
 		return (free(args), print_shell_error_ret_int("Fork error", -1));
@@ -35,10 +52,8 @@ int	execute_single_command(t_ast_node *node, t_ctx *ctx, char *prog_name)
 		execute_child_proc(prog_name, args, ctx);
 	}
 	waitpid(pid, &status, 0);
-	if (WIFEXITED(status))
-		ctx->exit_status = WEXITSTATUS(status);
-	else if (WIFSIGNALED(status))
-		ctx->exit_status = 128 + WTERMSIG(status);
+	if (assign_status_to_ctx(status, node, ctx) == -1)
+		return (-1);
 	free(args);
 	return (0);
 }
@@ -63,6 +78,8 @@ void	execute_child_proc(char *prog_name, char **args, t_ctx *ctx)
 {
 	int		exit_status;
 
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
 	exit_status = 0;
 	if (is_builtin(prog_name))
 	{

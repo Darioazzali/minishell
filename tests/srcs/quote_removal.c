@@ -25,6 +25,7 @@ int	main(int ac, char **av)
 	size_t		len;
 	t_list		*node;
 	char		*cloned;
+	t_token		*tok;
 	t_lexer	parser = {0};
 
 	if (ac < 2)
@@ -38,7 +39,10 @@ int	main(int ac, char **av)
 	while (getline(&line, &len, fp) != -1)
 	{
 		cloned = ft_strdup(strip_newline(line));
-		node = ft_lstnew(cloned);
+		tok = malloc(sizeof(t_token));
+		tok->value = cloned;
+		tok->type = 0;
+		node = ft_lstnew(tok);
 		ft_lstadd_back(&tok_lst, node);
 		free(line);
 		line = NULL;
@@ -58,11 +62,13 @@ int	main(int ac, char **av)
 static	void	print_tokens(t_list *tokens)
 {
 	t_list	*tmp;
+	t_token	*t;
 
 	tmp = tokens;
 	while (tmp)
 	{
-		printf("%s\n", (char *)tmp->content);
+		t = tmp->content;
+		printf("%s\n", t->value);
 		tmp = tmp->next;
 	}
 }

@@ -17,11 +17,21 @@ static void	process_new_line(char *line, t_ctx *ctx);
 
 int	read_user_line(t_ctx *ctx)
 {
-	char				*line;
+	char	*line;
+	char	*tmp;
 
 	while (1)
 	{
-		line = readline("minishell> ");
+		if (isatty(fileno(stdin)))
+			line = readline("minishell> ");
+		else
+		{
+			tmp = get_next_line(fileno(stdin));
+			if (!tmp)
+				break ;
+			line = ft_strtrim(tmp, "\n");
+			free(tmp);
+		}
 		if (line)
 			process_new_line(line, ctx);
 		else
@@ -81,13 +91,13 @@ int	parse_line(char *line, t_ctx *ctx)
 	reset_tokenizer(ctx->lexer, line);
 	if (tokenize_line(ctx->lexer, line) == -1)
 		return (_parse_error(ctx->lexer, line, "Failed to tokenize line\n"));
+	if (recognize_tokens(ctx) == -1)
+		return (_parse_error(ctx->lexer,
+				line, "Failed to recognize tokens\n"));
 	if (expand_tokens(ctx) == -1)
 		return (_parse_error(ctx->lexer, line, "Failed to expand tokens\n"));
 	if (remove_quotes(ctx) == -1)
 		return (_parse_error(ctx->lexer, line, "Failed to remove tokens\n"));
-	if (recognize_tokens(ctx) == -1)
-		return (_parse_error(ctx->lexer,
-				line, "Failed to recognize tokens\n"));
 	return (0);
 }
 

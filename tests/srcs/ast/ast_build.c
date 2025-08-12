@@ -14,29 +14,32 @@
 
 extern char	**environ;
 static void	_free_test(void *content);
-static int	make_test(char *line, char *expected);
+static int	make_test(char *line, char *expected, char *test_name);
 char		g_buff[1024] = {0};
 
-int	main(int argc, char **argv)
+int	main(int argc, char **argv, char **envp)
 {
 	char	*file_path;
 	t_list	*test_lst;
 	t_test	*test;
 	t_cd_t	test_res;
 	int		status;
+	t_list	*origin;
 
 	if (argc != 2)
 		exit(1);
+	environ = envp;
 	file_path = *(argv + 1);
 	test_lst = parse_test_file(file_path);
 	if (!test_lst)
 		return (1);
 	init_test_result(&test_res);
 	status = 0;
+	origin = test_lst;
 	while (test_lst)
 	{
 		test = test_lst->content;
-		status = make_test(test->line, test->expected);
+		status = make_test(test->line, test->expected, test->name);
 		test_res.t_total++;
 		test_res.status |= status;
 		if (status == 1)
@@ -45,7 +48,7 @@ int	main(int argc, char **argv)
 			test_res.t_succ++;
 		test_lst = test_lst->next;
 	}
-	ft_lstclear(&test_lst, _free_test);
+	ft_lstclear(&origin, _free_test);
 	_print_test_result(&test_res);
 	return (test_res.status);
 }
@@ -64,7 +67,7 @@ static t_test	*_setup(void)
 	ctx = NULL;
 	_reset_buf();
 	env = environ;
-	test = malloc(sizeof(t_test));
+	test = calloc(1, sizeof(t_test));
 	if (!test)
 	{
 		log_error("Failed to allocate memory for test");
@@ -77,7 +80,7 @@ static t_test	*_setup(void)
 	return (test);
 }
 
-static int	make_test(char *line, char *expected)
+static int	make_test(char *line, char *expected, char *test_name)
 {
 	static t_lexer	parser = {0};
 	t_ast_node		*node;
@@ -89,8 +92,11 @@ static int	make_test(char *line, char *expected)
 	assert(test);
 	test->line = line;
 	test->expected = expected;
+	test->name = test_name;
+	test_name = test->name;
 	node = parse_new_line(test->line, &parser, test->ctx);
 	if (!node) {
+		test_fail(test_name, "Failed to build AST");
 		log_error("Failed to build AST");
 		return (1);
 	}
@@ -121,6 +127,8 @@ static void	_free_test(void *content)
 	test = content;
 	if (test->line)
 		free(test->line);
+	if (test->name)
+		free(test->name);
 	if (test->expected)
 		free(test->expected);
 	if (test->ctx)

@@ -1,5 +1,4 @@
 include config.mk
-include unit.mk
 # LOG_FILE_PATH 	= 
 # LOG_LEVEL	 	= 	0
 EXPANDER				=	expander
@@ -91,6 +90,7 @@ $(BUILD_DIR)/%.o: $(SRCS_DIR)/%.c $(HEADERS) Makefile
 	-I libs \
 	-c $< -o $@
 
+include unit.mk
 
 clean:
 	rm -rf $(BUILD_DIR)

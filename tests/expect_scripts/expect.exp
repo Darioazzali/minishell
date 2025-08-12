@@ -1,0 +1,80 @@
+#!/usr/bin/expect -f
+
+set script_dir [file dirname [info script]]
+source [file join $script_dir "common.exp"]
+# Set timeout for expect commands (in seconds)
+set timeout 5
+
+# Start your shell (replace "./myshell" with the path to your shell)
+# spawn ../minishell
+spawn [file join $script_dir "../../minishell"]
+
+
+# Test 1: Wait for the initial prompt
+# puts "${CYAN}=== Test: Waiting for prompt ===${RESET}"
+# expect {
+#     "minishell>"  {
+#         puts "\n${GREEN}✓${RESET} Shell started and shows prompt"
+#     }
+#     timeout {
+#         puts "✗ Timeout waiting for shell prompt"
+#         exit 1
+#     }
+# }
+# Test 2: Test a simple command (echo)
+puts "\n${CYAN}=== Test: Echo command ===${RESET}"
+expect "minishell>"
+send "echo hello world\r"
+expect {
+    -re "hello world" {
+        puts "${GREEN}✓${RESET} Echo command works"
+    }
+    timeout {
+        puts "${RED}✗${RESET} Echo command failed or timed out"
+        exit 1
+    }
+}
+
+# Wait for prompt again
+puts "\n${CYAN}=== Test: ls command ===${RESET}"
+expect "minishell>"
+send "ls\r"
+expect {
+    -re "common.exp" {
+        puts "${GREEN}✓${RESET} ls command executed (found common.exp)"
+    }
+    timeout {
+        puts "${RED}✗${RESET} ls command failed or timed out"
+		exit 1
+    }
+}
+
+# Test 4: Test invalid command
+puts "\n${CYAN}=== Test: Invalid command ===${RESET}"
+expect "minishell>"
+send "invalidcommand123\r"
+expect {
+    -re "(command not found|No such file)" {
+        puts "${GREEN}✓${RESET} Invalid command handled correctly"
+    }
+    timeout {
+        puts "${RED}✗${RESET} Invalid command test failed"
+		exit 1
+    }
+}
+
+# Test 5: Exit the shell
+puts "\n${CYAN}=== Test: Exit ===${RESET}"
+expect "minishell>"
+send "exit\r"
+expect {
+    eof {
+        puts "${GREEN}✓${RESET} Shell exited properly"
+    }
+    timeout {
+        puts "${RED}✗${RESET} Shell didn't exit properly"
+        exit 1
+    }
+}
+
+# puts "\n=== All tests completed ==="

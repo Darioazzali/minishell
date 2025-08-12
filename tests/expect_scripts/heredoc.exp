@@ -1,0 +1,277 @@
+#!/bin/expect -f
+
+set script_dir [file dirname [info script]]
+source [file join $script_dir "common.exp"]
+#Create file input test
+exec bash -c "cat << EOF > file.txt
+file1content
+EOF"
+
+proc cleanup {} {
+	exec bash -c "rm -f file_out.txt"
+	exec bash -c "rm -f file.txt"
+}
+
+proc check_leaks {} {
+	global minishell_pid baseline_fd_count GREEN_CHECKMARK RESET
+
+	set fd_count [exec bash -c "ls /proc/$minishell_pid/fd | wc -l"]
+	set leaked_fds [expr $fd_count - $baseline_fd_count]
+	if {$leaked_fds == 0} {
+		puts "${GREEN_CHECKMARK} No FD leaks after double heredoc control C"
+	} else {
+		puts "✗ FD leak detected: $leaked_fds descriptors leaked"
+		exit 1
+	}
+}
+
+spawn ../../minishell
+sleep 1
+
+set minishell_pid [exp_pid]
+
+set baseline_fd_count [exec bash -c "ls /proc/$minishell_pid/fd | wc -l"]
+
+
+puts "${CYAN}\n=== Testing simple heredoc ===${RESET}"
+send "cat << EOF\r"
+
+expect {
+    -re "(>|minishell>)" {
+        puts "${GREEN_CHECKMARK} Shell is ready for heredoc input"
+    }
+    timeout {
+        puts "✗ No continuation prompt for heredoc"
+		cleanup
+		exit 1
+    }
+}
+
+# Send heredoc content
+send "Hello World\r"
+send "This is line 2\r" 
+send "EOF\r"
+
+# Expect the heredoc content to be output
+expect {
+    -re "Hello World.*This is line 2" {
+        puts "${GREEN_CHECKMARK} Heredoc content output correctly"
+    }
+    timeout {
+        puts "✗ Heredoc output not received"
+		cleanup
+		exit 1
+    }
+}
+check_leaks
+
+puts "${CYAN}\n=== Testing two heredocs ===${RESET}"
+send "cat << EOF << EOF2\r"
+
+
+# Send heredoc content
+send "Hello World\r"
+expect ">"
+send "This is line 2\r" 
+expect ">"
+send "EOF\r"
+
+expect ">"
+send "Second heredoc\r"
+expect ">"
+send "This is line 2 of second heredoc\r" 
+expect ">"
+send "EOF2\r"
+expect ">"
+
+# Expect the heredoc content to be output
+expect {
+    -re "Second heredoc.*This is line 2 of second heredoc" {
+        puts "${GREEN_CHECKMARK} Heredoc double output correctly"
+    }
+    timeout {
+        puts "✗ Heredoc output not received"
+		cleanup
+		exit 1
+    }
+}
+
+check_leaks
+
+puts "${CYAN}\n=== Testing two heredocs, ctrl-c ===${RESET}"
+send "cat << EOF << EOF2\r"
+
+
+# Send heredoc content
+send "Hello World\r"
+expect ">"
+send "This is line 2\r" 
+expect ">"
+send "EOF\r"
+
+expect ">"
+send "Second heredoc\r"
+expect ">"
+send "This is line 2 of second heredoc\r" 
+expect ">"
+sleep 0.5
+send "\x03"
+
+
+# Expect the heredoc content to be output
+expect {
+    -re "minishell>" {
+        puts "${GREEN_CHECKMARK} Heredoc control C correctly"
+    }
+    timeout {
+        puts "✗ Heredoc output not received"
+		cleanup
+		exit 1
+    }
+}
+
+check_leaks
+
+puts "${CYAN}\n=== Testing heredocs with pipes===${RESET}"
+send "cat << EOF | cat \r"
+
+
+send "Hello World\r"
+expect ">"
+send "This is line 2\r" 
+expect ">"
+send "EOF\r"
+
+# Expect the heredoc content to be output
+expect {
+    -re "Hello World.*This is line 2" {
+        puts "${GREEN_CHECKMARK} Heredoc pipe output correctly"
+    }
+    timeout {
+        puts "✗ Heredoc output not received"
+		cleanup
+		exit 1
+    }
+}
+
+check_leaks
+
+puts "${CYAN}\n=== Testing multiple heredocs with pipes===${RESET}"
+send "cat << EOF | cat << EOF2\r"
+
+
+send "Hello World\r"
+expect ">"
+send "This is line 1\r" 
+expect ">"
+send "EOF\r"
+expect ">"
+send "Hello World2\r"
+expect ">"
+send "This is line 2\r" 
+expect ">"
+send "EOF2\r"
+
+# Expect the heredoc content to be output
+expect {
+    -re "Hello World2.*This is line 2" {
+        puts "${GREEN_CHECKMARK} Muliple Heredoc pipe output correctly"
+    }
+    timeout {
+        puts "✗ Heredoc output not received"
+		cleanup
+		exit 1
+    }
+}
+puts "${CYAN}\n=== Testing multiple heredocs in multiple pipes===${RESET}"
+send "cat << EOF << EOF2 | cat << EOF3 << EOF4\r"
+
+
+send "Hello World\r"
+expect ">"
+send "This is line 1\r" 
+expect ">"
+send "EOF\r"
+expect ">"
+send "Hello World2\r"
+expect ">"
+send "This is line 2\r" 
+expect ">"
+send "EOF2\r"
+expect ">"
+send "Hello World3\r"
+expect ">"
+send "This is line 3\r" 
+expect ">"
+send "EOF3\r"
+expect ">"
+send "Hello World4\r"
+expect ">"
+send "This is line 4\r" 
+expect ">"
+send "EOF4\r"
+
+# Expect the heredoc content to be output
+expect {
+    -re "Hello World4.*This is line 4" {
+        puts "${GREEN_CHECKMARK} Muliple Heredoc in multiple pipe output correctly"
+    }
+    timeout {
+        puts "✗ Heredoc output not received"
+		cleanup
+		exit 1
+    }
+}
+check_leaks
+
+puts "${CYAN}\n=== Testing  heredocs with redirect===${RESET}"
+send "cat << EOF < file.txt | cat \r"
+
+
+send "Hello World\r"
+expect ">"
+send "This is line 1\r" 
+expect ">"
+send "EOF\r"
+
+# Expect the heredoc content to be output
+expect {
+    -re "file1content" {
+        puts "${GREEN_CHECKMARK} Heredoc redirect output correctly"
+    }
+    timeout {
+        puts "✗ Heredoc output not received"
+		cleanup
+		exit 1
+    }
+}
+check_leaks
+
+puts "${CYAN}\n=== Testing  heredocs with redirect out ===${RESET}"
+send "cat << EOF  | cat > file_out.txt\r"
+
+
+send "Hello World\r"
+expect ">"
+send "This is line 1\r" 
+expect ">"
+send "EOF\r"
+expect "minishell>"
+send "cat file_out.txt\r"
+
+# Expect the heredoc content to be output
+expect {
+    -re "Hello World.*This is line 1" {
+        puts "${GREEN_CHECKMARK} Heredoc redirect output correctly"
+    }
+    timeout {
+        puts "✗ Heredoc output not received"
+		cleanup
+		exit 1
+    }
+}
+check_leaks
+
+cleanup
+
+exit

@@ -12,34 +12,35 @@
 
 #include "expander.h"
 
-static char	*expand_token(t_ctx *ctx, const char *token);
 static void	_debug_tokens(t_list *tokens);
 
 int	expand_tokens(t_ctx *ctx)
 {
-	t_list		*token;
+	t_list		*token_node;
 	char		*expanded;
+	t_token		*tok;
 
-	token = ctx->lexer->tokens;
+	token_node = ctx->lexer->tokens;
 	ctx->lexer->stage = P_EXPANDING;
-	while (token)
+	while (token_node)
 	{
-		expanded = expand_token(ctx, token->content);
+		tok = token_node->content;
+		expanded = expand_token(ctx, tok->value);
 		if (!expanded)
 		{
 			print_shell_error(MALLOC_ERROR_MSG);
 			return (-1);
 		}
-		free(token->content);
-		token->content = expanded;
-		token = token->next;
+		free(tok->value);
+		tok->value = expanded;
+		token_node = token_node->next;
 	}
-	log_debug("expanded tokens:\n");
+	log_debug("Expanded tokens:\n");
 	_debug_tokens(ctx->lexer->tokens);
 	return (0);
 }
 
-static char	*expand_token(t_ctx *ctx, const char *token)
+char	*expand_token(t_ctx *ctx, const char *token)
 {
 	t_expander	expander;
 	char		*ret;

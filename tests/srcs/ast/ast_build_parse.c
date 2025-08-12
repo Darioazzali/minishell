@@ -6,7 +6,7 @@
 /*   By: dazzali <dazzali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 13:41:29 by dazzali           #+#    #+#             */
-/*   Updated: 2025/07/25 13:55:06 by dazzali          ###   ########.fr       */
+/*   Updated: 2025/08/07 11:04:42 by dazzali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ static void	append_new_test(t_list **lst,
 	assert(line);
 	assert(name);
 	assert(expected);
-	test = malloc(sizeof(t_test));
+	test = calloc(sizeof(t_test), 1);
 	if (!test)
 	{
 		log_error("Failed to allocate memory for test");

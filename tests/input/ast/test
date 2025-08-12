@@ -58,3 +58,27 @@ TEST: complex combination
 INPUT: cat file.txt | sort | uniq > sorted.txt
 EXPECTED: pipe(,pipe(,cmd:cat[file.txt],cmd:sort),cmd:uniq{>sorted.txt})
 ---
+TEST: redirect inside parenthesis
+INPUT: echo ">>"
+EXPECTED: cmd:echo[>>]
+---
+TEST: Mixed token quote
+INPUT: echo ">>" ">" "|" "&&"
+EXPECTED: cmd:echo[>>,>,|,&&]
+---
+TEST: Mixed token quotes pipe
+INPUT: echo hello >> "file.txt"
+EXPECTED: cmd:echo[hello]{>>file.txt}
+---
+TEST: Partial quotes
+INPUT: echo $MY_VAR file.txt
+EXPECTED: cmd:echo[>>,file.txt]
+---
+TEST: Empty quotes
+INPUT: echo "" >> file.txt
+EXPECTED: cmd:echo{>>file.txt}
+---
+TEST: Single and double quotes
+INPUT: echo '|' "|" '$MY_VAR' "$MY_VAR"
+EXPECTED: cmd:echo[|,|,$MY_VAR,>>]
+---

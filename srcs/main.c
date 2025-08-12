@@ -21,9 +21,11 @@ int	main(int argc, char **argv, char **env)
 	ctx = NULL;
 	if (!init_program(&ctx, env))
 		return (1);
+	signal(SIGINT, sig_handler_sigint);
+	signal(SIGQUIT, SIG_IGN);
 	read_user_line(ctx);
 	save_to_history_file(ctx->history);
 	rl_clear_history();
 	free_ctx(ctx);
-	return (0);
+	return (ctx->exit_status);
 }

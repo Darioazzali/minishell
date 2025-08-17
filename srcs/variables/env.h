@@ -22,4 +22,5 @@ int				_env_malloc_err(t_sh_var *env);
 void			export_var(t_envs *envs, char *name, char *value);
 t_sh_var		*parse_variable_assignment(char *str);
 bool			is_valid_var_name(char *str);;
+void			remove_shell_var(t_envs **envs, char *key);
 #endif

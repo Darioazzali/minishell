@@ -14,7 +14,6 @@
 
 static t_list	*_find_var_node(char *key, t_envs *envs);
 static void		_free_env_lst(void *content);
-static void		remove_shell_var(t_envs **envs, char *key);
 
 /** @brief unset the given keys from the environment
  *
@@ -44,7 +43,7 @@ int	unset_btin(t_envs **envs, char **keys)
  * @param envs The environment list
  * @param key The key of the variable to unset
  * */
-static void	remove_shell_var(t_envs **envs, char *key)
+void	remove_shell_var(t_envs **envs, char *key)
 {
 	t_list	*found;
 

@@ -17,6 +17,7 @@ static void	_execute_external_command(char *prog_name, char **args, t_ctx *ctx);
 int	assign_status_to_ctx(int status, t_ast_node *node, t_ctx *ctx)
 {
 	signal(SIGINT, sig_handler_sigint);
+	signal(SIGQUIT, SIG_IGN);
 	if (node->input_fd != STDIN_FILENO)
 		close(node->input_fd);
 	if (WIFEXITED(status))
@@ -41,7 +42,8 @@ int	execute_single_command(t_ast_node *node, t_ctx *ctx, char *prog_name)
 	args = build_args(node);
 	if (!args)
 		return (print_shell_error_ret_int(MALLOC_ERROR_MSG, -1));
-	signal(SIGINT, SIG_IGN);
+	signal(SIGINT, sig_handler_sigint_in_process);
+	signal(SIGQUIT, sigquit_handler_in_process);
 	pid = fork();
 	if (pid < 0)
 		return (free(args), print_shell_error_ret_int("Fork error", -1));

@@ -20,8 +20,9 @@ int	exit_btin(int argc, char **argv, t_ctx *ctx)
 	int		status;
 	char	*str;
 
+	write(1, "exit\n", 5);
 	if (argc == 0)
-		exit(ctx->exit_status);
+		return (save_to_history_file(ctx->history), exit(ctx->exit_status), 0);
 	if (argc != 1)
 	{
 		print_program_error("exit", "too many arguments");
@@ -53,6 +54,7 @@ static int	_non_numeric_err(char *str)
 
 static int	_clean_and_exit(t_ctx *ctx, char **argv, int status)
 {
+	save_to_history_file(ctx->history);
 	free_str_array(argv);
 	free_ctx(ctx);
 	rl_clear_history();

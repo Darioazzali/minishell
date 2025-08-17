@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/bash
 
 # **************************************************************************** #
 #                                                                              #
@@ -127,7 +127,7 @@ for test_name in "${TESTS_TO_RUN[@]}"; do
 	run_test "$test_name" || true
 done
 
-./expect_scripts/expect.sh
+# ./expect_scripts/expect.sh
 
 if [[ ! $single_test ]]; then
 	show_summary

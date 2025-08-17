@@ -141,8 +141,11 @@ static int	_update_oldpwd(t_envs *envs)
 
 	old_pwd = get_shell_var(envs, "OLDPWD");
 	pwd = get_shell_var(envs, "PWD");
-	if (!old_pwd || !pwd)
+	if (!pwd)
+	{
+		remove_shell_var(&envs, "OLDPWD");
 		return (1);
+	}
 	new_pwd = getcwd(NULL, 0);
 	if (!new_pwd)
 		return (print_shell_error_ret_int(

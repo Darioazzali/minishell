@@ -24,12 +24,16 @@ fi
 compare_echos() {
 	local ours=$1
 	local original=$2
-	$ECHO "$ours" >$ECHO_DIR/basic.txt
-	echo "$original" >$ECHO_DIR/basic_real.txt
+	$ECHO ${ours} >$ECHO_DIR/basic.txt
+	echo ${original} >$ECHO_DIR/basic_real.txt
 	diff "$ECHO_DIR/basic.txt" "$ECHO_DIR/basic_real.txt" >"$ECHO_DIR/.fail_res"
 	diff_err_code=$?
 	if [[ $diff_err_code -ne 0 ]]; then
-		test_fail "basic echo" "$(cat $ECHO_DIR/.fail_res)"
+		test_fail "Test: ${ours}" "$(cat $ECHO_DIR/.fail_res)"
+		echo "file nuestro"
+		cat  "$ECHO_DIR/basic.txt"
+		echo "file ellos"
+		cat  "$ECHO_DIR/basic_real.txt"
 	else
 		test_pass "basic echo" "$original"
 	fi
@@ -57,6 +61,7 @@ echo_test "hello" "hello"
 echo_test "" ""
 echo_test "-n" "-n"
 echo_test "-n hello" "-n hello"
+echo_test "-nnn -n hello" "-nnn -n hello"
 echo_test "$SHELL" "$SHELL"
 resume_test $tests_passed $tests_failed
 clean_up_files

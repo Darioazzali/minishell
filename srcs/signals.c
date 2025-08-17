@@ -6,7 +6,7 @@
 /*   By: dazzali <dazzali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 08:18:21 by dazzali           #+#    #+#             */
-/*   Updated: 2025/08/11 09:43:54 by dazzali          ###   ########.fr       */
+/*   Updated: 2025/08/17 13:02:40 by dazzali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,4 +32,10 @@ void	sig_handler_sigint_in_process(int sig)
 {
 	printf("\n");
 	(void) sig;
+}
+
+void	sigquit_handler_in_process(int sig)
+{
+	(void) sig;
+	printf("Quit (core dumped)\n");
 }

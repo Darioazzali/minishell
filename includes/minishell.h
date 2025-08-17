@@ -114,4 +114,5 @@ char			**envs_to_strarr(t_envs *envs);
 void			sig_handler_sigint(int sig);
 void			sig_handler_sigint_in_heredoc(int sig);
 void			sig_handler_sigint_in_process(int sig);
+void			sigquit_handler_in_process(int sig);
 #endif

@@ -1,0 +1,69 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    cositas.txt                                        :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: aluque-v <aluque-v@student.42barcelon      +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2025/09/03 16:58:53 by aluque-v          #+#    #+#              #
+#    Updated: 2025/09/03 17:37:24 by aluque-v         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
+- No gestiona bien cuando no tenemos nada de entorno (ENV) (env -i bash y despues ./minishell y hacemos unset de lo que falta )
+failed to allocate memory not correct
+
+- Se acepta una redireccion ( >/</>>/<< ) sin argumento despues
+
+- No hay gestion de Ambiguous redirect (export [REDIR="a b"] y despues [> $REDIR])
+
+- Export debe mostrar variables creadas no inicializadas
+
+- Control C debe dar codigo de error (Exit status)
+
+- leaks cuando command not found
+
+- Cuando hacemos "< X" siendo X un archivo que no existe, se tiene que crear.
+
+vagrind 
+>> exit
+==872589== Invalid read of size 4
+==872589==    at 0x40138F: main (main.c:30)
+==872589==  Address 0x4b22068 is 40 bytes inside a block of size 48 free'd
+==872589==    at 0x484B27F: free (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==872589==    by 0x402274: free_ctx (ctx.c:66)
+==872589==    by 0x40138A: main (main.c:29)
+==872589==  Block was alloc'd at
+==872589==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==872589==    by 0x4021C1: init_ctx (ctx.c:50)
+==872589==    by 0x4020B4: init_program (ctx.c:21)
+==872589==    by 0x40132E: main (main.c:22)
+==872589== 
+==872589== 
+==872589== HEAP SUMMARY:
+==872589==     in use at exit: 208,183 bytes in 223 blocks
+==872589==   total heap usage: 1,939 allocs, 1,716 frees, 333,356 bytes allocated
+==872589== 
+==872589== 2 bytes in 1 blocks are definitely lost in loss record 1 of 64
+==872589==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==872589==    by 0x40A91E: ft_itoa (ft_itoa.c:57)
+==872589==    by 0x402373: _increment_shlvl (ctx.c:90)
+==872589==    by 0x402151: init_program (ctx.c:36)
+==872589==    by 0x40132E: main (main.c:22)
+==872589== 
+==872589== LEAK SUMMARY:
+==872589==    definitely lost: 2 bytes in 1 blocks
+==872589==    indirectly lost: 0 bytes in 0 blocks
+==872589==      possibly lost: 0 bytes in 0 blocks
+==872589==    still reachable: 208,181 bytes in 222 blocks
+==872589==         suppressed: 0 bytes in 0 blocks
+==872589== Reachable blocks (those to which a pointer was found) are not shown.
+==872589== To see them, rerun with: --leak-check=full --show-leak-kinds=all
+==872589== 
+==872589== For lists of detected and suppressed errors, rerun with: -s
+==872589== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
+➜  entrega git:(master) 
+
+
+
+- Control de Syntax Errors ([|] [| |])

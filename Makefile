@@ -84,11 +84,6 @@ HEADERS			=	$(INC_DIR)/minishell.h 		\
 					$(VARIABLES_DIR)/env.h		\
 					$(EXECUTION_DIR)/execute.h
 
-#Built-ins utilities
-# ECHO			=	echo
-# EXPORT			=	export
-# BUILTIN_UTILS	=	$(ECHO)
-
 #Object files
 SRCS			=	$(addprefix $(SRCS_DIR)/,$(SRCS_FILES))
 OBJS			=	$(patsubst $(SRCS_DIR)/%.c,$(BUILD_DIR)/%.o,$(SRCS))
@@ -137,13 +132,6 @@ $(LMINISHELL): $(OBJS)
 	@ar -crs $@ $^
 	printf "$(GREEN)✅ Library created$(RESET)\n"
 
-#Built-in utilities
-# $(ECHO):$(BUILD_DIR)/builtin/echo.o $(UTILS_OBJS)
-# 	printf "$(YELLOW)🔨 Building echo...$(RESET)\n"
-# 	@$(CC) $< $(UTILS_OBJS) $(LIBFT) $(LDFLAGS) -o $@
-# 	printf "$(GREEN)✅ Echo built$(RESET)\n"
-
-#Object files compilation - Updated to handle subdirectories
 $(BUILD_DIR)/%.o:$(SRCS_DIR)/%.c $(HEADERS) Makefile $(CONFIG_FILE)
 	@mkdir -p $(dir $@)
 	printf "$(GREEN)Compiling: $(WHITE)$<$(RESET)\r"
@@ -161,7 +149,6 @@ $(BUILD_DIR)/%.o:$(SRCS_DIR)/%.c $(HEADERS) Makefile $(CONFIG_FILE)
 	-MD -MP \
 	-c $< -o $@
 
-# Special compilation rule for main
 $(BUILD_DIR)/main.o: $(SRCS_DIR)/main.c Makefile $(CONFIG_FILE)
 	@mkdir -p $(BUILD_DIR)
 	printf "$(GREEN)Compiling: $(WHITE)$<$(RESET)\n"
@@ -179,7 +166,6 @@ $(BUILD_DIR)/main.o: $(SRCS_DIR)/main.c Makefile $(CONFIG_FILE)
 		-MD -MP \
 		-c $< -o $@
 
-#Build configuration tracking
 $(CONFIG_FILE): force
 	@echo "DEBUG=$(DEBUG)" > $@.tmp
 	@echo "LOG_LEVEL=$(LOG_LEVEL)" >> $@.tmp

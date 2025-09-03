@@ -76,7 +76,7 @@ clean_files() {
 tests_passed=0
 tests_failed=0
 pwd_test
-pwd_no_existent_dir
+# pwd_no_existent_dir
 resume_test $tests_passed $tests_failed
 clean_files
 

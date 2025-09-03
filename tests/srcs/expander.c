@@ -14,7 +14,8 @@
 #include "minishell.h"
 #include "test.h"
 
-static	void	print_tokens(t_list *tokens);
+static void		print_tokens(t_list *tokens);
+static t_token	*new_tok(char *content);
 
 int	main(int ac, char **av, char **env)
 {
@@ -39,7 +40,7 @@ int	main(int ac, char **av, char **env)
 		exit(1);
 	}
 	while ((read = getline(&line, &len, fp)) != -1)
-		ft_lstadd_back(&tok_lst, ft_lstnew(ft_strdup(strip_newline(line))));
+		ft_lstadd_back(&tok_lst, ft_lstnew(new_tok(line)));
 	fclose(fp);
 	ctx->lexer = &tokenizer;
 	if (!ctx->lexer)
@@ -51,12 +52,24 @@ int	main(int ac, char **av, char **env)
 
 static	void	print_tokens(t_list *tokens)
 {
-    t_list	*tmp;
+	t_list	*tmp;
+	t_token	*tok;
 	
 	tmp = tokens;
 	while (tmp)
 	{
-		printf("%s\n", (char *)tmp->content);
+		tok = tmp->content;
+		printf("%s\n", (char *)tok->value);
 		tmp = tmp->next;
 	}
+}
+
+static t_token *new_tok(char *content)
+{
+	t_token	*tok;	
+
+	tok = malloc(sizeof(t_token));
+	tok->value = ft_strtrim(ft_strdup(content), "\n");
+	tok->type = 0;
+	return (tok);
 }
